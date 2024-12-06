@@ -1,6 +1,9 @@
-import { Text, View } from "react-native";
+import { Text, View, Button } from "react-native";
+import { useSession } from "@/context/ctx";
 
 export default function Index() {
+  const { signOut } = useSession();
+
   return (
     <View
       style={{
@@ -10,6 +13,10 @@ export default function Index() {
       }}
     >
       <Text>This is the home page.</Text>
+      <Button
+        title="Sign Out"
+        onPress={signOut}
+      />
     </View>
   );
 }

@@ -1,6 +1,7 @@
 import { Text } from 'react-native';
 import { Redirect, Tabs } from 'expo-router';
 import { useSession } from '@/context/ctx';
+import theme from '@/theme/theme';
 
 export default function TabsLayout() {
   const { session, isLoading } = useSession();
@@ -20,7 +21,22 @@ export default function TabsLayout() {
 
   // This layout can be deferred because it's not the root layout.
   return (
-    <Tabs>
+    <Tabs
+    screenOptions={{
+      headerStyle: {
+        backgroundColor: theme.colors.primary, // Background color of the header
+      },
+      headerTintColor: theme.colors.white, // Text color (e.g., white)
+      headerTitleStyle: {
+        fontWeight: "bold", // Optional: Make the title bold
+      },
+      tabBarStyle: {
+        backgroundColor: theme.colors.primary, // Background color of the tab bar
+      },
+      tabBarActiveTintColor: theme.colors.white, // Active tab icon/text color
+      tabBarInactiveTintColor: theme.colors.inactiveWhite, // Inactive tab icon/text color
+    }}
+    >
       <Tabs.Screen
         name="index"
         options={{headerTitle: "Home",}}
@@ -32,6 +48,10 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="profile"
         options={{headerTitle: "Profile",}}
+      />
+      <Tabs.Screen
+        name="sign-in-screen"
+        options={{headerTitle: "Sign In",}}
       />
     </Tabs>
   );

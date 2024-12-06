@@ -16,6 +16,12 @@ export default function RootLayout() {
             }}
           />
           <Stack.Screen
+            name="sign-in"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
             name="+not-found"
             options={{
               headerShown: false,

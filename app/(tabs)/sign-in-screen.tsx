@@ -10,7 +10,7 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useSession } from "@/context/ctx";
 import { router } from "expo-router";
 
-export default function SignIn() {
+export default function SignInScreen() {
     const [signInOption, setSignInOption] = useState<"Phone" | "Email">(
         "Phone"
     ); // Toggle between sign-in options
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
     bodyContainer: {
         // Size and Positioning
         width: "100%",
-        height: 525,
+        height: 500,
 
         // Flexbox
         flexDirection: "column",
