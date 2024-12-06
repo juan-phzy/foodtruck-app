@@ -49,135 +49,126 @@ export default function SignIn() {
                     </View>
                     {/* LOGO CONTAINER END */}
 
-                    {/* BODY CONTAINER START */}
-                    <BlurView intensity={8} style={styles.bodyContainer}>
-                        {/* BODY CONTAINER BG GRADIENT START - POSITION ABSOLUTE */}
-                        <LinearGradient
-                            colors={[
-                                "rgba(210, 210, 210, 0.2)",
-                                "rgba(0, 0, 0, 0)",
-                            ]}
-                            locations={[0.5, 1]}
-                            style={styles.gradient}
-                        />
-                        {/* BODY CONTAINER BG GRADIENT END */}
-
-                        {/* INPUT FORM START */}
-                        <View style={styles.child}>
-                            <CustomTextInput
-                                label={signInOption}
-                                placeholder={
-                                    signInOption != "Email"
-                                        ? "+1 (123)-456-7890"
-                                        : "muncher@email.com"
-                                }
+                    {/* Shadow Container */}
+                    <View style={styles.shadowContainer}>
+                        {/* BlurView for Background */}
+                        <BlurView intensity={8} style={styles.bodyContainer}>
+                            {/* BODY CONTAINER BG GRADIENT START */}
+                            <LinearGradient
+                                colors={[
+                                    "rgba(210, 210, 210, 0.2)",
+                                    "rgba(0, 0, 0, 0)",
+                                ]}
+                                locations={[0.5, 1]}
+                                style={styles.gradient}
                             />
-                            <CustomTextInput
-                                label="Password"
-                                placeholder="Enter your password"
-                            />
-                            <CustomButton
-                                style="light"
-                                verticalPadding={10}
-                                fontSize={16}
-                                text="Sign In"
-                                onPress={() => {
-                                    signIn();
-                                    // Navigate after signing in. You may want to tweak this to ensure sign-in is
-                                    // successful before navigating.
-                                    router.replace("/");
-                                }}
-                            />
-                        </View>
-                        {/* INPUT FORM END */}
+                            {/* BODY CONTAINER BG GRADIENT END */}
 
-                        {/* DIVIDER LINE START */}
-                        <View style={styles.dividerContainer}>
-                            <View style={styles.dividerLine} />
-                            <Text style={styles.dividerText}>OR</Text>
-                            <View style={styles.dividerLine} />
-                        </View>
-                        {/* DIVIDER LINE END */}
-
-                        {/* OTHER SIGN-IN OPTIONS START */}
-                        <View style={styles.otherOptionsContainer}>
-                            {signInOption == "Email" ? (
-                                <IconButton
-                                    icon={
-                                        <MaterialIcons
-                                            name="email"
-                                            size={25}
-                                            color="white"
-                                        />
+                            {/* INPUT FORM START */}
+                            <View style={styles.child}>
+                                <CustomTextInput
+                                    label={signInOption}
+                                    placeholder={
+                                        signInOption != "Email"
+                                            ? "+1 (123)-456-7890"
+                                            : "muncher@email.com"
                                     }
-                                    label="Email"
-                                    iconBackground={theme.colors.primary}
+                                />
+                                <CustomTextInput
+                                    label="Password"
+                                    placeholder="Enter your password"
+                                />
+                                <CustomButton
+                                    style="light"
+                                    verticalPadding={10}
+                                    fontSize={16}
+                                    text="Sign In"
                                     onPress={() => {
-                                        setSignInOption("Phone");
-                                        console.log("Email Button Pressed");
+                                        signIn();
+                                        router.replace("/");
                                     }}
                                 />
-                            ) : (
+                            </View>
+                            {/* INPUT FORM END */}
+
+                            {/* DIVIDER LINE START */}
+                            <View style={styles.dividerContainer}>
+                                <View style={styles.dividerLine} />
+                                <Text style={styles.dividerText}>OR</Text>
+                                <View style={styles.dividerLine} />
+                            </View>
+                            {/* DIVIDER LINE END */}
+
+                            {/* OTHER SIGN-IN OPTIONS */}
+                            <View style={styles.otherOptionsContainer}>
+                                {signInOption === "Email" ? (
+                                    <IconButton
+                                        icon={
+                                            <MaterialIcons
+                                                name="email"
+                                                size={25}
+                                                color="white"
+                                            />
+                                        }
+                                        label="Email"
+                                        iconBackground={theme.colors.primary}
+                                        onPress={() => setSignInOption("Phone")}
+                                    />
+                                ) : (
+                                    <IconButton
+                                        icon={
+                                            <MaterialCommunityIcons
+                                                name="phone"
+                                                size={25}
+                                                color="white"
+                                            />
+                                        }
+                                        label="Phone"
+                                        iconBackground={theme.colors.primary}
+                                        onPress={() => setSignInOption("Email")}
+                                    />
+                                )}
                                 <IconButton
                                     icon={
                                         <MaterialCommunityIcons
-                                            name="phone"
+                                            name="gmail"
                                             size={25}
                                             color="white"
                                         />
                                     }
-                                    label="Phone"
+                                    label="Gmail"
                                     iconBackground={theme.colors.primary}
-                                    onPress={() => {
-                                        setSignInOption("Email");
-                                        console.log("Phone Button Pressed");
-                                    }}
+                                    onPress={() =>
+                                        console.log("Gmail Button Pressed")
+                                    }
                                 />
-                            )}
+                            </View>
+                            {/* NEW USER SECTION */}
+                            <View style={styles.newUserContainer}>
+                                <Text style={styles.newUserLabel}>
+                                    New User?
+                                </Text>
+                                <CustomButton
+                                    style="outlineLight"
+                                    verticalPadding={10}
+                                    fontSize={16}
+                                    text="Create Account Here"
+                                    onPress={() =>
+                                        console.log(
+                                            "Create Account Button Pressed"
+                                        )
+                                    }
+                                />
+                            </View>
 
-                            <IconButton
-                                icon={
-                                    <MaterialCommunityIcons
-                                        name="gmail"
-                                        size={25}
-                                        color="white"
-                                    />
-                                }
-                                label="Gmail"
-                                iconBackground={theme.colors.primary}
-                                onPress={() =>
-                                    console.log("Gmail Button Pressed")
-                                }
-                            />
-                        </View>
-                        {/* OTHER SIGN-IN OPTIONS END */}
-
-                        {/* NEW USER SECTION START*/}
-                        <View style={styles.newUserContainer}>
-                            <Text style={styles.newUserLabel}>New User?</Text>
-                            <CustomButton
-                                style="outlineLight"
-                                verticalPadding={10}
-                                fontSize={16}
-                                text="Create Account Here"
-                                onPress={() => {
-                                    console.log(
-                                        "Create Account Button Pressed"
-                                    );
-                                }}
-                            />
-                        </View>
-                        {/* NEW USER SECTION END */}
-
-                        {/* SWITCH TO VENDOR START */}
-                        <View style={styles.switchVendorContainer}>
-                            <Text style={styles.switchVendorText}>
-                                Switch to Vendor Login
-                            </Text>
-                        </View>
-                        {/* SWITCH TO VENDOR END */}
-                    </BlurView>
-                    {/* BODY CONTAINER END */}
+                            {/* SWITCH TO VENDOR */}
+                            <View style={styles.switchVendorContainer}>
+                                <Text style={styles.switchVendorText}>
+                                    Switch to Vendor Login
+                                </Text>
+                            </View>
+                        </BlurView>
+                    </View>
                 </View>
                 {/* CONTENT CONTAINER END */}
             </ImageBackground>
@@ -236,21 +227,39 @@ const styles = StyleSheet.create({
         color: "white",
     },
 
-    // Body Container
-    bodyContainer: {
+    // Shadow Container
+    shadowContainer: {
+        // Flexbox
+        flexDirection: "column",
+        justifyContent: "flex-end",
+
         // Size and Positioning
         width: "100%",
         height: 525,
 
+        // Shadow (iOS + Android)
+        shadowColor: theme.colors.primary,
+        shadowOffset: { width: 0, height: -10 },
+        shadowOpacity: 0.7,
+        shadowRadius: 15,
+        elevation: 10,
+    },
+
+    // Body Container
+    bodyContainer: {
         // Flexbox
         flexDirection: "column",
         padding: 25,
         gap: 15,
 
-        // Borders and Background
+        // Size and Positioning
+        width: "100%",
+        height: "100%",
+
+        // Borders
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
-        overflow: "hidden",
+        overflow: "hidden", // Clips the gradient to rounded corners
     },
     child: {
         // Size and Positioning
