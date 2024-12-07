@@ -130,3 +130,5 @@ Follow these instructions to set up and run the project locally.
 | Ghalia Azam        | Backend Developer & Researcher             |
 | Juan Hernandez     | Project Manager, Lead Developer, Designer  |
 | Krinal Kathiriya   | Front-End Dev                              |
+
+Contact the Lead at jherna50@nyit.edu or jp.hernandez.yz@gmail.com
