@@ -23,13 +23,7 @@ export default function TabsLayout() {
   return (
     <Tabs
     screenOptions={{
-      headerStyle: {
-        backgroundColor: theme.colors.primary, // Background color of the header
-      },
-      headerTintColor: theme.colors.white, // Text color (e.g., white)
-      headerTitleStyle: {
-        fontWeight: "bold", // Optional: Make the title bold
-      },
+      headerShown: false, // Hide the header
       tabBarStyle: {
         backgroundColor: theme.colors.primary, // Background color of the tab bar
       },
