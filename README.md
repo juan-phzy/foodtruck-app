@@ -1,50 +1,132 @@
-# Welcome to your Expo app 👋
+# MunchMap 📍🍔
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+MunchMap is a mobile-first application designed to help users discover nearby food trucks and enjoy a seamless browsing experience. The app features a sleek design, modern UI/UX, and functionality for user authentication, account creation, and personalization.
 
-## Get started
+---
 
-1. Install dependencies
+## Current Completed Progress 🚀
 
+- **Sign-In Screen**: Users can log in via phone or email with a beautifully designed interface.
+- **Sign-Up Screen**: Simple and intuitive account creation with fields for personal and contact information.
+- **Dynamic Forms**: Toggle between sign-in options (Phone or Email) with reusable and modular components.
+- **Theming**: Unified theme for consistent design, including primary and secondary colors.
+- **Custom Components**:
+  - `CustomButton`: Fully customizable button styles.
+  - `CustomTextInput`: Reusable input fields with labels and borders.
+  - `IconButton`: Icon-based buttons with labels for alternate sign-in methods.
+- **Blur and Gradient Effects**: Modern design elements such as background blur and gradients.
+
+---
+
+## Current Project Directory Structure 🗂️
+
+```
+FOODTRUCK-APP
+│
+├── app
+│   ├── (tabs)               # Tab layout and related screens
+│   │   ├── _layout.tsx      # Tab layout file
+│   │   ├── index.tsx        # Home screen
+│   │   ├── profile.tsx      # Profile screen
+│   │   ├── search.tsx       # Search screen
+│   │   └── sign-in.tsx      # Sign-In screen
+│   └── create-account.tsx   # Sign-Up screen
+│
+├── components               # Reusable UI components
+│   ├── CustomButton.tsx
+│   ├── CustomTextInput.tsx
+│   ├── IconButton.tsx
+│
+├── assets                   # Static assets
+│   ├── images
+│   │   └── sign-in-bg.jpg   # Background image for Sign-In and Sign-Up screens
+│   └── fonts                # Fonts used in the application
+│
+├── theme                    # Theme and styling variables
+│   └── theme.ts
+│
+├── storage                  # Local storage utilities
+│   └── useStorageState.ts
+│
+├── context                  # Context for authentication
+│   └── ctx.tsx
+│
+└── README.md                # Project documentation
+```
+
+---
+
+## Getting Started 🛠️
+
+Follow these instructions to set up and run the project locally.
+
+### Prerequisites
+
+- **Node.js** (Latest stable version recommended)
+- **Expo CLI** (or use `npx expo` commands, I personally only use npx expo commands and it's worked very easily so far)
+- **Git** (for version control)
+
+---
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo-url/munchmap.git
+   cd munchmap
+   ```
+
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-2. Start the app
-
+3. Install Expo dependencies:
    ```bash
-    npx expo start
+   npx expo install
    ```
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Running the App
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+1. Start the development server:
+   ```bash
+   npx expo start
+   ```
 
-## Get a fresh project
+2. Choose a platform to run the app:
+   - Press `w` to run in the browser (WebView).
+   - Press `a` to run on Android.
+   - Press `i` to run on iOS (requires macOS).
 
-When you're ready, run:
+---
 
-```bash
-npm run reset-project
-```
+## How to Use 🧑‍💻
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+1. **Sign In**:
+   - Launch the app.
+   - The backend is not yet set up so you can access the app by simply pressing Sign In or Sign Up
 
-## Learn more
+---
 
-To learn more about developing your project with Expo, look at the following resources:
+## Key Technologies Used 🛠️
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- **React Native**: Framework for building mobile applications.
+- **Expo**: Development environment for React Native apps.
+- **TypeScript**: Typed JavaScript for improved developer experience.
+- **Expo Router**: Simplified navigation with file-based routing.
+- **Expo Blur**: Background blur effects.
+- **Expo Linear Gradient**: Stylish gradient overlays.
 
-## Join the community
+---
 
-Join our community of developers creating universal apps.
+## Team Members 👥
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+| Name               | Role                                       |
+|--------------------|--------------------------------------------|
+| Cheuk Tung Ho      | Front-End Dev, Design Researcher           |
+| Elijah Ewers       | Front-End Dev                              |
+| Ghalia Azam        | Backend Developer & Researcher             |
+| Juan Hernandez     | Project Manager, Lead Developer, Designer  |
+| Krinal Kathiriya   | Front-End Dev                              |
