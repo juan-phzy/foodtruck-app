@@ -102,7 +102,7 @@ export default function SignIn() {
 
                             {/* OTHER SIGN-IN OPTIONS */}
                             <View style={styles.otherOptionsContainer}>
-                                {signInOption === "Email" ? (
+                                {signInOption === "Phone" ? (
                                     <IconButton
                                         icon={
                                             <MaterialIcons
@@ -113,7 +113,7 @@ export default function SignIn() {
                                         }
                                         label="Email"
                                         iconBackground={theme.colors.primary}
-                                        onPress={() => setSignInOption("Phone")}
+                                        onPress={() => setSignInOption("Email")}
                                     />
                                 ) : (
                                     <IconButton
@@ -126,7 +126,7 @@ export default function SignIn() {
                                         }
                                         label="Phone"
                                         iconBackground={theme.colors.primary}
-                                        onPress={() => setSignInOption("Email")}
+                                        onPress={() => setSignInOption("Phone")}
                                     />
                                 )}
                                 <IconButton
