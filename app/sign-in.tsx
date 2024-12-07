@@ -70,7 +70,7 @@ export default function SignIn() {
                                     label={signInOption}
                                     placeholder={
                                         signInOption != "Email"
-                                            ? "+1 (123)-456-7890"
+                                            ? "(123)-456-7890"
                                             : "muncher@email.com"
                                     }
                                 />
@@ -84,6 +84,7 @@ export default function SignIn() {
                                     fontSize={16}
                                     text="Sign In"
                                     onPress={() => {
+                                        console.log("Sign In Button Pressed");
                                         signIn();
                                         router.replace("/");
                                     }}
@@ -154,9 +155,12 @@ export default function SignIn() {
                                     fontSize={16}
                                     text="Create Account Here"
                                     onPress={() =>
+                                    {
                                         console.log(
                                             "Create Account Button Pressed"
-                                        )
+                                        );
+                                        router.push("/create-account"); // Navigate to the CreateAccountScreen
+                                    }
                                     }
                                 />
                             </View>

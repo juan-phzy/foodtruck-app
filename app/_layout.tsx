@@ -22,6 +22,12 @@ export default function RootLayout() {
             }}
           />
           <Stack.Screen
+            name="create-account"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
             name="+not-found"
             options={{
               headerShown: false,

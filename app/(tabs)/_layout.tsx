@@ -49,10 +49,6 @@ export default function TabsLayout() {
         name="profile"
         options={{headerTitle: "Profile",}}
       />
-      <Tabs.Screen
-        name="sign-in-screen"
-        options={{headerTitle: "Sign In",}}
-      />
     </Tabs>
   );
 }
