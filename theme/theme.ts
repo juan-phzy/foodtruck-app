@@ -2,10 +2,13 @@
 const theme = {
     colors: {
       primary: "rgba(255, 132, 0, 1)",
+      primaryInactive: "rgba(255, 132, 0, 0.5)",
       gray: "#DDDDDD",
+      grayInactive: "rgba(221, 221, 221, 0.5)",
       white: "#FFFFFF",
-      inactiveWhite: "rgba(255, 255, 255, 0.5)",
+      whiteInactive: "rgba(255, 255, 255, 0.5)",
       black: "#000000",
+      blackInactive: "rgba(0, 0, 0, 0.5)",
     },
     typography: {
     },
