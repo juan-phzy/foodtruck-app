@@ -1,79 +1,151 @@
 import React from "react";
-import { StyleSheet, View, Text, FlatList, Pressable } from "react-native";
+import { StyleSheet, View, Text, Pressable } from "react-native";
+import { BlurView } from "expo-blur";
+import { Ionicons } from "@expo/vector-icons"; // Using Ionicons for the dropdown arrow
 import theme from "@/theme/theme";
+import CustomButton from "./CustomButton";
 
 interface Truck {
-  id: string;
-  name: string;
-  description: string;
-  latitude: number;
-  longitude: number;
+    id: string;
+    name: string;
+    description: string;
+    latitude: number;
+    longitude: number;
 }
 
 interface TruckListCardProps {
-  isExpanded: boolean;
-  onToggleExpand: () => void;
-  trucks: Truck[];
+    isExpanded: boolean;
+    onToggleExpand: () => void;
+    trucks: Truck[];
 }
 
 const TruckListCard: React.FC<TruckListCardProps> = ({
-  isExpanded,
-  onToggleExpand,
-  trucks,
+    isExpanded,
+    onToggleExpand,
+    trucks,
 }) => {
-  return (
-    <View style={[styles.card, isExpanded && styles.expanded]}>
-      <Pressable onPress={onToggleExpand}>
-        <Text style={styles.toggleText}>
-          {isExpanded ? "Collapse" : "Nearby Food Trucks"}
-        </Text>
-      </Pressable>
-      {isExpanded && (
-        <FlatList
-          data={trucks}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.truckItem}>
-              <Text style={styles.truckName}>{item.name}</Text>
-              <Text style={styles.truckDetails}>{item.description}</Text>
+    return (
+        <BlurView
+            intensity={10}
+            style={[styles.card, isExpanded && styles.expanded]}
+        >
+            {/* First View: Title Bar */}
+            <View style={styles.titleBar}>
+                {/* Title Text */}
+                <Text style={styles.titleText}>Nearby Food Trucks</Text>
+                {/* Dropdown Arrow */}
+                <Pressable
+                    onPress={onToggleExpand}
+                    style={styles.dropdownButton}
+                >
+                    <Ionicons
+                        name={isExpanded ? "chevron-down" : "chevron-up"}
+                        size={30}
+                        color={theme.colors.primary} // Orange color from your theme
+                    />
+                </Pressable>
             </View>
-          )}
-        />
-      )}
-    </View>
-  );
+
+            {/* Second View: Filter Bar */}
+            <View style={styles.filterBar}>
+                <Text style={{fontSize:18,fontWeight:"bold", flex:1}}>Filters:</Text>
+                <CustomButton
+                    style="outlineDark"
+                    verticalPadding={5}
+                    fontSize={12}
+                    width="fit"
+                    text="Category"
+                    onPress={() => {
+                        console.log("Category Button Pressed");
+                    }}
+                />
+                <CustomButton
+                    style="outlineDark"
+                    verticalPadding={5}
+                    fontSize={12}
+                    width="fit"
+                    text="Distance"
+                    onPress={() => {
+                        console.log("Distance Button Pressed");
+                    }}
+                />
+                <CustomButton
+                    style="outlineDark"
+                    verticalPadding={5}
+                    fontSize={12}
+                    width="fit"
+                    text="Rating"
+                    onPress={() => {
+                        console.log("Rating Button Pressed");
+                    }}
+                />
+                <CustomButton
+                    style="dark"
+                    verticalPadding={5}
+                    fontSize={12}
+                    width="fit"
+                    text="Radius: 2mi"
+                    onPress={() => {
+                        console.log("Category Button Pressed");
+                    }}
+                />
+            </View>
+
+            {/* Second and Third Views will be added later */}
+        </BlurView>
+    );
 };
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: theme.colors.white,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 10,
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    height: 100,
-  },
-  expanded: {
-    height: "50%",
-  },
-  toggleText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  truckItem: {
-    marginVertical: 10,
-  },
-  truckName: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  truckDetails: {
-    fontSize: 14,
-    color: theme.colors.gray,
-  },
+    card: {
+        // Main Container Styles
+        position: "absolute",
+        bottom: 0,
+        width: "100%",
+        height: 160,
+        paddingVertical: 15,
+        paddingHorizontal: 10,
+        backgroundColor: "rgba(255, 255, 255, 0.85)",
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        overflow: "hidden",
+        // Flexbox
+        flexDirection: "column",
+        gap: 10,
+    },
+    expanded: {
+        // Adjust height when expanded
+        height: 500, // Or any desired height
+    },
+    titleBar: {
+        // First View Styles
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "100%",
+    },
+    titleText: {
+        // Title Text Styles
+        fontSize: 18,
+        fontWeight: "bold",
+        color: theme.colors.black,
+    },
+    dropdownButton: {
+        // Dropdown Arrow Styles
+        width: 30,
+        height: 30,
+        justifyContent: "center",
+        alignItems: "center",
+        // Background color is transparent by default
+    },
+    filterBar: {
+        // Second View Styles
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        gap: 5,
+        width: "100%",
+    },
 });
 
 export default TruckListCard;

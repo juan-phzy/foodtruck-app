@@ -28,7 +28,7 @@ export default function TabsLayout() {
         backgroundColor: theme.colors.primary, // Background color of the tab bar
       },
       tabBarActiveTintColor: theme.colors.white, // Active tab icon/text color
-      tabBarInactiveTintColor: theme.colors.inactiveWhite, // Inactive tab icon/text color
+      tabBarInactiveTintColor: theme.colors.whiteInactive, // Inactive tab icon/text color
     }}
     >
       <Tabs.Screen
