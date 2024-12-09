@@ -14,7 +14,7 @@ export default function CustomTextInput({ label, placeholder }: CustomTextInputP
       <TextInput
         style={styles.textInput}
         placeholder={placeholder}
-        placeholderTextColor={theme.colors.inactiveWhite} // Optional for placeholder styling
+        placeholderTextColor={theme.colors.whiteInactive} // Optional for placeholder styling
       />
     </View>
   );

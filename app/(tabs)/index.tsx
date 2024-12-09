@@ -7,10 +7,11 @@ import SearchBar from "@/components/SearchBar";
 
 export default function Index() {
     const [region, setRegion] = useState({
-        latitude: 40.7128, // Default to NYC
-        longitude: -74.006,
-        latitudeDelta: 0.0922, // Adjust for 5-mile radius
-        longitudeDelta: 0.0421,
+        latitude: 40.76779159578361,  // Default to NYC
+        longitude: -73.98228109243095,
+        latitudeDelta: 0.04, // Adjust for 5-mile radius
+        longitudeDelta: 0.02,
+        
     });
 
     const { signOut } = useSession();

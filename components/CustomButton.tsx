@@ -52,9 +52,13 @@ const styles = StyleSheet.create({
   // Style variants
   dark: {
     backgroundColor: theme.colors.primary,
+    borderWidth: 2,
+    borderColor: theme.colors.primary,
   },
   light: {
     backgroundColor: theme.colors.white,
+    borderWidth: 2,
+    borderColor: theme.colors.white,
   },
   outlineLight: {
     backgroundColor: "transparent",

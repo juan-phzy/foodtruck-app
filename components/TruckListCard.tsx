@@ -4,19 +4,12 @@ import { BlurView } from "expo-blur";
 import { Ionicons } from "@expo/vector-icons"; // Using Ionicons for the dropdown arrow
 import theme from "@/theme/theme";
 import CustomButton from "./CustomButton";
-
-interface Truck {
-    id: string;
-    name: string;
-    description: string;
-    latitude: number;
-    longitude: number;
-}
+import { FoodTruck } from "@/types";
 
 interface TruckListCardProps {
     isExpanded: boolean;
     onToggleExpand: () => void;
-    trucks: Truck[];
+    trucks: FoodTruck[];
 }
 
 const TruckListCard: React.FC<TruckListCardProps> = ({
@@ -102,7 +95,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         width: "100%",
-        height: 160,
+        height: 200,
         paddingVertical: 15,
         paddingHorizontal: 10,
         backgroundColor: "rgba(255, 255, 255, 0.85)",
@@ -143,8 +136,11 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "flex-start",
         alignItems: "center",
+        paddingBottom: 10,
         gap: 5,
         width: "100%",
+        borderBottomColor: "rgba(0, 0, 0, 0.1)",
+        borderBottomWidth: 1,
     },
 });
 
