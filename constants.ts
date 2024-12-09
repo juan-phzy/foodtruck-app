@@ -65,7 +65,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
                 twitter: "@tacofiesta",
             },
         },
-        isOpen: true,
+        isOpen: false,
         imageUrl: "https://www.ctfoodtrucks.com/wp-content/uploads/2020/02/fiesta-taco-truck-e1562690144706.jpg",
     },
     // Additional food trucks added to constants.ts
@@ -131,7 +131,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
                 twitter: "@pizzaparadise",
             },
         },
-        isOpen: true,
+        isOpen: false,
         imageUrl: "https://th.bing.com/th/id/OIP.7PVZoRvuBGKzOqga_FtoUQHaE9?rs=1&pid=ImgDetMain",
     },
     {

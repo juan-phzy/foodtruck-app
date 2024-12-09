@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import React, { useState, useRef } from "react";
+import { StyleSheet, View, Animated } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import SearchBar from "@/components/SearchBar";
 import NearbyTrucksCard from "@/components/NearbyTrucksCard";
@@ -8,71 +8,121 @@ import { FOOD_TRUCKS } from "@/constants";
 
 export default function Index() {
     const [region, setRegion] = useState({
-        latitude: 40.76779159578361,  // Default to NYC
+        latitude: 40.76779159578361, // Default to NYC
         longitude: -73.98228109243095,
         latitudeDelta: 0.04, // Adjust for 5-mile radius
         longitudeDelta: 0.02,
-        
     });
 
+    const [selectedTruckId, setSelectedTruckId] = useState<string | null>(null); // Track the selected truck
+    const mapRef = useRef<MapView>(null); // Ref for the MapView
+    const animationValues = useRef(
+        FOOD_TRUCKS.reduce((acc, truck) => {
+            acc[truck.id] = new Animated.Value(1); // Initialize each truck with a default scale of 1
+            return acc;
+        }, {} as Record<string, Animated.Value>)
+    ).current; // Animated values for icon sizes
 
-    const [markers, setMarkers] = useState([]); // Array of truck data
-    const [isExpanded, setIsExpanded] = useState(false); // Card state
-
-    useEffect(() => {
-        // Fetch active trucks in the region when the map region changes
-        // fetchTrucks(region);
-    }, []);
-
-    const fetchTrucks = async (currentRegion: any) => {
-        try {
-            const response = await fetch(
-                `https://your-api.com/trucks?lat=${currentRegion.latitude}&lng=${currentRegion.longitude}&radius=5`
+    const handleMarkerPress = (truck: any) => {
+        if (selectedTruckId === truck.id) {
+            // If already selected, zoom out and deselect
+            mapRef.current?.animateToRegion(
+                {
+                    latitude: 40.76779159578361,
+                    longitude: -73.98228109243095,
+                    latitudeDelta: 0.04,
+                    longitudeDelta: 0.02,
+                },
+                1000
             );
-            const data = await response.json();
-            setMarkers(data.trucks); // Assuming API returns truck data
-        } catch (error) {
-            console.error("Error fetching trucks:", error);
-        }
-    };
+            setSelectedTruckId(null);
 
-    const handleSearch = (location: any) => {
-        // Update map region based on searched location
-        setRegion({
-            latitude: location.lat,
-            longitude: location.lng,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-        });
+            // Shrink the icon back
+            Animated.timing(animationValues[truck.id], {
+                toValue: 1,
+                duration: 1000,
+                useNativeDriver: true,
+            }).start();
+        } else {
+            // Zoom into the selected truck
+            if (selectedTruckId) {
+                // Reset the previously selected truck
+                Animated.timing(animationValues[selectedTruckId], {
+                    toValue: 1,
+                    duration: 1000,
+                    useNativeDriver: true,
+                }).start();
+            }
+
+            mapRef.current?.animateToRegion(
+                {
+                    latitude: truck.coordinates.latitude,
+                    longitude: truck.coordinates.longitude,
+                    latitudeDelta: 0.01,
+                    longitudeDelta: 0.01,
+                },
+                1000
+            );
+            setSelectedTruckId(truck.id);
+
+            // Enlarge the icon for the newly selected truck
+            Animated.timing(animationValues[truck.id], {
+                toValue: 1.8,
+                duration: 1000,
+                useNativeDriver: true,
+            }).start();
+        }
     };
 
     return (
         <View style={styles.container}>
             {/* Search Bar */}
-            <SearchBar onSearch={handleSearch} />
+            <SearchBar
+                onSearch={(location) => {
+                    // Update map based on search
+                }}
+            />
 
             {/* Map */}
             <MapView
+                ref={mapRef} // Attach ref to MapView
                 style={styles.map}
                 region={region}
                 onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
             >
-                {/* {markers.map((truck) => (
-          <Marker
-            key={truck.id}
-            coordinate={{
-              latitude: truck.latitude,
-              longitude: truck.longitude,
-            }}
-            title={truck.name}
-          />
-        ))} */}
+                {FOOD_TRUCKS.map((truck) => (
+                    <Marker
+                        key={truck.id}
+                        coordinate={{
+                            latitude: truck.coordinates.latitude,
+                            longitude: truck.coordinates.longitude,
+                        }}
+                        onPress={() => handleMarkerPress(truck)} // Handle press
+                    >
+                        {/* Custom Marker View */}
+                        <View style={styles.markerContainer}>
+                            <Animated.Image
+                                source={require("@/assets/images/icon.png")}
+                                style={[
+                                    styles.markerImage,
+                                    {
+                                        transform: [
+                                            {
+                                                scale: animationValues[truck.id],
+                                            },
+                                        ],
+                                    },
+                                ]}
+                            />
+                        </View>
+                    </Marker>
+                ))}
             </MapView>
 
             {/* Truck List */}
             <NearbyTrucksCard
-                isExpanded={isExpanded}
-                onToggleExpand={() => setIsExpanded(!isExpanded)}
+                isExpanded={false}
+                onToggleExpand={() => {}}
                 trucks={FOOD_TRUCKS}
             />
         </View>
@@ -85,5 +135,14 @@ const styles = StyleSheet.create({
     },
     map: {
         flex: 1,
+    },
+    markerContainer: {
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    markerImage: {
+        width: 40, // Default width
+        height: 40, // Default height
+        resizeMode: "contain",
     },
 });
