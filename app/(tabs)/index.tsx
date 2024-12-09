@@ -1,9 +1,10 @@
-import { useSession } from "@/context/ctx";
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Button } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import TruckListCard from "@/components/TruckListCard";
 import SearchBar from "@/components/SearchBar";
+import NearbyTrucksCard from "@/components/NearbyTrucksCard";
+
+import { FOOD_TRUCKS } from "@/constants";
 
 export default function Index() {
     const [region, setRegion] = useState({
@@ -14,7 +15,6 @@ export default function Index() {
         
     });
 
-    const { signOut } = useSession();
 
     const [markers, setMarkers] = useState([]); // Array of truck data
     const [isExpanded, setIsExpanded] = useState(false); // Card state
@@ -70,10 +70,10 @@ export default function Index() {
             </MapView>
 
             {/* Truck List */}
-            <TruckListCard
+            <NearbyTrucksCard
                 isExpanded={isExpanded}
                 onToggleExpand={() => setIsExpanded(!isExpanded)}
-                trucks={markers}
+                trucks={FOOD_TRUCKS}
             />
         </View>
     );

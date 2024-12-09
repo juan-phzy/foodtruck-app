@@ -5,18 +5,21 @@ import { Ionicons } from "@expo/vector-icons"; // Using Ionicons for the dropdow
 import theme from "@/theme/theme";
 import CustomButton from "./CustomButton";
 import { FoodTruck } from "@/types";
+import TruckCardList from "./TruckCardList";
 
-interface TruckListCardProps {
+interface NearbyTrucksCardProps {
     isExpanded: boolean;
     onToggleExpand: () => void;
     trucks: FoodTruck[];
 }
 
-const TruckListCard: React.FC<TruckListCardProps> = ({
+const NearbyTrucksCard: React.FC<NearbyTrucksCardProps> = ({
     isExpanded,
     onToggleExpand,
     trucks,
 }) => {
+
+
     return (
         <BlurView
             intensity={10}
@@ -84,7 +87,9 @@ const TruckListCard: React.FC<TruckListCardProps> = ({
                 />
             </View>
 
-            {/* Second and Third Views will be added later */}
+            {/* Third View: TruckCards */}
+            <TruckCardList trucks={trucks} />
+
         </BlurView>
     );
 };
@@ -144,4 +149,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default TruckListCard;
+export default NearbyTrucksCard;

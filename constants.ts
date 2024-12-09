@@ -9,7 +9,10 @@ export const FOOD_TRUCKS: FoodTruck[] = [
         description: "American, Fast Food, Comfort, Burgers",
         location: "123 Sesame St. NY, NY",
         type: "Stationary",
-        coordinates: { latitude: 40.769842169115456, longitude: -73.98803807961161 }, 
+        coordinates: {
+            latitude: 40.769842169115456,
+            longitude: -73.98803807961161,
+        },
         hours: {
             sunday: "09:00 AM - 09:00 PM",
             monday: "09:00 AM - 09:00 PM",
@@ -30,6 +33,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
+        imageUrl: "https://s.hdnux.com/photos/01/13/34/22/19776684/3/1200x0.jpg",
     },
     // Add 9 more food trucks here
     {
@@ -38,7 +42,10 @@ export const FOOD_TRUCKS: FoodTruck[] = [
         description: "Mexican, Tacos, Comfort Food",
         location: "456 Taco Ln, NY, NY",
         type: "Stationary",
-        coordinates: { latitude: 40.76603584958277, longitude: -73.98339407734088 }, 
+        coordinates: {
+            latitude: 40.76603584958277,
+            longitude: -73.98339407734088,
+        },
         hours: {
             sunday: "08:00 AM - 08:00 PM",
             monday: "08:00 AM - 08:00 PM",
@@ -59,6 +66,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
+        imageUrl: "https://www.ctfoodtrucks.com/wp-content/uploads/2020/02/fiesta-taco-truck-e1562690144706.jpg",
     },
     // Additional food trucks added to constants.ts
 
@@ -68,7 +76,10 @@ export const FOOD_TRUCKS: FoodTruck[] = [
         description: "BBQ, Ribs, Comfort Food",
         location: "789 BBQ Blvd, Dallas, TX",
         type: "Stationary",
-        coordinates: { latitude: 40.7648366742179, longitude: -73.97842882891602 }, 
+        coordinates: {
+            latitude: 40.7648366742179,
+            longitude: -73.97842882891602,
+        },
         hours: {
             sunday: "11:00 AM - 10:00 PM",
             monday: "11:00 AM - 10:00 PM",
@@ -89,6 +100,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
+        imageUrl: "https://www.ctfoodtrucks.com/wp-content/uploads/2016/04/pig-rig-bbq-food-truck-1.jpg",
     },
     {
         id: "4",
@@ -96,7 +108,10 @@ export const FOOD_TRUCKS: FoodTruck[] = [
         description: "Italian, Pizza, Fast Food",
         location: "321 Pizza Ln, San Francisco, CA",
         type: "Mobile",
-        coordinates: { latitude: 40.77183296465364, longitude: -73.97941631600894 }, 
+        coordinates: {
+            latitude: 40.77183296465364,
+            longitude: -73.97941631600894,
+        },
         hours: {
             sunday: "10:00 AM - 09:00 PM",
             monday: "10:00 AM - 09:00 PM",
@@ -117,6 +132,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
+        imageUrl: "https://th.bing.com/th/id/OIP.7PVZoRvuBGKzOqga_FtoUQHaE9?rs=1&pid=ImgDetMain",
     },
     {
         id: "5",
@@ -124,7 +140,10 @@ export const FOOD_TRUCKS: FoodTruck[] = [
         description: "Vegan, Healthy, Organic",
         location: "654 Greenway St, Boulder, CO",
         type: "Stationary",
-        coordinates: { latitude: 40.772749665368515, longitude: -73.9891319148263 },  
+        coordinates: {
+            latitude: 40.772749665368515,
+            longitude: -73.9891319148263,
+        },
         hours: {
             sunday: "08:00 AM - 06:00 PM",
             monday: "08:00 AM - 06:00 PM",
@@ -145,6 +164,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
+        imageUrl: "https://i.pinimg.com/originals/48/20/2b/48202bcd744a4d309014413bcbd0370a.jpg",
     },
     {
         id: "6",
@@ -152,7 +172,10 @@ export const FOOD_TRUCKS: FoodTruck[] = [
         description: "Japanese, Sushi, Seafood",
         location: "123 Sushi Blvd, Seattle, WA",
         type: "Mobile",
-        coordinates: { latitude: 40.76686326170899, longitude: -73.98941860462746 },  
+        coordinates: {
+            latitude: 40.76686326170899,
+            longitude: -73.98941860462746,
+        },
         hours: {
             sunday: "12:00 PM - 08:00 PM",
             monday: "12:00 PM - 08:00 PM",
@@ -173,6 +196,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
+        imageUrl: "https://th.bing.com/th/id/OIP.SlU9VsRqRftxqDNn97pl0wAAAA?rs=1&pid=ImgDetMain",
     },
     {
         id: "7",
@@ -180,7 +204,10 @@ export const FOOD_TRUCKS: FoodTruck[] = [
         description: "French, Desserts, Crepes",
         location: "456 Sweet St, New Orleans, LA",
         type: "Mobile",
-        coordinates: { latitude: 40.77156760155993, longitude: -73.98253804939942 }, 
+        coordinates: {
+            latitude: 40.77156760155993,
+            longitude: -73.98253804939942,
+        },
         hours: {
             sunday: "09:00 AM - 05:00 PM",
             monday: "09:00 AM - 05:00 PM",
@@ -201,6 +228,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
+        imageUrl: "https://i.pinimg.com/originals/ba/c3/34/bac334508bbade6a4196cd2523c933bc.jpg",
     },
     {
         id: "8",
@@ -208,7 +236,10 @@ export const FOOD_TRUCKS: FoodTruck[] = [
         description: "Mediterranean, Kebabs, Middle Eastern",
         location: "789 Kebab Ln, Chicago, IL",
         type: "Stationary",
-        coordinates: { latitude: 40.76498143251705, longitude: -73.97464688424562 }, 
+        coordinates: {
+            latitude: 40.76498143251705,
+            longitude: -73.97464688424562,
+        },
         hours: {
             sunday: "10:00 AM - 08:00 PM",
             monday: "10:00 AM - 08:00 PM",
@@ -229,6 +260,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
+        imageUrl: "https://i.pinimg.com/474x/4b/ef/28/4bef285a21155f431926326643b5af88--food-carts-for-sale-electric-foods.jpg",
     },
     {
         id: "9",
@@ -236,7 +268,10 @@ export const FOOD_TRUCKS: FoodTruck[] = [
         description: "Chinese, Dim Sum, Dumplings",
         location: "123 Chinatown Rd, San Francisco, CA",
         type: "Mobile",
-        coordinates: { latitude: 40.761115713616185, longitude: -73.97546478711149 }, 
+        coordinates: {
+            latitude: 40.761115713616185,
+            longitude: -73.97546478711149,
+        },
         hours: {
             sunday: "10:00 AM - 09:00 PM",
             monday: "10:00 AM - 09:00 PM",
@@ -257,6 +292,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
+        imageUrl: "https://live.staticflickr.com/701/20961727134_062f7cbd6d_b.jpg",
     },
     {
         id: "10",
@@ -264,7 +300,10 @@ export const FOOD_TRUCKS: FoodTruck[] = [
         description: "Italian, Pasta, Comfort Food",
         location: "321 Spaghetti Ln, Los Angeles, CA",
         type: "Mobile",
-        coordinates: { latitude: 40.76638746545183, longitude: -73.99599636395169 }, 
+        coordinates: {
+            latitude: 40.76638746545183,
+            longitude: -73.99599636395169,
+        },
         hours: {
             sunday: "11:00 AM - 08:00 PM",
             monday: "11:00 AM - 08:00 PM",
@@ -285,5 +324,6 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
+        imageUrl: "https://bestfoodtrucks.mo.cloudinary.net/https://bft-production.storage.googleapis.com/resources/trucks/2810/images/original/pasta-on-the-go-2810.jpg?1630070856&tx=f_auto,c_limit,g_center,w_3840,q_auto&resource_type=image",
     },
 ];

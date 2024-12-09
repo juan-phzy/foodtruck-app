@@ -36,6 +36,7 @@ export interface Coordinates {
     reviewCount: number;
     contact: Contact;
     isOpen: boolean;
+    imageUrl: string;
   }
   
   // types.ts
