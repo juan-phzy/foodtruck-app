@@ -1,48 +1,63 @@
-import { Text } from 'react-native';
-import { Redirect, Tabs } from 'expo-router';
-import { useSession } from '@/context/ctx';
-import theme from '@/theme/theme';
+import { Text } from "react-native";
+import { Redirect, Tabs } from "expo-router";
+import theme from "@/theme/theme";
+import { Ionicons } from "@expo/vector-icons";
+import { useSession } from "@/context/ctx";
 
 export default function TabsLayout() {
-  const { session, isLoading } = useSession();
+    const { session, isLoading } = useSession();
 
-  // You can keep the splash screen open, or render a loading screen like we do here.
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
+    if (isLoading) {
+        return <Text>Loading...</Text>;
+    }
 
-  // Only require authentication within the (app) group's layout as users
-  // need to be able to access the (auth) group and sign in again.
-  if (!session) {
-    // On web, static rendering will stop here as the user is not authenticated
-    // in the headless Node process that the pages are rendered in.
-    return <Redirect href="/sign-in" />;
-  }
+    if (!session) {
+        return <Redirect href="/sign-in" />;
+    }
 
-  // This layout can be deferred because it's not the root layout.
-  return (
-    <Tabs
-    screenOptions={{
-      headerShown: false, // Hide the header
-      tabBarStyle: {
-        backgroundColor: theme.colors.primary, // Background color of the tab bar
-      },
-      tabBarActiveTintColor: theme.colors.white, // Active tab icon/text color
-      tabBarInactiveTintColor: theme.colors.whiteInactive, // Inactive tab icon/text color
-    }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{headerTitle: "Home",}}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{headerTitle: "Search",}}
-      />
-      <Tabs.Screen
-        name="profile"
-        options={{headerTitle: "Profile",}}
-      />
-    </Tabs>
-  );
+    return (
+        <Tabs
+            screenOptions={{
+                headerShown: false, // Hide the header
+                tabBarStyle: {
+                    backgroundColor: theme.colors.primary, // Tab bar background color
+                    height: 100, // Increase height for proper spacing
+                },
+                tabBarItemStyle: {
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    paddingTop: 15, // Add padding to the top of the icon
+                },
+                tabBarShowLabel: false, // Hide text labels
+                tabBarActiveTintColor: theme.colors.white, // Active tab icon color
+                tabBarInactiveTintColor: theme.colors.whiteInactive, // Inactive tab icon color
+            }}
+        >
+            <Tabs.Screen
+                name="index"
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="home" size={30} color={color} /> // Home icon
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="search"
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="search" size={30} color={color} /> // Search icon
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name="profile"
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="person" size={30} color={color} /> // Profile icon
+                    ),
+                }}
+            />
+        </Tabs>
+    );
 }
