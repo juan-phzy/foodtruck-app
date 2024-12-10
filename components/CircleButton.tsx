@@ -23,6 +23,11 @@ const styles = StyleSheet.create({
         height: 40,
         justifyContent: "center",
         alignItems: "center",
+        shadowColor: theme.colors.black,
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        shadowOffset: { width: 0, height: 2 },
+        elevation: 3,
     },
     iconContainer: {
         width: 25,

@@ -3,7 +3,6 @@ import { StyleSheet, View, Animated } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import SearchBar from "@/components/SearchBar";
 import NearbyTrucksCard from "@/components/NearbyTrucksCard";
-
 import { FOOD_TRUCKS } from "@/constants";
 import SelectedTruckCard from "@/components/SelectedTruckCard";
 
@@ -77,13 +76,23 @@ export default function Index() {
         }
     };
 
+    const handleSearch = (location: { latitude: number; longitude: number }) => {
+        mapRef.current?.animateToRegion(
+            {
+                latitude: location.latitude,
+                longitude: location.longitude,
+                latitudeDelta: 0.04,
+                longitudeDelta: 0.02,
+            },
+            1000
+        );
+    };
+
     return (
         <View style={styles.container}>
             {/* Search Bar */}
             <SearchBar
-                onSearch={(location) => {
-                    // Update map based on search
-                }}
+                onSearch={handleSearch}
             />
 
             {/* Map */}
