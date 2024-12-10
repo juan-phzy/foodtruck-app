@@ -169,6 +169,12 @@ export default function Index() {
                     }}
                 />
             ) : (
+                /* Make The Truck Cards in the list pressable
+                 We most likely will need to redo the handleMarkerPress logic
+                 We might need to create a context instead for the selected
+                 and then run a function through useEffect whenever the selected
+                 truck changes 
+                 */
                 <NearbyTrucksCard
                     isExpanded={isExpanded}
                     onToggleExpand={() => setIsExpanded(!isExpanded)}
