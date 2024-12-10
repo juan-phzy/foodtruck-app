@@ -17,7 +17,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
             {/* Gradient Background */}
             <LinearGradient
                 colors={["rgba(255, 132, 0, 0.9)", "rgba(255, 132, 0, 0)"]}
-                locations={[0.2, .8]}
+                locations={[0.2, 0.8]}
                 style={styles.gradient}
             />
             {/* Google Places Autocomplete */}
@@ -123,12 +123,12 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: theme.colors.black,
     },
-	togglesContainer: {
-		flexDirection: "row",
-		justifyContent: "flex-end",
-		width: "100%",
-		gap: 10,
-	},
+    togglesContainer: {
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        width: "100%",
+        gap: 10,
+    },
 });
 
 export default SearchBar;
