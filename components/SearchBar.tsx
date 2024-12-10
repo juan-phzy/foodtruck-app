@@ -30,8 +30,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
                     language: "en",
                 }}
                 onPress={(data, details = null) => {
-                    const latitude = details?.geometry?.location?.lat || 0;
-                    const longitude = details?.geometry?.location?.lng || 0;
+                    const latitude = details?.geometry?.location?.lat ?? 0;
+                    const longitude = details?.geometry?.location?.lng ?? 0;
                     onSearch({ latitude, longitude });
                 }}
                 styles={{
