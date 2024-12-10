@@ -162,7 +162,10 @@ export default function Index() {
                         >
                             Select Categories
                         </Text>
-                        <Pressable style={{paddingHorizontal:15}} onPress={()=>setCategoryFilters([])}>
+                        <Pressable
+                            style={{ paddingHorizontal: 15 }}
+                            onPress={() => setCategoryFilters([])}
+                        >
                             <Text
                                 style={{
                                     color: theme.colors.primary,
@@ -180,23 +183,32 @@ export default function Index() {
                         data={CATEGORIES}
                         numColumns={3}
                         renderItem={({ item }) => (
-                            <Pressable 
-                                style={
-                                    [
-                                        styles.categoryButton,
-                                        categoryFilters.includes(item.name) ? styles.categorySelected : {}
-                                    ]
-                                }
-                                onPress={
-                                    () => {
+                            <Pressable
+                                style={[
+                                    styles.categoryButton,
+                                    categoryFilters.includes(item.name)
+                                        ? styles.categorySelected
+                                        : {},
+                                ]}
+                                onPress={() => {
                                     if (categoryFilters.includes(item.name)) {
-                                        setCategoryFilters(categoryFilters.filter((name) => name !== item.name));
+                                        setCategoryFilters(
+                                            categoryFilters.filter(
+                                                (name) => name !== item.name
+                                            )
+                                        );
                                     } else {
-                                        setCategoryFilters([...categoryFilters, item.name]);
+                                        setCategoryFilters([
+                                            ...categoryFilters,
+                                            item.name,
+                                        ]);
                                     }
                                 }}
                             >
-                                <Image source={{uri:item.url}} style={styles.image} />
+                                <Image
+                                    source={{ uri: item.url }}
+                                    style={styles.image}
+                                />
                                 <Text>{item.name}</Text>
                             </Pressable>
                         )}
@@ -247,7 +259,13 @@ export default function Index() {
                         />
                     </View>
                 </Marker>
-                {FOOD_TRUCKS.map((truck) => (
+                {FOOD_TRUCKS.filter(
+                    (truck) =>
+                        categoryFilters.length === 0 || // If no filters are applied, include all trucks
+                        truck.categories.some((category) =>
+                            categoryFilters.includes(category)
+                        )
+                ).map((truck) => (
                     <Marker
                         key={truck.id}
                         coordinate={{
@@ -330,9 +348,16 @@ export default function Index() {
                  truck changes 
                  */
                 <NearbyTrucksCard
+                    isCategoryActive = {categoryFilters.length > 0}
                     isExpanded={isExpanded}
                     onToggleExpand={() => setIsExpanded(!isExpanded)}
-                    trucks={FOOD_TRUCKS}
+                    trucks={FOOD_TRUCKS.filter(
+                        (truck) =>
+                            categoryFilters.length === 0 || // If no filters are applied, include all trucks
+                            truck.categories.some((category) =>
+                                categoryFilters.includes(category)
+                            )
+                    )}
                     showCategories={() => setShowCategoryModal(true)}
                 />
             )}
@@ -391,7 +416,7 @@ const styles = StyleSheet.create({
         borderBottomColor: "rgba(0, 0, 0, 0.1)",
         borderBottomWidth: 1,
         marginHorizontal: 10,
-        marginBottom: 20.
+        marginBottom: 20,
     },
     categoryListView: {
         flex: 1,
@@ -407,8 +432,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         padding: 10,
-        marginBottom:10,
-        backgroundColor: theme.colors.primarySuperLight
+        marginBottom: 10,
+        gap: 5,
+        backgroundColor: theme.colors.primarySuperLight,
     },
     image: {
         width: 50,
@@ -417,5 +443,5 @@ const styles = StyleSheet.create({
     categorySelected: {
         borderColor: theme.colors.primary,
         borderWidth: 2,
-    }
+    },
 });

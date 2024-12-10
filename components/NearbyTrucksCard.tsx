@@ -8,6 +8,7 @@ import { FoodTruck } from "@/types";
 import TruckCardList from "./TruckCardList";
 
 interface NearbyTrucksCardProps {
+    isCategoryActive: boolean;
     isExpanded: boolean;
     onToggleExpand: () => void;
     trucks: FoodTruck[];
@@ -15,6 +16,7 @@ interface NearbyTrucksCardProps {
 }
 
 const NearbyTrucksCard: React.FC<NearbyTrucksCardProps> = ({
+    isCategoryActive,
     isExpanded,
     onToggleExpand,
     trucks,
@@ -48,7 +50,7 @@ const NearbyTrucksCard: React.FC<NearbyTrucksCardProps> = ({
             <View style={styles.filterBar}>
                 <Text style={{fontSize:18,fontWeight:"bold", flex:1}}>Filters:</Text>
                 <CustomButton
-                    style="outlineDark"
+                    style={isCategoryActive ? "dark" : "outlineDark"}
                     verticalPadding={5}
                     fontSize={12}
                     width="fit"
