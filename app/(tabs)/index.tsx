@@ -5,6 +5,8 @@ import SearchBar from "@/components/SearchBar";
 import NearbyTrucksCard from "@/components/NearbyTrucksCard";
 import { FOOD_TRUCKS } from "@/constants";
 import SelectedTruckCard from "@/components/SelectedTruckCard";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import theme from "@/theme/theme";
 
 export default function Index() {
     const [region, setRegion] = useState({
@@ -35,14 +37,14 @@ export default function Index() {
                     latitudeDelta: 0.04,
                     longitudeDelta: 0.02,
                 },
-                1000
+                650
             );
             setSelectedTruckId(null);
 
             // Shrink the icon back
             Animated.timing(animationValues[truck.id], {
                 toValue: 1,
-                duration: 1000,
+                duration: 650,
                 useNativeDriver: true,
             }).start();
         } else {
@@ -51,7 +53,7 @@ export default function Index() {
                 // Reset the previously selected truck
                 Animated.timing(animationValues[selectedTruckId], {
                     toValue: 1,
-                    duration: 1000,
+                    duration: 650,
                     useNativeDriver: true,
                 }).start();
             }
@@ -63,20 +65,23 @@ export default function Index() {
                     latitudeDelta: 0.01,
                     longitudeDelta: 0.01,
                 },
-                1000
+                650
             );
             setSelectedTruckId(truck.id);
 
             // Enlarge the icon for the newly selected truck
             Animated.timing(animationValues[truck.id], {
                 toValue: 1.8,
-                duration: 1000,
+                duration: 650,
                 useNativeDriver: true,
             }).start();
         }
     };
 
-    const handleSearch = (location: { latitude: number; longitude: number }) => {
+    const handleSearch = (location: {
+        latitude: number;
+        longitude: number;
+    }) => {
         mapRef.current?.animateToRegion(
             {
                 latitude: location.latitude,
@@ -84,16 +89,26 @@ export default function Index() {
                 latitudeDelta: 0.04,
                 longitudeDelta: 0.02,
             },
-            1000
+            650
+        );
+    };
+
+    const userLocation = () => {
+        mapRef.current?.animateToRegion(
+            {
+                latitude: 40.7698499519505,
+                longitude: -73.98251936106666,
+                latitudeDelta: 0.04,
+                longitudeDelta: 0.02,
+            },
+            650
         );
     };
 
     return (
         <View style={styles.container}>
             {/* Search Bar */}
-            <SearchBar
-                onSearch={handleSearch}
-            />
+            <SearchBar onSearch={handleSearch} onLocate={userLocation} />
 
             {/* Map */}
             <MapView
@@ -102,6 +117,27 @@ export default function Index() {
                 region={region}
                 onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
             >
+                <Marker
+                    coordinate={{
+                        latitude: 40.7698499519505,
+                        longitude: -73.98251936106666,
+                    }}
+                >
+                    {/* Custom Marker View */}
+                    <View
+                        style={{
+                            backgroundColor: theme.colors.primary,
+                            padding: 2,
+                            borderRadius: 30,
+                        }}
+                    >
+                        <MaterialIcons
+                            name="person-pin-circle"
+                            size={40}
+                            color="white"
+                        />
+                    </View>
+                </Marker>
                 {FOOD_TRUCKS.map((truck) => (
                     <Marker
                         key={truck.id}

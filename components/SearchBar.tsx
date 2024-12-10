@@ -8,10 +8,11 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 
 interface SearchBarProps {
     onSearch: (location: { latitude: number; longitude: number }) => void;
+	onLocate: () => void;
 }
 const GOOGLE_PLACES_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch, onLocate }) => {
     return (
         <View style={styles.container}>
             {/* Gradient Background */}
@@ -90,7 +91,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
                             color={theme.colors.primary}
                         />
                     }
-                    onPress={() => {}}
+                    onPress={onLocate}
                 />
             </View>
         </View>
