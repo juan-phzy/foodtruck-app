@@ -5,6 +5,7 @@ import SearchBar from "@/components/SearchBar";
 import NearbyTrucksCard from "@/components/NearbyTrucksCard";
 
 import { FOOD_TRUCKS } from "@/constants";
+import SelectedTruckCard from "@/components/SelectedTruckCard";
 
 export default function Index() {
     const [region, setRegion] = useState({
@@ -13,6 +14,8 @@ export default function Index() {
         latitudeDelta: 0.04, // Adjust for 5-mile radius
         longitudeDelta: 0.02,
     });
+
+    const [isExpanded, setIsExpanded] = useState(false); // Card state
 
     const [selectedTruckId, setSelectedTruckId] = useState<string | null>(null); // Track the selected truck
     const mapRef = useRef<MapView>(null); // Ref for the MapView
@@ -56,7 +59,7 @@ export default function Index() {
 
             mapRef.current?.animateToRegion(
                 {
-                    latitude: truck.coordinates.latitude,
+                    latitude: truck.coordinates.latitude - 0.003,
                     longitude: truck.coordinates.longitude,
                     latitudeDelta: 0.01,
                     longitudeDelta: 0.01,
@@ -108,7 +111,9 @@ export default function Index() {
                                     {
                                         transform: [
                                             {
-                                                scale: animationValues[truck.id],
+                                                scale: animationValues[
+                                                    truck.id
+                                                ],
                                             },
                                         ],
                                     },
@@ -119,12 +124,57 @@ export default function Index() {
                 ))}
             </MapView>
 
-            {/* Truck List */}
-            <NearbyTrucksCard
-                isExpanded={false}
-                onToggleExpand={() => {}}
-                trucks={FOOD_TRUCKS}
-            />
+            {/* Conditional Card Rendering */}
+            {selectedTruckId ? (
+                <SelectedTruckCard
+                    truck={
+                        FOOD_TRUCKS.find(
+                            (truck) => truck.id === selectedTruckId
+                        )!
+                    }
+                    backFunction={() =>
+                        handleMarkerPress(
+                            FOOD_TRUCKS.find(
+                                (truck) => truck.id === selectedTruckId
+                            )!
+                        )
+                    }
+                    nextTruck={() => {
+                        const num = parseInt(selectedTruckId, 10);
+                        if (num === 10) {
+                            handleMarkerPress(
+                                FOOD_TRUCKS.find((truck) => truck.id === "1")!
+                            );
+                        } else {
+                            handleMarkerPress(
+                                FOOD_TRUCKS.find(
+                                    (truck) => truck.id === (num + 1).toString()
+                                )!
+                            );
+                        }
+                    }}
+                    previousTruck={() => {
+                        const num = parseInt(selectedTruckId, 10);
+                        if (num === 1) {
+                            handleMarkerPress(
+                                FOOD_TRUCKS.find((truck) => truck.id === "10")!
+                            );
+                        } else {
+                            handleMarkerPress(
+                                FOOD_TRUCKS.find(
+                                    (truck) => truck.id === (num - 1).toString()
+                                )!
+                            );
+                        }
+                    }}
+                />
+            ) : (
+                <NearbyTrucksCard
+                    isExpanded={isExpanded}
+                    onToggleExpand={() => setIsExpanded(!isExpanded)}
+                    trucks={FOOD_TRUCKS}
+                />
+            )}
         </View>
     );
 }

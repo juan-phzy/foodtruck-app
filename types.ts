@@ -37,6 +37,7 @@ export interface Coordinates {
     contact: Contact;
     isOpen: boolean;
     imageUrl: string;
+    images: string[];
   }
   
   // types.ts

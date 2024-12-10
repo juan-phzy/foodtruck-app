@@ -6,7 +6,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
     {
         id: "1",
         name: "Whataburger",
-        description: "American, Fast Food, Comfort, Burgers",
+        description: "American, Burgers",
         location: "123 Sesame St. NY, NY",
         type: "Stationary",
         coordinates: {
@@ -33,13 +33,18 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
-        imageUrl: "https://s.hdnux.com/photos/01/13/34/22/19776684/3/1200x0.jpg",
+        imageUrl:
+            "https://s.hdnux.com/photos/01/13/34/22/19776684/3/1200x0.jpg",
+        images: [
+            "https://th.bing.com/th/id/OIP.EUSnARUOq1Ed8z9WWLRb7AHaE8?w=257&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+            "https://th.bing.com/th/id/OIP.oHVCdsNYJjLKFop5A_X-7AHaE8?w=268&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+            "https://th.bing.com/th/id/OIP.avyUpTdLZLZFC2gbyAE51gHaFj?w=207&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+        ],
     },
-    // Add 9 more food trucks here
     {
         id: "2",
         name: "Taco Fiesta",
-        description: "Mexican, Tacos, Comfort Food",
+        description: "Mexican, Tacos",
         location: "456 Taco Ln, NY, NY",
         type: "Stationary",
         coordinates: {
@@ -66,14 +71,18 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: false,
-        imageUrl: "https://www.ctfoodtrucks.com/wp-content/uploads/2020/02/fiesta-taco-truck-e1562690144706.jpg",
+        imageUrl:
+            "https://www.ctfoodtrucks.com/wp-content/uploads/2020/02/fiesta-taco-truck-e1562690144706.jpg",
+        images: [
+            "https://th.bing.com/th/id/OIP.O6iZ5H18dNPmWot1X7uqMwAAAA?w=254&h=190&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+            "https://th.bing.com/th/id/OIP.em5-7XmFYToVpnuIyf5YnQHaFj?w=238&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+            "https://th.bing.com/th/id/OIP.3mqB4hQyCFcWbIMgn4Xc-gAAAA?w=225&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+        ],
     },
-    // Additional food trucks added to constants.ts
-
     {
         id: "3",
         name: "Rolling BBQ",
-        description: "BBQ, Ribs, Comfort Food",
+        description: "BBQ, Ribs",
         location: "789 BBQ Blvd, Dallas, TX",
         type: "Stationary",
         coordinates: {
@@ -100,12 +109,18 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
-        imageUrl: "https://www.ctfoodtrucks.com/wp-content/uploads/2016/04/pig-rig-bbq-food-truck-1.jpg",
+        imageUrl:
+            "https://www.ctfoodtrucks.com/wp-content/uploads/2016/04/pig-rig-bbq-food-truck-1.jpg",
+        images: [
+            "https://th.bing.com/th/id/OIP.F_MD1ZwYccaJbEc4OdN05AHaFj?rs=1&pid=ImgDetMain",
+            "https://th.bing.com/th/id/OIP.Z7FioLpsCk60OfuoevvjawHaJ4?pid=ImgDet&w=474&h=632&rs=1",
+            "https://th.bing.com/th/id/OIP.1Y6VTuruKYqwA5c7n-xGLAHaFj?pid=ImgDet&w=474&h=355&rs=1",
+        ],
     },
     {
         id: "4",
         name: "Pizza Paradise",
-        description: "Italian, Pizza, Fast Food",
+        description: "Italian, Pizza",
         location: "321 Pizza Ln, San Francisco, CA",
         type: "Mobile",
         coordinates: {
@@ -132,12 +147,18 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: false,
-        imageUrl: "https://th.bing.com/th/id/OIP.7PVZoRvuBGKzOqga_FtoUQHaE9?rs=1&pid=ImgDetMain",
+        imageUrl:
+            "https://th.bing.com/th/id/OIP.7PVZoRvuBGKzOqga_FtoUQHaE9?rs=1&pid=ImgDetMain",
+        images: [
+            "https://cruisingkitchens.com/wp-content/uploads/2022/06/stouts-pizza-custom-food-truck-pizza-oven-mobile-truck-8-1024x683.jpg",
+            "https://th.bing.com/th/id/OIP.pGKTM5_vyfCfPEZTDVQ9MQHaE8?pid=ImgDet&w=474&h=316&rs=1",
+            "https://th.bing.com/th/id/OIP.X68S1k8TOEp_UnPFwGvbZQAAAA?pid=ImgDet&w=474&h=316&rs=1",
+        ],
     },
     {
         id: "5",
         name: "Vegan Bites",
-        description: "Vegan, Healthy, Organic",
+        description: "Vegan, Healthy",
         location: "654 Greenway St, Boulder, CO",
         type: "Stationary",
         coordinates: {
@@ -164,7 +185,13 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
-        imageUrl: "https://i.pinimg.com/originals/48/20/2b/48202bcd744a4d309014413bcbd0370a.jpg",
+        imageUrl:
+            "https://i.pinimg.com/originals/48/20/2b/48202bcd744a4d309014413bcbd0370a.jpg",
+        images: [
+            "https://images.happycow.net/venues/1024/97/58/hcmp97588_291119.jpeg",
+            "https://th.bing.com/th/id/OIP.-FNJqmddnSgvOmxncUh0BwHaHa?pid=ImgDet&w=474&h=474&rs=1",
+            "https://th.bing.com/th/id/OIP.Nfe9RvR9v1dVR5OtNwA1ugHaHa?pid=ImgDet&w=474&h=474&rs=1",
+        ],
     },
     {
         id: "6",
@@ -196,7 +223,13 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
-        imageUrl: "https://th.bing.com/th/id/OIP.SlU9VsRqRftxqDNn97pl0wAAAA?rs=1&pid=ImgDetMain",
+        imageUrl:
+            "https://th.bing.com/th/id/OIP.SlU9VsRqRftxqDNn97pl0wAAAA?rs=1&pid=ImgDetMain",
+        images: [
+            "https://th.bing.com/th/id/OIP.SqE8Pzm9_lqoClmh5030dwHaJ4?rs=1&pid=ImgDetMain",
+            "https://th.bing.com/th/id/OIP.4M8qC-ilA4lc-55vhE8chAHaJ4?pid=ImgDet&w=474&h=632&rs=1",
+            "https://th.bing.com/th/id/OIP.COHUmm0ZKLswp-u9TDQDgwHaJQ?pid=ImgDet&w=474&h=592&rs=1",
+        ],
     },
     {
         id: "7",
@@ -228,7 +261,13 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
-        imageUrl: "https://i.pinimg.com/originals/ba/c3/34/bac334508bbade6a4196cd2523c933bc.jpg",
+        imageUrl:
+            "https://i.pinimg.com/originals/ba/c3/34/bac334508bbade6a4196cd2523c933bc.jpg",
+        images: [
+            "https://foodtruckya.eu-central-1.linodeobjects.com/service/103/image/964/7e4f5208-edd1-4a72-8d5f-53a8aa486314.jpeg",
+            "https://th.bing.com/th/id/OIP.lY3lnT68HzxLHKhEVfzbpAHaJR?pid=ImgDet&w=474&h=593&rs=1",
+            "https://th.bing.com/th/id/OIP.WZWWEGSETiaj5dOob2PmSQHaHa?pid=ImgDet&w=474&h=474&rs=1",
+        ],
     },
     {
         id: "8",
@@ -260,7 +299,13 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
-        imageUrl: "https://i.pinimg.com/474x/4b/ef/28/4bef285a21155f431926326643b5af88--food-carts-for-sale-electric-foods.jpg",
+        imageUrl:
+            "https://i.pinimg.com/474x/4b/ef/28/4bef285a21155f431926326643b5af88--food-carts-for-sale-electric-foods.jpg",
+        images: [
+            "https://th.bing.com/th/id/R.09917c20e7b3d4e4295aca38721ad17a?rik=3id8Gtf7WeDVeg&riu=http%3a%2f%2fbookmylot.com%2fwp-content%2fgallery%2fdoner-kebob%2fdoner-kabob-food-truck-los-angeles-food-trucks-la-01.jpg&ehk=UJfyevcxc6HvexqTvoOCRmkIM3afVd3jJoRHh2zeRvA%3d&risl=&pid=ImgRaw&r=0",
+            "https://th.bing.com/th/id/OIP.JL9_xxFwQcPq5zKZQWUMmgHaE6?pid=ImgDet&w=474&h=314&rs=1",
+            "https://th.bing.com/th/id/OIP.sOhec202eKG4czeRM9qCJgHaEJ?pid=ImgDet&w=474&h=265&rs=1",
+        ],
     },
     {
         id: "9",
@@ -292,7 +337,13 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
-        imageUrl: "https://live.staticflickr.com/701/20961727134_062f7cbd6d_b.jpg",
+        imageUrl:
+            "https://live.staticflickr.com/701/20961727134_062f7cbd6d_b.jpg",
+        images: [
+            "https://i.pinimg.com/originals/96/a6/f2/96a6f2d72e7348cdafda1d21bdde2043.jpg",
+            "https://th.bing.com/th/id/R.bb6f128a603b39d2b6c4e3cd7e0c9e70?rik=n0utIsUyRGC5aQ&riu=http%3a%2f%2ffarm5.static.flickr.com%2f4066%2f4383457958_1ebcb5abda.jpg&ehk=fOKi6u1a%2fhwsA%2bgbav3NGjk6%2brwrae72m53U9ggXc3w%3d&risl=&pid=ImgRaw&r=0",
+            "https://dailytrojan.com/wp-content/uploads/2010/03/Dim-sum-truck-1.jpg",
+        ],
     },
     {
         id: "10",
@@ -324,6 +375,12 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             },
         },
         isOpen: true,
-        imageUrl: "https://bestfoodtrucks.mo.cloudinary.net/https://bft-production.storage.googleapis.com/resources/trucks/2810/images/original/pasta-on-the-go-2810.jpg?1630070856&tx=f_auto,c_limit,g_center,w_3840,q_auto&resource_type=image",
+        imageUrl:
+            "https://bestfoodtrucks.mo.cloudinary.net/https://bft-production.storage.googleapis.com/resources/trucks/2810/images/original/pasta-on-the-go-2810.jpg?1630070856&tx=f_auto,c_limit,g_center,w_3840,q_auto&resource_type=image",
+        images: [
+            "https://www.arizonafoodtrucks.com/wp-content/uploads/2022/01/174087927_1912739438896327_6914361191601118463_n.jpg",
+            "https://th.bing.com/th/id/OIP.MiAGrYafshORM2n_HLu4swHaHa?rs=1&pid=ImgDetMain",
+            "https://photos.roaminghunger.com/1200x/c6e30f1f-dab3-4a13-9de8-24dc27b0f8dd.jpg",
+        ],
     },
 ];
