@@ -73,7 +73,7 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
             {/* Second View: Information and Buttons */}
             <View style={styles.infoSection}>
                 <View style={styles.categoryDistance}>
-                    <Text style={styles.bolded}>{truck.description}</Text>
+                    <Text style={styles.bolded}>{truck.categories.join(", ")}</Text>
                     <Text style={styles.bolded}>5 min drive ⦁ 15 min walk</Text>
                 </View>
 

@@ -38,7 +38,7 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
                 </Text>
 
                 {/* Description / Categories */}
-                <Text style={styles.categories}>{truck.description}</Text>
+                <Text style={styles.categories}>{truck.categories.join(', ')}</Text>
 
                 {/* Star Ratings */}
                 <View style={styles.ratingContainer}>

@@ -11,12 +11,14 @@ interface NearbyTrucksCardProps {
     isExpanded: boolean;
     onToggleExpand: () => void;
     trucks: FoodTruck[];
+    showCategories: ()=>void;
 }
 
 const NearbyTrucksCard: React.FC<NearbyTrucksCardProps> = ({
     isExpanded,
     onToggleExpand,
     trucks,
+    showCategories
 }) => {
 
 
@@ -51,9 +53,7 @@ const NearbyTrucksCard: React.FC<NearbyTrucksCardProps> = ({
                     fontSize={12}
                     width="fit"
                     text="Category"
-                    onPress={() => {
-                        console.log("Category Button Pressed");
-                    }}
+                    onPress={showCategories}
                 />
                 <CustomButton
                     style="outlineDark"

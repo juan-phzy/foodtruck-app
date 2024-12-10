@@ -2,38 +2,110 @@
 
 import { FoodTruck } from "./types";
 
-export const CATEGORIES: string[] = [
-    "American",
-    "Burgers",
-    "Mexican",
-    "Tacos",
-    "BBQ",
-    "Ribs",
-    "Italian",
-    "Pizza",
-    "Vegan",
-    "Healthy",
-    "Japanese",
-    "Sushi",
-    "Seafood",
-    "French",
-    "Desserts",
-    "Crepes",
-    "Mediterranean",
-    "Kebabs",
-    "Middle Eastern",
-    "Chinese",
-    "Dim Sum",
-    "Dumplings",
-    "Comfort Food",
-    "Pasta",
+export const CATEGORIES: { name: string; url: string }[] = [
+    {
+        name: "American",
+        url: "https://cdn-icons-png.flaticon.com/128/206/206626.png",
+    },
+    {
+        name: "Burgers",
+        url: "https://cdn-icons-png.flaticon.com/128/878/878052.png",
+    },
+    {
+        name: "Mexican",
+        url: "https://cdn-icons-png.flaticon.com/128/12360/12360219.png",
+    },
+    {
+        name: "Tacos",
+        url: "https://cdn-icons-png.flaticon.com/128/537/537386.png",
+    },
+    {
+        name: "BBQ",
+        url: "https://cdn-icons-png.flaticon.com/128/3808/3808804.png",
+    },
+    {
+        name: "Ribs",
+        url: "https://cdn-icons-png.flaticon.com/128/6332/6332512.png",
+    },
+    {
+        name: "Italian",
+        url: "https://cdn-icons-png.flaticon.com/128/330/330672.png",
+    },
+    {
+        name: "Pizza",
+        url: "https://cdn-icons-png.flaticon.com/128/3595/3595455.png",
+    },
+    {
+        name: "Vegan",
+        url: "https://cdn-icons-png.flaticon.com/128/16206/16206765.png",
+    },
+    {
+        name: "Healthy",
+        url: "https://cdn-icons-png.flaticon.com/128/706/706164.png",
+    },
+    {
+        name: "Japanese",
+        url: "https://cdn-icons-png.flaticon.com/128/14007/14007506.png",
+    },
+    {
+        name: "Sushi",
+        url: "https://cdn-icons-png.flaticon.com/128/2674/2674064.png",
+    },
+    {
+        name: "Seafood",
+        url: "https://cdn-icons-png.flaticon.com/128/3082/3082055.png",
+    },
+    {
+        name: "French",
+        url: "https://cdn-icons-png.flaticon.com/128/330/330490.png",
+    },
+    {
+        name: "Desserts",
+        url: "https://cdn-icons-png.flaticon.com/128/3081/3081903.png",
+    },
+    {
+        name: "Crepes",
+        url: "https://cdn-icons-png.flaticon.com/128/168/168351.png",
+    },
+    {
+        name: "Mediterranean",
+        url: "https://cdn-icons-png.flaticon.com/128/5861/5861566.png",
+    },
+    {
+        name: "Kebabs",
+        url: "https://cdn-icons-png.flaticon.com/128/4711/4711382.png",
+    },
+    {
+        name: "Middle Eastern",
+        url: "https://cdn-icons-png.flaticon.com/128/706/706893.png",
+    },
+    {
+        name: "Chinese",
+        url: "https://cdn-icons-png.flaticon.com/128/13482/13482170.png",
+    },
+    {
+        name: "Dim Sum",
+        url: "https://cdn-icons-png.flaticon.com/128/7499/7499405.png",
+    },
+    {
+        name: "Dumplings",
+        url: "https://cdn-icons-png.flaticon.com/128/673/673530.png",
+    },
+    {
+        name: "Fast Food",
+        url: "https://cdn-icons-png.flaticon.com/128/737/737967.png",
+    },
+    {
+        name: "Pasta",
+        url: "https://cdn-icons-png.flaticon.com/128/3480/3480618.png",
+    },
 ];
 
 export const FOOD_TRUCKS: FoodTruck[] = [
     {
         id: "1",
         name: "Whataburger",
-        description: "American, Burgers",
+        categories: ["American", "Burgers"],
         location: "123 Sesame St. NY, NY",
         type: "Stationary",
         coordinates: {
@@ -71,7 +143,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
     {
         id: "2",
         name: "Taco Fiesta",
-        description: "Mexican, Tacos",
+        categories: ["Mexican", "Tacos"],
         location: "456 Taco Ln, NY, NY",
         type: "Stationary",
         coordinates: {
@@ -109,7 +181,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
     {
         id: "3",
         name: "Rolling BBQ",
-        description: "BBQ, Ribs",
+        categories: ["BBQ", "Ribs"],
         location: "789 BBQ Blvd, Dallas, TX",
         type: "Stationary",
         coordinates: {
@@ -147,7 +219,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
     {
         id: "4",
         name: "Pizza Paradise",
-        description: "Italian, Pizza",
+        categories: ["Italian", "Pizza"],
         location: "321 Pizza Ln, San Francisco, CA",
         type: "Mobile",
         coordinates: {
@@ -185,7 +257,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
     {
         id: "5",
         name: "Vegan Bites",
-        description: "Vegan, Healthy",
+        categories: ["Vegan", "Healthy"],
         location: "654 Greenway St, Boulder, CO",
         type: "Stationary",
         coordinates: {
@@ -223,7 +295,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
     {
         id: "6",
         name: "Sushi on Wheels",
-        description: "Japanese, Sushi, Seafood",
+        categories: ["Japanese", "Sushi", "Seafood"],
         location: "123 Sushi Blvd, Seattle, WA",
         type: "Mobile",
         coordinates: {
@@ -261,7 +333,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
     {
         id: "7",
         name: "Crepe Delight",
-        description: "French, Desserts, Crepes",
+        categories: ["French", "Desserts", "Crepes"],
         location: "456 Sweet St, New Orleans, LA",
         type: "Mobile",
         coordinates: {
@@ -299,7 +371,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
     {
         id: "8",
         name: "Kebab Junction",
-        description: "Mediterranean, Kebabs, Middle Eastern",
+        categories: ["Mediterranean", "Kebabs", "Middle Eastern"],
         location: "789 Kebab Ln, Chicago, IL",
         type: "Stationary",
         coordinates: {
@@ -337,7 +409,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
     {
         id: "9",
         name: "Dim Sum Cart",
-        description: "Chinese, Dim Sum, Dumplings",
+        categories: ["Chinese", "Dim Sum", "Dumplings"],
         location: "123 Chinatown Rd, San Francisco, CA",
         type: "Mobile",
         coordinates: {
@@ -375,7 +447,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
     {
         id: "10",
         name: "Pasta on the Go",
-        description: "Italian, Pasta, Comfort Food",
+        categories: ["Italian", "Pasta"],
         location: "321 Spaghetti Ln, Los Angeles, CA",
         type: "Mobile",
         coordinates: {

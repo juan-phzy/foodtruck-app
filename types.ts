@@ -27,7 +27,7 @@ export interface Coordinates {
   export interface FoodTruck {
     id: string;
     name: string;
-    description: string;
+    categories: string[];
     location: string;
     type: "Stationary" | "Mobile";
     coordinates: Coordinates;
