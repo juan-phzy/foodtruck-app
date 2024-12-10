@@ -2,12 +2,12 @@ import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import theme from "@/theme/theme";
 
-type IconButtonProps = {
+type IconButtonProps = Readonly<{
   icon: React.ReactNode; // Pass the icon component as a prop
   label: string;
   iconBackground: string; // Background color for the icon container
   onPress: () => void; // Function triggered on press
-};
+}>;
 
 export default function IconButton({
   icon,
