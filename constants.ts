@@ -2,6 +2,33 @@
 
 import { FoodTruck } from "./types";
 
+export const CATEGORIES: string[] = [
+    "American",
+    "Burgers",
+    "Mexican",
+    "Tacos",
+    "BBQ",
+    "Ribs",
+    "Italian",
+    "Pizza",
+    "Vegan",
+    "Healthy",
+    "Japanese",
+    "Sushi",
+    "Seafood",
+    "French",
+    "Desserts",
+    "Crepes",
+    "Mediterranean",
+    "Kebabs",
+    "Middle Eastern",
+    "Chinese",
+    "Dim Sum",
+    "Dumplings",
+    "Comfort Food",
+    "Pasta",
+];
+
 export const FOOD_TRUCKS: FoodTruck[] = [
     {
         id: "1",

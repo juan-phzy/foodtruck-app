@@ -16,6 +16,10 @@ export default function Index() {
         longitudeDelta: 0.02,
     });
 
+    const [mapType, setMapType] = useState<
+        "standard" | "hybrid" | "mutedStandard"
+    >("mutedStandard"); // Map type
+
     const [isExpanded, setIsExpanded] = useState(false); // Card state
 
     const [selectedTruckId, setSelectedTruckId] = useState<string | null>(null); // Track the selected truck
@@ -108,7 +112,14 @@ export default function Index() {
     return (
         <View style={styles.container}>
             {/* Search Bar */}
-            <SearchBar onSearch={handleSearch} onLocate={userLocation} />
+            <SearchBar
+                onSearch={handleSearch}
+                onLocate={userLocation}
+                currentMap = {mapType}
+                changeMapToSatellite={() => setMapType("hybrid")}
+                changeMapToDetailed={() => setMapType("standard")}
+                changeMapToRegular={() => setMapType("mutedStandard")}
+            />
 
             {/* Map */}
             <MapView
@@ -116,6 +127,11 @@ export default function Index() {
                 style={styles.map}
                 region={region}
                 onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
+                loadingEnabled={true}
+                loadingBackgroundColor={theme.colors.white}
+                loadingIndicatorColor={theme.colors.primary}
+                showsCompass={false}
+                mapType={mapType}
             >
                 <Marker
                     coordinate={{
