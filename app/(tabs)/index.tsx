@@ -90,8 +90,8 @@ export default function Index() {
             {
                 latitude: location.latitude,
                 longitude: location.longitude,
-                latitudeDelta: 0.04,
-                longitudeDelta: 0.02,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
             },
             650
         );
