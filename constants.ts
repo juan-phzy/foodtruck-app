@@ -139,6 +139,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.oHVCdsNYJjLKFop5A_X-7AHaE8?w=268&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
             "https://th.bing.com/th/id/OIP.avyUpTdLZLZFC2gbyAE51gHaFj?w=207&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
         ],
+        distance: 0,
     },
     {
         id: "2",
@@ -177,6 +178,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.em5-7XmFYToVpnuIyf5YnQHaFj?w=238&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
             "https://th.bing.com/th/id/OIP.3mqB4hQyCFcWbIMgn4Xc-gAAAA?w=225&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
         ],
+        distance: 0,
     },
     {
         id: "3",
@@ -215,6 +217,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.Z7FioLpsCk60OfuoevvjawHaJ4?pid=ImgDet&w=474&h=632&rs=1",
             "https://th.bing.com/th/id/OIP.1Y6VTuruKYqwA5c7n-xGLAHaFj?pid=ImgDet&w=474&h=355&rs=1",
         ],
+        distance: 0,
     },
     {
         id: "4",
@@ -253,6 +256,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.pGKTM5_vyfCfPEZTDVQ9MQHaE8?pid=ImgDet&w=474&h=316&rs=1",
             "https://th.bing.com/th/id/OIP.X68S1k8TOEp_UnPFwGvbZQAAAA?pid=ImgDet&w=474&h=316&rs=1",
         ],
+        distance: 0,
     },
     {
         id: "5",
@@ -291,6 +295,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.-FNJqmddnSgvOmxncUh0BwHaHa?pid=ImgDet&w=474&h=474&rs=1",
             "https://th.bing.com/th/id/OIP.Nfe9RvR9v1dVR5OtNwA1ugHaHa?pid=ImgDet&w=474&h=474&rs=1",
         ],
+        distance: 0,
     },
     {
         id: "6",
@@ -329,6 +334,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.4M8qC-ilA4lc-55vhE8chAHaJ4?pid=ImgDet&w=474&h=632&rs=1",
             "https://th.bing.com/th/id/OIP.COHUmm0ZKLswp-u9TDQDgwHaJQ?pid=ImgDet&w=474&h=592&rs=1",
         ],
+        distance: 0,
     },
     {
         id: "7",
@@ -367,6 +373,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.lY3lnT68HzxLHKhEVfzbpAHaJR?pid=ImgDet&w=474&h=593&rs=1",
             "https://th.bing.com/th/id/OIP.WZWWEGSETiaj5dOob2PmSQHaHa?pid=ImgDet&w=474&h=474&rs=1",
         ],
+        distance: 0,
     },
     {
         id: "8",
@@ -405,6 +412,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.JL9_xxFwQcPq5zKZQWUMmgHaE6?pid=ImgDet&w=474&h=314&rs=1",
             "https://th.bing.com/th/id/OIP.sOhec202eKG4czeRM9qCJgHaEJ?pid=ImgDet&w=474&h=265&rs=1",
         ],
+        distance: 0,
     },
     {
         id: "9",
@@ -443,6 +451,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/R.bb6f128a603b39d2b6c4e3cd7e0c9e70?rik=n0utIsUyRGC5aQ&riu=http%3a%2f%2ffarm5.static.flickr.com%2f4066%2f4383457958_1ebcb5abda.jpg&ehk=fOKi6u1a%2fhwsA%2bgbav3NGjk6%2brwrae72m53U9ggXc3w%3d&risl=&pid=ImgRaw&r=0",
             "https://dailytrojan.com/wp-content/uploads/2010/03/Dim-sum-truck-1.jpg",
         ],
+        distance: 0,
     },
     {
         id: "10",
@@ -481,5 +490,6 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.MiAGrYafshORM2n_HLu4swHaHa?rs=1&pid=ImgDetMain",
             "https://photos.roaminghunger.com/1200x/c6e30f1f-dab3-4a13-9de8-24dc27b0f8dd.jpg",
         ],
+        distance: 0,
     },
 ];

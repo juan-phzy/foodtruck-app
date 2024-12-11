@@ -38,6 +38,7 @@ export interface Coordinates {
     isOpen: boolean;
     imageUrl: string;
     images: string[];
+    distance: number;
   }
   
   // types.ts

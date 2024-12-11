@@ -17,6 +17,8 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import theme from "@/theme/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { getDistance } from "geolib";
+import { FoodTruck } from "@/types";
 
 export default function Index() {
     const [region, setRegion] = useState({
@@ -38,10 +40,20 @@ export default function Index() {
 
     const [selectedTruckId, setSelectedTruckId] = useState<string | null>(null); // Track the selected truck
 
+    const foodTruckData: FoodTruck[] = FOOD_TRUCKS.map((truck) => {
+        return {
+            ...truck, // Spread the original truck object
+            distance:getDistance(truck.coordinates, {
+                    latitude: 40.7698499519505,
+                    longitude: -73.98251936106666,
+                }) / 1609.344, // Add the calculated distance
+        };
+    });
+
     const mapRef = useRef<MapView>(null); // Ref for the MapView
 
     const animationValues = useRef(
-        FOOD_TRUCKS.reduce((acc, truck) => {
+        foodTruckData.reduce((acc, truck) => {
             acc[truck.id] = new Animated.Value(1); // Initialize each truck with a default scale of 1
             return acc;
         }, {} as Record<string, Animated.Value>)
@@ -259,54 +271,56 @@ export default function Index() {
                         />
                     </View>
                 </Marker>
-                {FOOD_TRUCKS.filter(
-                    (truck) =>
-                        categoryFilters.length === 0 || // If no filters are applied, include all trucks
-                        truck.categories.some((category) =>
-                            categoryFilters.includes(category)
-                        )
-                ).map((truck) => (
-                    <Marker
-                        key={truck.id}
-                        coordinate={{
-                            latitude: truck.coordinates.latitude,
-                            longitude: truck.coordinates.longitude,
-                        }}
-                        onPress={() => handleMarkerPress(truck)} // Handle press
-                    >
-                        {/* Custom Marker View */}
-                        <View style={styles.markerContainer}>
-                            <Animated.Image
-                                source={require("@/assets/images/icon.png")}
-                                style={[
-                                    styles.markerImage,
-                                    {
-                                        transform: [
-                                            {
-                                                scale: animationValues[
-                                                    truck.id
-                                                ],
-                                            },
-                                        ],
-                                    },
-                                ]}
-                            />
-                        </View>
-                    </Marker>
-                ))}
+                {foodTruckData
+                    .filter(
+                        (truck) =>
+                            categoryFilters.length === 0 || // If no filters are applied, include all trucks
+                            truck.categories.some((category) =>
+                                categoryFilters.includes(category)
+                            )
+                    )
+                    .map((truck) => (
+                        <Marker
+                            key={truck.id}
+                            coordinate={{
+                                latitude: truck.coordinates.latitude,
+                                longitude: truck.coordinates.longitude,
+                            }}
+                            onPress={() => handleMarkerPress(truck)} // Handle press
+                        >
+                            {/* Custom Marker View */}
+                            <View style={styles.markerContainer}>
+                                <Animated.Image
+                                    source={require("@/assets/images/icon.png")}
+                                    style={[
+                                        styles.markerImage,
+                                        {
+                                            transform: [
+                                                {
+                                                    scale: animationValues[
+                                                        truck.id
+                                                    ],
+                                                },
+                                            ],
+                                        },
+                                    ]}
+                                />
+                            </View>
+                        </Marker>
+                    ))}
             </MapView>
 
             {/* Conditional Card Rendering */}
             {selectedTruckId ? (
                 <SelectedTruckCard
                     truck={
-                        FOOD_TRUCKS.find(
+                        foodTruckData.find(
                             (truck) => truck.id === selectedTruckId
                         )!
                     }
                     backFunction={() =>
                         handleMarkerPress(
-                            FOOD_TRUCKS.find(
+                            foodTruckData.find(
                                 (truck) => truck.id === selectedTruckId
                             )!
                         )
@@ -315,11 +329,11 @@ export default function Index() {
                         const num = parseInt(selectedTruckId, 10);
                         if (num === 10) {
                             handleMarkerPress(
-                                FOOD_TRUCKS.find((truck) => truck.id === "1")!
+                                foodTruckData.find((truck) => truck.id === "1")!
                             );
                         } else {
                             handleMarkerPress(
-                                FOOD_TRUCKS.find(
+                                foodTruckData.find(
                                     (truck) => truck.id === (num + 1).toString()
                                 )!
                             );
@@ -329,11 +343,13 @@ export default function Index() {
                         const num = parseInt(selectedTruckId, 10);
                         if (num === 1) {
                             handleMarkerPress(
-                                FOOD_TRUCKS.find((truck) => truck.id === "10")!
+                                foodTruckData.find(
+                                    (truck) => truck.id === "10"
+                                )!
                             );
                         } else {
                             handleMarkerPress(
-                                FOOD_TRUCKS.find(
+                                foodTruckData.find(
                                     (truck) => truck.id === (num - 1).toString()
                                 )!
                             );
@@ -348,10 +364,10 @@ export default function Index() {
                  truck changes 
                  */
                 <NearbyTrucksCard
-                    isCategoryActive = {categoryFilters.length > 0}
+                    isCategoryActive={categoryFilters.length > 0}
                     isExpanded={isExpanded}
                     onToggleExpand={() => setIsExpanded(!isExpanded)}
-                    trucks={FOOD_TRUCKS.filter(
+                    trucks={foodTruckData.filter(
                         (truck) =>
                             categoryFilters.length === 0 || // If no filters are applied, include all trucks
                             truck.categories.some((category) =>

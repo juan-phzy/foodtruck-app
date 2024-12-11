@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Text, Pressable } from "react-native";
 import { BlurView } from "expo-blur";
 import { Ionicons } from "@expo/vector-icons"; // Using Ionicons for the dropdown arrow
@@ -23,6 +23,13 @@ const NearbyTrucksCard: React.FC<NearbyTrucksCardProps> = ({
     showCategories
 }) => {
 
+    const [ sortedByRating, setSortedByRating ] = useState(false);
+
+    const [ sortedByDistance, setSortedByDistance ] = useState(false);
+
+    const sortedTrucksByRating = [...trucks].sort((a, b) => b.rating - a.rating);
+
+    const sortedTrucksByDistance = [...trucks].sort((a, b) => a.distance - b.distance);
 
     return (
         <BlurView
@@ -58,39 +65,41 @@ const NearbyTrucksCard: React.FC<NearbyTrucksCardProps> = ({
                     onPress={showCategories}
                 />
                 <CustomButton
-                    style="outlineDark"
+                    style={sortedByDistance ? "dark" : "outlineDark"}
                     verticalPadding={5}
                     fontSize={12}
                     width="fit"
                     text="Distance"
                     onPress={() => {
                         console.log("Distance Button Pressed");
+                        if(sortedByDistance){
+                            setSortedByDistance(false);
+                        } else {
+                            setSortedByDistance(true);
+                            setSortedByRating(false);
+                        }
                     }}
                 />
                 <CustomButton
-                    style="outlineDark"
+                    style={sortedByRating ? "dark" : "outlineDark"}
                     verticalPadding={5}
                     fontSize={12}
                     width="fit"
                     text="Rating"
                     onPress={() => {
-                        console.log("Rating Button Pressed");
-                    }}
-                />
-                <CustomButton
-                    style="dark"
-                    verticalPadding={5}
-                    fontSize={12}
-                    width="fit"
-                    text="Radius: 2mi"
-                    onPress={() => {
-                        console.log("Category Button Pressed");
+                        console.log("Rating Button Pressed")
+                        if(sortedByRating){
+                            setSortedByRating(false);
+                        } else {
+                            setSortedByRating(true);
+                            setSortedByDistance(false);
+                        }
                     }}
                 />
             </View>
 
             {/* Third View: TruckCards */}
-            <TruckCardList trucks={trucks} />
+            <TruckCardList trucks={sortedByRating ? sortedTrucksByRating : (sortedByDistance ? sortedTrucksByDistance: trucks)} />
 
         </BlurView>
     );

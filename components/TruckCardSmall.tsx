@@ -12,15 +12,10 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
     //temporary state for favorite icon, should be extracted from user data
     const [isFavorite, setIsFavorite] = useState(false);
 
-
-
     return (
         <View style={styles.container}>
             {/* Truck Image */}
-            <Image
-                source={{uri: truck.imageUrl}}
-                style={styles.image}
-            />
+            <Image source={{ uri: truck.imageUrl }} style={styles.image} />
 
             {/* Truck Info */}
             <View style={styles.infoContainer}>
@@ -34,11 +29,15 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
 
                 {/* Distance and Time */}
                 <Text style={styles.details}>
-                    2 mi away ⦁ 5 min drive ⦁ 15 min walk
+                    {`${truck.distance.toFixed(2)} mi ⦁ `}
+                    {`${Math.round(truck.distance * 3)} min drive ⦁ `}
+                    {`${Math.round(truck.distance * 20)} min walk `}
                 </Text>
 
                 {/* Description / Categories */}
-                <Text style={styles.categories}>{truck.categories.join(', ')}</Text>
+                <Text style={styles.categories}>
+                    {truck.categories.join(", ")}
+                </Text>
 
                 {/* Star Ratings */}
                 <View style={styles.ratingContainer}>
@@ -54,8 +53,10 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
                             color={theme.colors.primary}
                         />
                     ))}
-                    <Text style={{marginLeft:5, fontSize:12}}>{truck.rating}</Text>
-                    <Text style={{fontSize:12}}>({truck.reviewCount})</Text>
+                    <Text style={{ marginLeft: 5, fontSize: 12 }}>
+                        {truck.rating}
+                    </Text>
+                    <Text style={{ fontSize: 12 }}>({truck.reviewCount})</Text>
                 </View>
             </View>
 
