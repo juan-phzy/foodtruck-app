@@ -378,7 +378,7 @@ export const FOOD_TRUCKS: FoodTruck[] = [
     {
         id: "8",
         name: "Kebab Junction",
-        categories: ["Mediterranean", "Kebabs", "Middle Eastern"],
+        categories: ["Kebabs", "Middle Eastern"],
         location: "789 Kebab Ln, Chicago, IL",
         type: "Stationary",
         coordinates: {

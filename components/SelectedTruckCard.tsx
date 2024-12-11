@@ -76,7 +76,7 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
                     <Text style={styles.bolded}>
                         {truck.categories.join(", ")}
                     </Text>
-                    <Text style={styles.bolded}>
+                    <Text style={[styles.bolded,{fontSize:12}]}>
                         {`${truck.distance.toFixed(2)} mi ⦁ `}
                         {`${Math.round(truck.distance * 3)} min drive ⦁ `}
                         {`${Math.round(truck.distance * 20)} min walk `}
@@ -259,6 +259,7 @@ const styles = StyleSheet.create({
     categoryDistance: {
         flexDirection: "row",
         justifyContent: "space-between",
+        alignItems: "center",
     },
     vert: {
         flexDirection: "column",
