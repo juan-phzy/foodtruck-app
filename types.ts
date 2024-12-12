@@ -39,6 +39,19 @@ export interface Coordinates {
     imageUrl: string;
     images: string[];
     distance: number;
+    menu: ItemCategory[];
+  }
+
+  export interface ItemCategory {
+    category: string;
+    items: Item[];
+  }
+
+  export interface Item {
+    name: string;
+    description: string;
+    price: number;
+    imageUrl: string;
   }
   
   // types.ts

@@ -140,6 +140,50 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.avyUpTdLZLZFC2gbyAE51gHaFj?w=207&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
         ],
         distance: 0,
+        menu: [
+            {
+                category: "Classic Burgers",
+                items: [
+                    {
+                        name: "Cheeseburger",
+                        description:
+                            "Juicy beef patty topped with melted cheddar cheese, lettuce, tomato, and pickles.",
+                        price: 10.99,
+                        imageUrl:
+                            "https://www.foodrepublic.com/wp-content/uploads/2012/03/033_FR11785.jpg",
+                    },
+                    {
+                        name: "Bacon Burger",
+                        description:
+                            "Beef patty topped with crispy bacon, lettuce, and a special house sauce.",
+                        price: 12.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/OIP.JGigDSijh-lKRw6YaZQGVwHaDs?rs=1&pid=ImgDetMain",
+                    },
+                ],
+            },
+            {
+                category: "Gourmet Burgers",
+                items: [
+                    {
+                        name: "Mushroom Swiss Burger",
+                        description:
+                            "Beef patty topped with sautéed mushrooms and Swiss cheese.",
+                        price: 13.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/OIP.qaM3W2UhxEq9XFBJMGF7vwHaE8?rs=1&pid=ImgDetMain",
+                    },
+                    {
+                        name: "Spicy Jalapeño Burger",
+                        description:
+                            "Beef patty with spicy jalapeños, pepper jack cheese, and chipotle mayo.",
+                        price: 11.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/OIP.r1CzwUrnuV3Rt_ZNLkd3kAHaFj?rs=1&pid=ImgDetMain",
+                    },
+                ],
+            },
+        ],
     },
     {
         id: "2",
@@ -179,6 +223,92 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.3mqB4hQyCFcWbIMgn4Xc-gAAAA?w=225&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
         ],
         distance: 0,
+        menu: [
+            {
+                category: "Classic Tacos",
+                items: [
+                    {
+                        name: "Beef Taco",
+                        description:
+                            "Seasoned ground beef, lettuce, cheddar cheese, and diced tomatoes in a soft tortilla.",
+                        price: 3.99,
+                        imageUrl:
+                            "https://www.thecookierookie.com/wp-content/uploads/2020/01/crockpot-taco-meat-beef-tacos-6-of-8-1.jpg",
+                    },
+                    {
+                        name: "Chicken Taco",
+                        description:
+                            "Grilled chicken, pico de gallo, and shredded lettuce in a warm tortilla.",
+                        price: 4.49,
+                        imageUrl:
+                            "https://butteryourbiscuit.com/wp-content/uploads/2020/10/baked-chicken-tacos-1.jpeg",
+                    },
+                ],
+            },
+            {
+                category: "Gourmet Tacos",
+                items: [
+                    {
+                        name: "Fish Taco",
+                        description:
+                            "Crispy fried fish, cabbage slaw, and tangy lime crema in a soft tortilla.",
+                        price: 5.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/R.a128422830f95e91ac645e879148c305?rik=sjfaFmBBvs8CUA&pid=ImgRaw&r=0",
+                    },
+                    {
+                        name: "Shrimp Taco",
+                        description:
+                            "Spicy grilled shrimp, avocado slices, and cilantro on a warm tortilla.",
+                        price: 6.49,
+                        imageUrl:
+                            "https://th.bing.com/th/id/OIP.ZjX1bH4Hvvwxxn7WBRrBvgHaLH?rs=1&pid=ImgDetMain",
+                    },
+                ],
+            },
+            {
+                category: "Classic Tacos",
+                items: [
+                    {
+                        name: "Beef Taco",
+                        description:
+                            "Seasoned ground beef, lettuce, cheddar cheese, and diced tomatoes in a soft tortilla.",
+                        price: 3.99,
+                        imageUrl:
+                            "https://www.thecookierookie.com/wp-content/uploads/2020/01/crockpot-taco-meat-beef-tacos-6-of-8-1.jpg",
+                    },
+                    {
+                        name: "Chicken Taco",
+                        description:
+                            "Grilled chicken, pico de gallo, and shredded lettuce in a warm tortilla.",
+                        price: 4.49,
+                        imageUrl:
+                            "https://butteryourbiscuit.com/wp-content/uploads/2020/10/baked-chicken-tacos-1.jpeg",
+                    },
+                ],
+            },
+            {
+                category: "Gourmet Tacos",
+                items: [
+                    {
+                        name: "Fish Taco",
+                        description:
+                            "Crispy fried fish, cabbage slaw, and tangy lime crema in a soft tortilla.",
+                        price: 5.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/R.a128422830f95e91ac645e879148c305?rik=sjfaFmBBvs8CUA&pid=ImgRaw&r=0",
+                    },
+                    {
+                        name: "Shrimp Taco",
+                        description:
+                            "Spicy grilled shrimp, avocado slices, and cilantro on a warm tortilla.",
+                        price: 6.49,
+                        imageUrl:
+                            "https://th.bing.com/th/id/OIP.ZjX1bH4Hvvwxxn7WBRrBvgHaLH?rs=1&pid=ImgDetMain",
+                    },
+                ],
+            },
+        ],
     },
     {
         id: "3",
@@ -218,6 +348,50 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.1Y6VTuruKYqwA5c7n-xGLAHaFj?pid=ImgDet&w=474&h=355&rs=1",
         ],
         distance: 0,
+        menu: [
+            {
+                category: "Classic Ribs",
+                items: [
+                    {
+                        name: "BBQ Pork Ribs",
+                        description:
+                            "Slow-cooked pork ribs glazed with a smoky BBQ sauce.",
+                        price: 14.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/R.634d586d591cff2083efec97f5768510?rik=WJp7wM8uDk4t6A&pid=ImgRaw&r=0",
+                    },
+                    {
+                        name: "Honey-Glazed Ribs",
+                        description:
+                            "Tender ribs coated in a sweet and sticky honey glaze.",
+                        price: 15.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/OIP.p7QW1pFrPnl-qA3Z1rRVnwHaKT?rs=1&pid=ImgDetMain",
+                    },
+                ],
+            },
+            {
+                category: "Specialty Ribs",
+                items: [
+                    {
+                        name: "Spicy Cajun Ribs",
+                        description:
+                            "Ribs seasoned with Cajun spices and served with a tangy dipping sauce.",
+                        price: 16.49,
+                        imageUrl:
+                            "https://i0.wp.com/frugalhausfrau.com/wp-content/uploads/2020/06/Sweet-Spicy-Cajun-Spare-Ribs-4.jpg?fit=923%2C1024&ssl=1",
+                    },
+                    {
+                        name: "Asian Sticky Ribs",
+                        description:
+                            "Ribs marinated in a soy-ginger glaze and topped with sesame seeds.",
+                        price: 16.99,
+                        imageUrl:
+                            "https://apressurecooker.com/wp-content/uploads/2021/02/chinese-sticky-ribs-recipe-1152x1536.jpg",
+                    },
+                ],
+            },
+        ],
     },
     {
         id: "4",
@@ -257,6 +431,50 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.X68S1k8TOEp_UnPFwGvbZQAAAA?pid=ImgDet&w=474&h=316&rs=1",
         ],
         distance: 0,
+        menu: [
+            {
+                category: "Classic Pizzas",
+                items: [
+                    {
+                        name: "Margherita Pizza",
+                        description:
+                            "Fresh mozzarella, tomato sauce, and basil on a crispy crust.",
+                        price: 10.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/OIP.A_7IadfotxHc56iM-XuY5AHaJd?rs=1&pid=ImgDetMain",
+                    },
+                    {
+                        name: "Pepperoni Pizza",
+                        description:
+                            "Classic pepperoni slices with mozzarella and tomato sauce.",
+                        price: 12.99,
+                        imageUrl:
+                            "https://fromthehorsesmouth.org.uk/wp-content/uploads/2019/10/easy-pepperoni-pizza-lead-4-731x1024.jpg",
+                    },
+                ],
+            },
+            {
+                category: "Specialty Pizzas",
+                items: [
+                    {
+                        name: "BBQ Chicken Pizza",
+                        description:
+                            "Grilled chicken, BBQ sauce, red onions, and mozzarella.",
+                        price: 13.99,
+                        imageUrl:
+                            "https://lilluna.com/wp-content/uploads/2014/05/barbecue-chicken-pizza-resize-7.jpg",
+                    },
+                    {
+                        name: "Veggie Supreme Pizza",
+                        description:
+                            "A mix of fresh vegetables, mozzarella, and tomato sauce.",
+                        price: 12.49,
+                        imageUrl:
+                            "https://th.bing.com/th/id/OIP.e8DKB-liIZTbNTNwfw1m0gHaE8?rs=1&pid=ImgDetMain",
+                    },
+                ],
+            },
+        ],
     },
     {
         id: "5",
@@ -296,6 +514,50 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.Nfe9RvR9v1dVR5OtNwA1ugHaHa?pid=ImgDet&w=474&h=474&rs=1",
         ],
         distance: 0,
+        menu: [
+            {
+                category: "Vegan Bowls",
+                items: [
+                    {
+                        name: "Quinoa Power Bowl",
+                        description:
+                            "Quinoa, roasted vegetables, and tahini dressing.",
+                        price: 9.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/OIP.rIlbUwt1Fam_Vp4KdX_jPwHaLH?rs=1&pid=ImgDetMain",
+                    },
+                    {
+                        name: "Avocado Chickpea Salad",
+                        description:
+                            "Chickpeas, avocado, cucumber, and lime dressing.",
+                        price: 8.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/R.52dcb4e753efcd697e91922821a4ee08?rik=V6PPOUilATtMtw&pid=ImgRaw&r=0",
+                    },
+                ],
+            },
+            {
+                category: "Vegan Wraps",
+                items: [
+                    {
+                        name: "Mediterranean Falafel Wrap",
+                        description:
+                            "Falafel, hummus, lettuce, and tomato in a soft wrap.",
+                        price: 7.99,
+                        imageUrl:
+                            "https://pickyeaterblog.com/wp-content/uploads/2022/11/healthy-falafel-wrap-recipe.jpg",
+                    },
+                    {
+                        name: "Spicy Tofu Wrap",
+                        description:
+                            "Grilled tofu, spicy mayo, and fresh veggies.",
+                        price: 8.49,
+                        imageUrl:
+                            "https://www.ourhappymess.com/wp-content/uploads/2022/01/Tofu-Wrap-1_.jpg",
+                    },
+                ],
+            },
+        ],
     },
     {
         id: "6",
@@ -335,6 +597,48 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.COHUmm0ZKLswp-u9TDQDgwHaJQ?pid=ImgDet&w=474&h=592&rs=1",
         ],
         distance: 0,
+        menu: [
+            {
+                category: "Classic Sushi Rolls",
+                items: [
+                    {
+                        name: "California Roll",
+                        description:
+                            "Crab stick, avocado, cucumber, and sesame seeds.",
+                        price: 8.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/R.3155b2dc431681ad2439a23366f4d5a4?rik=mZVvtdX2CmFrZg&pid=ImgRaw&r=0",
+                    },
+                    {
+                        name: "Spicy Tuna Roll",
+                        description: "Fresh tuna, spicy mayo, and scallions.",
+                        price: 9.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/OIP.E_drMaie2v0Sl0ruy38GpAHaE8?rs=1&pid=ImgDetMain",
+                    },
+                ],
+            },
+            {
+                category: "Specialty Sushi Rolls",
+                items: [
+                    {
+                        name: "Dragon Roll",
+                        description: "Eel, cucumber, avocado, and unagi sauce.",
+                        price: 12.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/R.573094b94e1a32bd0a5053ee34c731bd?rik=vksMic%2fa22KYOA&pid=ImgRaw&r=0",
+                    },
+                    {
+                        name: "Rainbow Roll",
+                        description:
+                            "California roll topped with assorted sashimi.",
+                        price: 13.99,
+                        imageUrl:
+                            "https://izzycooking.com/wp-content/uploads/2021/03/Rainbow-Roll-1.jpg",
+                    },
+                ],
+            },
+        ],
     },
     {
         id: "7",
@@ -374,6 +678,50 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.WZWWEGSETiaj5dOob2PmSQHaHa?pid=ImgDet&w=474&h=474&rs=1",
         ],
         distance: 0,
+        menu: [
+            {
+                category: "Sweet Crepes",
+                items: [
+                    {
+                        name: "Nutella Banana Crepe",
+                        description:
+                            "Filled with creamy Nutella and fresh banana slices.",
+                        price: 7.99,
+                        imageUrl:
+                            "https://bellyfull.net/wp-content/uploads/2021/07/Banana-Nutella-Crepes-blog-3.jpg",
+                    },
+                    {
+                        name: "Strawberry Delight Crepe",
+                        description:
+                            "Stuffed with strawberries, whipped cream, and a drizzle of chocolate sauce.",
+                        price: 8.99,
+                        imageUrl:
+                            "https://www.tasteofhome.com/wp-content/uploads/2018/01/Strawberry-Creme-Crepes_exps25512_BB2406671B09_02_3b_RMS.jpg",
+                    },
+                ],
+            },
+            {
+                category: "Savory Crepes",
+                items: [
+                    {
+                        name: "Ham and Cheese Crepe",
+                        description:
+                            "Filled with smoked ham and melted Swiss cheese.",
+                        price: 9.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/OIP.bRewNRSmSIMIsNldZPNhogHaHa?rs=1&pid=ImgDetMain",
+                    },
+                    {
+                        name: "Spinach and Feta Crepe",
+                        description:
+                            "Stuffed with sautéed spinach and crumbled feta cheese.",
+                        price: 10.99,
+                        imageUrl:
+                            "https://cottagelife.com/wp-content/uploads/2022/06/AdobeStock_98490564-1.jpeg",
+                    },
+                ],
+            },
+        ],
     },
     {
         id: "8",
@@ -413,6 +761,50 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://th.bing.com/th/id/OIP.sOhec202eKG4czeRM9qCJgHaEJ?pid=ImgDet&w=474&h=265&rs=1",
         ],
         distance: 0,
+        menu: [
+            {
+                category: "Sweet Crepes",
+                items: [
+                    {
+                        name: "Nutella Banana Crepe",
+                        description:
+                            "Filled with creamy Nutella and fresh banana slices.",
+                        price: 7.99,
+                        imageUrl:
+                            "https://bellyfull.net/wp-content/uploads/2021/07/Banana-Nutella-Crepes-blog-3.jpg",
+                    },
+                    {
+                        name: "Strawberry Delight Crepe",
+                        description:
+                            "Stuffed with strawberries, whipped cream, and a drizzle of chocolate sauce.",
+                        price: 8.99,
+                        imageUrl:
+                            "https://www.tasteofhome.com/wp-content/uploads/2018/01/Strawberry-Creme-Crepes_exps25512_BB2406671B09_02_3b_RMS.jpg",
+                    },
+                ],
+            },
+            {
+                category: "Savory Crepes",
+                items: [
+                    {
+                        name: "Ham and Cheese Crepe",
+                        description:
+                            "Filled with smoked ham and melted Swiss cheese.",
+                        price: 9.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/OIP.bRewNRSmSIMIsNldZPNhogHaHa?rs=1&pid=ImgDetMain",
+                    },
+                    {
+                        name: "Spinach and Feta Crepe",
+                        description:
+                            "Stuffed with sautéed spinach and crumbled feta cheese.",
+                        price: 10.99,
+                        imageUrl:
+                            "https://cottagelife.com/wp-content/uploads/2022/06/AdobeStock_98490564-1.jpeg",
+                    },
+                ],
+            },
+        ],
     },
     {
         id: "9",
@@ -452,6 +844,50 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://dailytrojan.com/wp-content/uploads/2010/03/Dim-sum-truck-1.jpg",
         ],
         distance: 0,
+        menu: [
+            {
+                category: "Dim Sum Classics",
+                items: [
+                    {
+                        name: "Shrimp Har Gow",
+                        description:
+                            "Delicate steamed dumplings with shrimp filling.",
+                        price: 9.99,
+                        imageUrl:
+                            "https://www.tastingtable.com/img/gallery/har-gow-the-delicate-shrimp-dumplings-that-are-a-dim-sum-staple/l-intro-1679071100.jpg",
+                    },
+                    {
+                        name: "Char Siu Bao",
+                        description:
+                            "Steamed buns filled with sweet barbecue pork.",
+                        price: 7.99,
+                        imageUrl:
+                            "https://th.bing.com/th/id/OIP.eNy5wowyaqOqJETaIpsjTgHaE7?rs=1&pid=ImgDetMain",
+                    },
+                ],
+            },
+            {
+                category: "Sweet Treats",
+                items: [
+                    {
+                        name: "Egg Tarts",
+                        description:
+                            "Sweet custard tarts with a flaky pastry crust.",
+                        price: 5.99,
+                        imageUrl:
+                            "https://www.jocooks.com/wp-content/uploads/2021/08/egg-tarts-1-19.jpg",
+                    },
+                    {
+                        name: "Sesame Balls",
+                        description:
+                            "Crispy fried balls filled with sweet red bean paste.",
+                        price: 6.49,
+                        imageUrl:
+                            "https://www.thespruceeats.com/thmb/N8wuye6vfugVfQ3IILXY9elJxI0=/4494x3000/filters:fill(auto,1)/sesame-seed-balls-694446-hero-01-5c018766c9e77c00019cd880.jpg",
+                    },
+                ],
+            },
+        ],
     },
     {
         id: "10",
@@ -491,5 +927,46 @@ export const FOOD_TRUCKS: FoodTruck[] = [
             "https://photos.roaminghunger.com/1200x/c6e30f1f-dab3-4a13-9de8-24dc27b0f8dd.jpg",
         ],
         distance: 0,
+        menu: [
+            {
+                category: "Classic Pastas",
+                items: [
+                    {
+                        name: "Spaghetti Bolognese",
+                        description: "Rich meat sauce with a touch of basil.",
+                        price: 12.99,
+                        imageUrl:
+                            "https://www.ericlyons.co.uk/wp-content/uploads/2021/06/8K0A7866-2000x1333.jpg",
+                    },
+                    {
+                        name: "Fettuccine Alfredo",
+                        description: "Creamy Alfredo sauce over fresh pasta.",
+                        price: 11.99,
+                        imageUrl:
+                            "https://hips.hearstapps.com/delish/assets/17/36/1504715566-delish-fettuccine-alfredo.jpg",
+                    },
+                ],
+            },
+            {
+                category: "Stuffed Pastas",
+                items: [
+                    {
+                        name: "Cheese Ravioli",
+                        description:
+                            "Stuffed with ricotta cheese and served with marinara sauce.",
+                        price: 12.99,
+                        imageUrl:
+                            "https://iambaker.net/wp-content/uploads/2019/11/ravioli-blog-2.jpg",
+                    },
+                    {
+                        name: "Meat Ravioli",
+                        description: "Stuffed with seasoned ground beef.",
+                        price: 13.49,
+                        imageUrl:
+                            "https://www.foodandwine.com/thmb/9A0UrYmDuzWLB3NK66ejinrdrGM=/2000x1334/filters:fill(auto,1)/meat-ravioli-filling-FT-RECIPE0721-2-caea06001b9642219d2a0ba2a466eabe.jpg",
+                    },
+                ],
+            },
+        ],
     },
 ];
