@@ -22,6 +22,7 @@ interface SelectedTruckCardProps {
     nextTruck: () => void;
     previousTruck: () => void;
     openMenu: () => void;
+    openTruckPage: () => void;
 }
 
 const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
@@ -30,6 +31,7 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
     previousTruck,
     nextTruck,
     openMenu,
+    openTruckPage,
 }) => {
     // temporary state, get from user lists later
     const [isFavorite, setIsFavorite] = useState(false);
@@ -137,7 +139,7 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
                         <Text style={styles.buttonText}>Directions</Text>
                     </Pressable>
 
-                    <Pressable style={styles.button}>
+                    <Pressable style={styles.button} onPress={openTruckPage}>
                         <MaterialCommunityIcons
                             name="truck-outline"
                             size={35}

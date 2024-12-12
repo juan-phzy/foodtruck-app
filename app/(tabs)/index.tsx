@@ -21,6 +21,7 @@ import { getDistance } from "geolib";
 import { FoodTruck } from "@/types";
 import CategoryModal from "@/components/CategoryModal";
 import MenuModal from "@/components/MenuModal";
+import TruckPage from "@/components/TruckPage";
 
 export default function Index() {
     const [region, setRegion] = useState({
@@ -39,6 +40,8 @@ export default function Index() {
     const [showCategoryModal, setShowCategoryModal] = useState(false); // Category modal state
 
     const [showMenuModal, setShowMenuModal] = useState(false); // Menu modal state
+
+    const [showTruckPage, setShowTruckPage] = useState(false); // Truck page state
 
     const [isExpanded, setIsExpanded] = useState(false); // Card state
 
@@ -157,6 +160,18 @@ export default function Index() {
             {showMenuModal && (
                 <MenuModal
                     closeMenu={() => setShowMenuModal(false)}
+                    truck={
+                        foodTruckData.find(
+                            (truck) => truck.id === selectedTruckId
+                        )!
+                    }
+                />
+            )}
+
+            {/* Truck Page */}
+            { showTruckPage && (
+                <TruckPage
+                    closeTruckPage={() => setShowTruckPage(false)}
                     truck={
                         foodTruckData.find(
                             (truck) => truck.id === selectedTruckId
@@ -293,6 +308,7 @@ export default function Index() {
                         }
                     }}
                     openMenu={() => setShowMenuModal(true)}
+                    openTruckPage={() => setShowTruckPage(true)}
                 />
             ) : (
                 /* Make The Truck Cards in the list pressable
