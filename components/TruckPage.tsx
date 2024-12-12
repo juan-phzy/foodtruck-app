@@ -20,6 +20,7 @@ const TruckPage: React.FC<TruckPageProps> = ({ closeTruckPage, truck }) => {
     const [isFavorite, setIsFavorite] = useState(false);
     const [showHours, setShowHours] = useState(false);
     const [userRating, setUserRating] = useState(0);
+    const [hoveredRating, setHoveredRating] = useState(0);
 
     const today = new Date();
     const weekdays: (keyof Hours)[] = [
@@ -32,6 +33,10 @@ const TruckPage: React.FC<TruckPageProps> = ({ closeTruckPage, truck }) => {
         "saturday",
     ];
     const weekday: keyof Hours = weekdays[today.getDay()];
+
+    const handleRatingSubmit = () => {
+        alert(`You rated ${userRating} stars!`);
+    };
 
     return (
         <View style={styles.truckPageContainer}>
@@ -120,7 +125,7 @@ const TruckPage: React.FC<TruckPageProps> = ({ closeTruckPage, truck }) => {
                             <Ionicons
                                 name={showHours ? "chevron-down" : "chevron-up"}
                                 size={30}
-                                color={theme.colors.primary} // Orange color from your theme
+                                color={theme.colors.primary}
                             />
                         </Pressable>
                     </View>
@@ -132,7 +137,11 @@ const TruckPage: React.FC<TruckPageProps> = ({ closeTruckPage, truck }) => {
                         <View style={styles.scheduleContainer}>
                             {weekdays.map((day) => (
                                 <View style={styles.scheduleRow} key={day}>
-                                    <Text>{day.charAt(0).toUpperCase() + day.slice(1)}:{" "}</Text>
+                                    <Text>
+                                        {day.charAt(0).toUpperCase() +
+                                            day.slice(1)}
+                                        :{" "}
+                                    </Text>
                                     <Text>{truck.hours[day]}</Text>
                                 </View>
                             ))}
@@ -142,12 +151,82 @@ const TruckPage: React.FC<TruckPageProps> = ({ closeTruckPage, truck }) => {
                 <View style={styles.contentRow}>
                     <Text style={styles.contentRowTitle}>Ratings</Text>
                     <View style={styles.contentRowBody}>
-                        {/* Your Ratings Code Goes Here */}
+                        {/* Display existing ratings */}
+                        <View style={styles.ratingContainer}>
+                            <Text
+                                style={{
+                                    marginLeft: 5,
+                                    fontSize: 14,
+                                    color: theme.colors.primary,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                            >
+                                {truck.rating}
+                            </Text>
+                            {Array.from({ length: 5 }, (_, index) => (
+                                <Ionicons
+                                    key={index}
+                                    name={
+                                        index < Math.floor(truck.rating)
+                                            ? "star"
+                                            : "star-outline"
+                                    }
+                                    size={16}
+                                    color={theme.colors.primary}
+                                />
+                            ))}
+
+                            <Text style={{ fontSize: 12 }}>
+                                ({truck.reviewCount})
+                            </Text>
+                        </View>
+
+                        {/* Interactive rating submission */}
+                        <View style={styles.starContainer}>
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <Pressable
+                                    key={star}
+                                    onPress={() => setUserRating(star)}
+                                >
+                                    <Ionicons
+                                        name={
+                                            star <=
+                                            (hoveredRating || userRating)
+                                                ? "star"
+                                                : "star-outline"
+                                        }
+                                        size={30}
+                                        color={theme.colors.primary}
+                                    />
+                                </Pressable>
+                            ))}
+                        </View>
+                        <Pressable
+                            style={styles.submitButton}
+                            onPress={handleRatingSubmit}
+                        >
+                            <Text style={styles.submitText}>Submit</Text>
+                        </Pressable>
                     </View>
                 </View>
                 <View style={styles.contentRow}>
                     <Text style={styles.contentRowTitle}>Contact</Text>
-                    <Text style={styles.contentRowBody}>{truck.type}</Text>
+                    <View style={styles.contentRowBody}>
+                        {/* Email */}
+                        <Text>Email: {truck.contact.email}</Text>
+
+                        {/* Social Links */}
+                        {Object.entries(truck.contact.social).map(
+                            ([platform, handle]) => (
+                                <Text key={platform}>
+                                    {platform.charAt(0).toUpperCase() +
+                                        platform.slice(1)}
+                                    : {handle}
+                                </Text>
+                            )
+                        )}
+                    </View>
                 </View>
             </View>
         </View>
@@ -238,35 +317,32 @@ const styles = StyleSheet.create({
     },
     hoursTitleRow: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
         alignItems: "center",
         borderBottomColor: "rgba(0, 0, 0, 0.1)",
+
         borderBottomWidth: 1,
         fontWeight: "bold",
+        alignSelf: "flex-start",
     },
     hoursTitleText: {
         fontWeight: "bold",
-        borderColor: "red",
-        borderWidth: 1,
     },
     dropdownButton: {
         justifyContent: "center",
         alignItems: "center",
-        paddingHorizontal: 50,
-        borderColor: "red",
-        borderWidth: 1,
+        paddingLeft: 120,
     },
-    scheduleContainer:{
+    scheduleContainer: {
         marginTop: 10,
         gap: 5,
         width: "85%",
     },
-    scheduleRow :{
+    scheduleRow: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
     },
-    
     contentRowTitle: {
         flexDirection: "row",
         width: "100%",
@@ -276,8 +352,27 @@ const styles = StyleSheet.create({
     },
     contentRowBody: {
         gap: 5,
-        borderColor: "red",
-        borderWidth: 1,
+    },
+    starContainer: {
+        flexDirection: "row",
+        marginVertical: 10,
+    },
+    ratingContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 2,
+        paddingVertical: 5,
+    },
+    submitButton: {
+        backgroundColor: theme.colors.primary,
+        padding: 10,
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    submitText: {
+        color: theme.colors.white,
+        fontWeight: "bold",
     },
 });
 
