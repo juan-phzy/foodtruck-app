@@ -48,7 +48,7 @@ const MenuModal: React.FC<MenuModalProps> = ({ closeMenu, truck }) => {
             </View>
 
             <FlatList
-                style={{ flex: 1, paddingHorizontal: 10}}
+                style={{ flex: 1, paddingHorizontal: 10 }}
                 data={truck.menu}
                 ListHeaderComponent={() => <View style={{ height: 10 }} />}
                 ListFooterComponent={() => <View style={{ height: 20 }} />}
