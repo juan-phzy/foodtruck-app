@@ -6,6 +6,7 @@ import { useState } from "react";
 import {
     ImageBackground,
     Pressable,
+    ScrollView,
     StyleSheet,
     Text,
     View,
@@ -100,7 +101,7 @@ const TruckPage: React.FC<TruckPageProps> = ({ closeTruckPage, truck }) => {
                     </View>
                 </ImageBackground>
             </View>
-            <View style={styles.truckPageContent}>
+            <ScrollView style={styles.truckPageContent}>
                 <View style={styles.contentRow}>
                     <Text style={styles.contentRowTitle}>Location</Text>
                     <Text style={styles.contentRowBody}>{truck.location}</Text>
@@ -228,7 +229,7 @@ const TruckPage: React.FC<TruckPageProps> = ({ closeTruckPage, truck }) => {
                         )}
                     </View>
                 </View>
-            </View>
+            </ScrollView>
         </View>
     );
 };
@@ -244,6 +245,9 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0,
         zIndex: 100,
+        borderColor: "red",
+        borderWidth: 2,
+        overflowY: "scroll",
     },
     truckPageHeader: {
         height: 250,
