@@ -1,5 +1,5 @@
 import { Text } from "react-native";
-import { Redirect, Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router"; //Tabs for Tab Navigation on the bottom
 import theme from "@/theme/theme";
 import { Ionicons } from "@expo/vector-icons";
 import { useSession } from "@/context/ctx";
@@ -12,7 +12,7 @@ export default function TabsLayout() {
     }
 
     if (!session) {
-        return <Redirect href="/sign-in" />;
+        return <Redirect href="/sign-in" />; //Ensure the user is signed in
     }
 
     return (

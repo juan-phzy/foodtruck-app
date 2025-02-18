@@ -3,10 +3,11 @@ import { StyleSheet, View, Text, TextInput } from "react-native";
 import theme from "@/theme/theme";
 
 interface CustomTextInputProps {
-  readonly label: string;
+  readonly label: string; //These values can't be changed after being assigned
   readonly placeholder: string;
 }
 
+//A nice reusable textfield that can show different placeholders and labels
 export default function CustomTextInput({ label, placeholder }: CustomTextInputProps) {
   return (
     <View style={styles.inputWrapper}>

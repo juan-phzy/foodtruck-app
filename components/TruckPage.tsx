@@ -12,6 +12,7 @@ import {
     View,
 } from "react-native";
 
+//The regular page where user can fav or rate it, and shows detailed info of truck
 interface TruckPageProps {
     closeTruckPage: () => void;
     truck: FoodTruck;

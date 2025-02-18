@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import theme from "@/theme/theme";
 import { FoodTruck } from "@/types";
 
+//renders truck details such as names, favs, image,categories, etc
 interface TruckCardSmallProps {
     truck: FoodTruck;
 }

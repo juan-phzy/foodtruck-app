@@ -1,7 +1,8 @@
 import { useContext, createContext, type PropsWithChildren } from 'react';
 import { useStorageState } from '../storage/useStorageState';
 
-const AuthContext = createContext<{
+{/*Creates a context with sign in/Up, is a session present, and is the data loading*/}
+const AuthContext = createContext<{ 
   signIn: () => void;
   signOut: () => void;
   session?: string | null;
@@ -14,7 +15,7 @@ const AuthContext = createContext<{
 });
 
 // This hook can be used to access the user info.
-export function useSession() {
+export function useSession() { {/*Allows the use of the above methods in any files by destructuring */}
   const value = useContext(AuthContext);
   if (process.env.NODE_ENV !== 'production') {
     if (!value) {
@@ -25,12 +26,15 @@ export function useSession() {
   return value;
 }
 
+
+//Wraps the app in a session and ensures authetication
 export function SessionProvider({ children }: Readonly<PropsWithChildren<{}>>) {
   const [[isLoading, session], setSession] = useStorageState('session');
 
   return (
     <AuthContext.Provider
     value={{
+      //Sign in and out methods are defined here
       signIn: () => {
         // Perform sign-in logic here
           setSession('xxx');

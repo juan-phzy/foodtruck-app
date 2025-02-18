@@ -1,6 +1,7 @@
 import { Text, View, Button } from "react-native";
 import { useSession } from "@/context/ctx";
 
+//Basic Sign out function from custom UseSession
 export default function Profile() {
     const { signOut } = useSession();
 

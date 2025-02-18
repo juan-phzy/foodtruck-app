@@ -10,6 +10,7 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useSession } from "@/context/ctx";
 import { router } from "expo-router";
 
+//Understands whole file
 export default function SignIn() {
     const [signInOption, setSignInOption] = useState<"Phone" | "Email">(
         "Phone"

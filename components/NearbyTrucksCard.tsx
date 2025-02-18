@@ -99,6 +99,7 @@ const NearbyTrucksCard: React.FC<NearbyTrucksCardProps> = ({
             </View>
 
             {/* Third View: TruckCards */}
+            {/* sorted based on either the rating or distance, depending on the active filter */}
             <TruckCardList trucks={sortedByRating ? sortedTrucksByRating : (sortedByDistance ? sortedTrucksByDistance: trucks)} />
 
         </BlurView>

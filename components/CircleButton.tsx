@@ -2,8 +2,9 @@ import React from "react";
 import { View, Pressable, StyleSheet } from "react-native";
 import theme from "@/theme/theme";
 
+//Readonly makes sure props can't be changed inside this component
 type CircleButtonProps = Readonly<{
-    icon: React.ReactNode;
+    icon: React.ReactNode; //Could be any react element
     onPress: () => void;
 }>;
 

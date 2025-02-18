@@ -17,6 +17,8 @@ interface CategoryModalProps {
     categoryFilters: string[];
 }
 
+//React.FC makes sure that this is a function component rather than a class component
+//And automatically infers children as prop
 const CategoryModal: React.FC<CategoryModalProps> = ({
     setShowCategoryModal,
     setCategoryFilters,
@@ -68,6 +70,7 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
                 </Pressable>
             </View>
 
+            {/*Creates a list of categories from the predefined constant file */}
             <FlatList
                 style={styles.categoryListView}
                 columnWrapperStyle={styles.columnWrapper} // Add gap between columns

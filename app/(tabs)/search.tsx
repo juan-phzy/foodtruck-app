@@ -1,5 +1,6 @@
 import { Text, View } from "react-native";
 
+//Yep nothing much going on here
 export default function Search() {
   return (
     <View

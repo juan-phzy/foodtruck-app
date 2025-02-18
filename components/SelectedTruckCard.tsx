@@ -16,6 +16,8 @@ import {
 import theme from "@/theme/theme";
 import { FoodTruck } from "@/types";
 
+//Shows more details about the truck, hours, menus, ratings, etc
+//Also allows user to switch to the following or previous trucks, which is defined at parent
 interface SelectedTruckCardProps {
     truck: FoodTruck;
     backFunction: () => void;

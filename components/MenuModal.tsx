@@ -5,7 +5,7 @@ import {
     StyleSheet,
     Text,
     View,
-} from "react-native";
+} from "react-native"; //FlatList only renders items visible on screen, which is why it is used to generate long lists
 import theme from "@/theme/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -47,9 +47,11 @@ const MenuModal: React.FC<MenuModalProps> = ({ closeMenu, truck }) => {
                 </Text>
             </View>
 
+{/*renders the food category*/}
             <FlatList
                 style={{ flex: 1, paddingHorizontal: 10 }}
                 data={truck.menu}
+                //Uses for spacings on top, bottom, and in between the lists
                 ListHeaderComponent={() => <View style={{ height: 10 }} />}
                 ListFooterComponent={() => <View style={{ height: 20 }} />}
                 ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
@@ -69,6 +71,7 @@ const MenuModal: React.FC<MenuModalProps> = ({ closeMenu, truck }) => {
                                 </Text>
                             </View>
 
+{/*renders each item on the menu */}
                             <FlatList
                                 style={{ flex: 1 }}
                                 data={menu.items}

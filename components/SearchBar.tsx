@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import theme from "@/theme/theme";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
+//Allows for users to search places with Google Autocomplete, and they are able to switch to different views
 interface SearchBarProps {
     onSearch: (location: { latitude: number; longitude: number }) => void;
     onLocate: () => void;
@@ -86,7 +87,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 onFail={(error) => console.error(error)}
             />
             <View style={styles.togglesContainer}>
-                <CircleButton
+                {/* <CircleButton
                     icon={
                         <Ionicons
                             name="layers"
@@ -95,7 +96,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                         />
                     }
                     onPress={() => setShowLayerModal(!showLayerModal)}
-                />
+                /> */}
                 <CircleButton
                     icon={
                         <Ionicons

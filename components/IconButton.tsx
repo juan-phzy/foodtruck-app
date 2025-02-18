@@ -2,6 +2,7 @@ import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import theme from "@/theme/theme";
 
+//button that accepts icon and a press action that is reusable
 type IconButtonProps = Readonly<{
   icon: React.ReactNode; // Pass the icon component as a prop
   label: string;

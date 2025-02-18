@@ -12,6 +12,7 @@ type ButtonProps = Readonly<{
   fontSize?: number;
 }>;
 
+//Nice reusable button that allows different texts, colors, and whatever onPress functionality when used
 export default function CustomButton({
   style = "dark", // Default style
   text,

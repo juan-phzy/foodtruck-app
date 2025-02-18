@@ -6,7 +6,7 @@ import { FoodTruck } from "@/types";
 interface TruckCardListProps {
   trucks: FoodTruck[];
 }
-
+//takes each truck by their ID and generate a list of small truck cards for each truck
 const TruckCardList: React.FC<TruckCardListProps> = ({
   trucks,
 }) => {

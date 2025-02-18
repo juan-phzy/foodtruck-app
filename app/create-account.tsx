@@ -71,7 +71,7 @@ export default function CreateAccountScreen() {
                                 style={styles.goBackContainer}
                                 onPress={() => {
                                     console.log("Go Back Pressed From Create Account Step 1");
-                                    router.back()
+                                    router.back() /*router.back used here to preserve history instead of replacing the page*/
                                 }}
                             >
                                 <Ionicons
@@ -121,7 +121,7 @@ export default function CreateAccountScreen() {
                                     onPress={() => {
                                         console.log("Sign Up Pressed");
                                         signIn();
-                                        router.replace("/");
+                                        router.replace("/"); {/*router.replace replaces the sign up page with the home page, removing it from the stack*/}
                                     }}
                                 />
                             </View>

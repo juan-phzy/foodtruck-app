@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef } from "react";//UseRef returns a mutable object, which doesn't cause a re-render
 import {
     StyleSheet,
     View,
@@ -8,7 +8,7 @@ import {
     Text,
     Image,
 } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps"; //Componenet to display maps
 import SearchBar from "@/components/SearchBar";
 import NearbyTrucksCard from "@/components/NearbyTrucksCard";
 import { FOOD_TRUCKS } from "@/constants";
@@ -49,6 +49,7 @@ export default function Index() {
 
     const foodTruckData: FoodTruck[] = FOOD_TRUCKS.map((truck) => {
         return {
+            //(Spread operator copies all the properties of the previous into a new one, only changing certain propteries)
             ...truck, // Spread the original truck object
             distance:
                 getDistance(truck.coordinates, {
@@ -60,6 +61,7 @@ export default function Index() {
 
     const mapRef = useRef<MapView>(null); // Ref for the MapView
 
+    //.reduce clumps values together and returns a single result
     const animationValues = useRef(
         foodTruckData.reduce((acc, truck) => {
             acc[truck.id] = new Animated.Value(1); // Initialize each truck with a default scale of 1
@@ -67,6 +69,8 @@ export default function Index() {
         }, {} as Record<string, Animated.Value>)
     ).current; // Animated values for icon sizes
 
+    //If a truck was already selected, zoom out and shrink the icon and remove the current truckID
+    //otherwise zoom in on the selected truck while shrinkin previiusly selected trucks, and set the truck ID
     const handleMarkerPress = (truck: any) => {
         if (selectedTruckId === truck.id) {
             // If already selected, zoom out and deselect
@@ -98,6 +102,7 @@ export default function Index() {
                 }).start();
             }
 
+            //?. is used here to ensures animateToRegion is only called when mapRef.current is not null
             mapRef.current?.animateToRegion(
                 {
                     latitude: truck.coordinates.latitude - 0.003,
@@ -114,10 +119,11 @@ export default function Index() {
                 toValue: 1.8,
                 duration: 650,
                 useNativeDriver: true,
-            }).start();
+            }).start(); //.start() begins the animation
         }
     };
 
+    //Passes lat and long and zooms in on new location
     const handleSearch = (location: {
         latitude: number;
         longitude: number;
@@ -133,6 +139,7 @@ export default function Index() {
         );
     };
 
+    //Hard Coded current location
     const userLocation = () => {
         mapRef.current?.animateToRegion(
             {
@@ -163,7 +170,7 @@ export default function Index() {
                     truck={
                         foodTruckData.find(
                             (truck) => truck.id === selectedTruckId
-                        )!
+                        )!//The ! ensures typescript that there will always be a result
                     }
                 />
             )}
@@ -223,6 +230,7 @@ export default function Index() {
                         />
                     </View>
                 </Marker>
+                {/*Checks if there are any filters on trucks before mapping each to a truck marker */}
                 {foodTruckData
                     .filter(
                         (truck) =>
@@ -250,7 +258,7 @@ export default function Index() {
                                             transform: [
                                                 {
                                                     scale: animationValues[
-                                                        truck.id
+                                                        truck.id 
                                                     ],
                                                 },
                                             ],
@@ -277,6 +285,8 @@ export default function Index() {
                             )!
                         )
                     }
+                    //Checks the current truck and parses the ID as a number, then move to the next one
+                    //by incrementing or decrementing. Defaults at 10 trucks here
                     nextTruck={() => {
                         const num = parseInt(selectedTruckId, 10);
                         if (num === 10) {
