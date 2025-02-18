@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 
 export default function Search() {
+  //No current implementation for the search screen yet, so display the default text
   return (
     <View
       style={{

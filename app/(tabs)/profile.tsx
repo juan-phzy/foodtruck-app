@@ -2,8 +2,9 @@ import { Text, View, Button } from "react-native";
 import { useSession } from "@/context/ctx";
 
 export default function Profile() {
+    //useSession hook called to sign the user out, redirecting them to the sign in page
     const { signOut } = useSession();
-
+    //No current implementation for profile screen, so display the default text
     return (
         <View
             style={{

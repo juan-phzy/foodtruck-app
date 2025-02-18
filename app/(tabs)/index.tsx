@@ -24,13 +24,14 @@ import MenuModal from "@/components/MenuModal";
 import TruckPage from "@/components/TruckPage";
 
 export default function Index() {
+    //Mapping information for default location
     const [region, setRegion] = useState({
         latitude: 40.76779159578361, // Default to NYC
         longitude: -73.98228109243095,
         latitudeDelta: 0.04, // Adjust for 5-mile radius
         longitudeDelta: 0.02,
     });
-
+    
     const [mapType, setMapType] = useState<
         "standard" | "hybrid" | "mutedStandard"
     >("mutedStandard"); // Map type

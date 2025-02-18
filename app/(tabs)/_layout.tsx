@@ -5,17 +5,22 @@ import { Ionicons } from "@expo/vector-icons";
 import { useSession } from "@/context/ctx";
 
 export default function TabsLayout() {
+    //Sign in session
     const { session, isLoading } = useSession();
-
+    
+    //While is loading, display loading text
     if (isLoading) {
         return <Text>Loading...</Text>;
     }
 
+    //If the user doesn't have a sign in session, redirect back to sign in page
     if (!session) {
         return <Redirect href="/sign-in" />;
     }
 
+    //Return the actual pages of the app once logged in
     return (
+        //All home,search, and profile tabs
         <Tabs
             screenOptions={{
                 headerShown: false, // Hide the header
@@ -34,6 +39,7 @@ export default function TabsLayout() {
                 tabBarInactiveTintColor: theme.colors.whiteInactive, // Inactive tab icon color
             }}
         >
+            
             <Tabs.Screen
                 name="index"
                 options={{
