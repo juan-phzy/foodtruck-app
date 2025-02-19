@@ -11,7 +11,7 @@ import MenuModal from "@/components/MenuModal";
 import TruckPage from "@/components/TruckPage";
 
 // NEW MAPBOX IMPORTS
-import Mapbox, { Camera, LocationPuck, MapView, Images, ShapeSource, SymbolLayer } from "@rnmapbox/maps";
+import Mapbox, { Camera, LocationPuck, MapView, Images, ShapeSource, SymbolLayer, CircleLayer } from "@rnmapbox/maps";
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY || '');
 
 import { featureCollection, point } from "@turf/helpers";
@@ -91,9 +91,35 @@ export default function Index() {
                 <Camera followUserLocation={true} followZoomLevel={14} />
                 <LocationPuck puckBearingEnabled={true} />
 
-                <ShapeSource id="foodTrucks" shape={truckFeatures}>
+                <ShapeSource id="foodTrucks" cluster shape={truckFeatures}>
+
+                    
+
+                    <CircleLayer
+                        id="clusters"
+                        filter={['has', 'point_count']}
+                        style={{
+                            circlePitchAlignment: "map",
+                            circleColor: "orange",
+                            circleRadius: 30,
+                            circleOpacity: .4,
+                            circleStrokeWidth: 2,
+                            circleStrokeColor: 'orange'
+                        }}
+                    />
+
+                    <SymbolLayer
+                        id='clusters-count'
+                        style={{
+                            textField: ['get','point_count'],
+                            textColor: 'white',
+                            textSize: 25
+                        }}
+                    />
+
                     <SymbolLayer 
                         id="foodTruckIcons"
+                        filter={['!',['has', 'point_count']]}
                         style={{
                             iconImage: 'icon',
                             iconSize: 0.05
