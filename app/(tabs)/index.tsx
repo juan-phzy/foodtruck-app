@@ -11,8 +11,11 @@ import MenuModal from "@/components/MenuModal";
 import TruckPage from "@/components/TruckPage";
 
 // NEW MAPBOX IMPORTS
-import Mapbox, { Camera, LocationPuck, MapView } from "@rnmapbox/maps";
-Mapbox.setAccessToken('pk.eyJ1IjoiZm9vZC10cnVjay1kZXYiLCJhIjoiY20zZjNua3pnMGhsaDJscHIwM21wanY3YyJ9.4IM0aruRxSpXT84RAZb0lw');
+import Mapbox, { Camera, LocationPuck, MapView, Images, ShapeSource, SymbolLayer } from "@rnmapbox/maps";
+Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY || '');
+
+import { featureCollection, point } from "@turf/helpers";
+import icon from "@/assets/images/icon.png";
 
 
 export default function Index() {
@@ -83,7 +86,18 @@ export default function Index() {
             {/* Map */}
             <MapView style={styles.map} styleURL={Mapbox.StyleURL.Street}>
                 <Camera followUserLocation={true} followZoomLevel={14} />
-                <LocationPuck />
+                <LocationPuck puckBearingEnabled={true} />
+
+                <ShapeSource id="foodTrucks" shape={featureCollection([point([-73.98803807961161,40.769842169115456])])}>
+                    <SymbolLayer 
+                        id="foodTruckIcons"
+                        style={{
+                            iconImage: 'icon',
+                        }} 
+                    />
+                    <Images images={{icon}} />
+
+                </ShapeSource>
             </MapView>
 
             {/* Conditional Card Rendering */}
