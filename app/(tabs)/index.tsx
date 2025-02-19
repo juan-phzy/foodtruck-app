@@ -1,8 +1,6 @@
+// ORIGINAL IMPORTS
 import React, { useState } from "react";
-import {
-    StyleSheet,
-    View,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 import SearchBar from "@/components/SearchBar";
 import NearbyTrucksCard from "@/components/NearbyTrucksCard";
 import { FOOD_TRUCKS } from "@/constants";
@@ -12,6 +10,11 @@ import CategoryModal from "@/components/CategoryModal";
 import MenuModal from "@/components/MenuModal";
 import TruckPage from "@/components/TruckPage";
 
+// NEW MAPBOX IMPORTS
+import Mapbox, { Camera, LocationPuck, MapView } from "@rnmapbox/maps";
+Mapbox.setAccessToken('pk.eyJ1IjoiZm9vZC10cnVjay1kZXYiLCJhIjoiY20zZjNua3pnMGhsaDJscHIwM21wanY3YyJ9.4IM0aruRxSpXT84RAZb0lw');
+
+
 export default function Index() {
     const [region, setRegion] = useState({
         latitude: 40.76779159578361, // Default to NYC
@@ -19,8 +22,6 @@ export default function Index() {
         latitudeDelta: 0.04, // Adjust for 5-mile radius
         longitudeDelta: 0.02,
     });
-
-
 
     const [categoryFilters, setCategoryFilters] = useState<string[]>([]); // Category filters
 
@@ -37,7 +38,7 @@ export default function Index() {
     const foodTruckData: FoodTruck[] = FOOD_TRUCKS.map((truck) => {
         return {
             ...truck, // Spread the original truck object
-            distance: 1000 // Placeholder distance
+            distance: 1000, // Placeholder distance
         };
     });
 
@@ -65,7 +66,7 @@ export default function Index() {
             )}
 
             {/* Truck Page */}
-            { showTruckPage && (
+            {showTruckPage && (
                 <TruckPage
                     closeTruckPage={() => setShowTruckPage(false)}
                     truck={
@@ -77,12 +78,13 @@ export default function Index() {
             )}
 
             {/* Search Bar */}
-            <SearchBar
-                onSearch={()=>{}}
-            />
+            <SearchBar onSearch={() => {}} />
 
             {/* Map */}
-            <View style={styles.map} />
+            <MapView style={styles.map} styleURL={Mapbox.StyleURL.Street}>
+                <Camera followUserLocation={true} followZoomLevel={14} />
+                <LocationPuck />
+            </MapView>
 
             {/* Conditional Card Rendering */}
             {selectedTruckId ? (
@@ -92,7 +94,6 @@ export default function Index() {
                             (truck) => truck.id === selectedTruckId
                         )!
                     }
-                    
                     openMenu={() => setShowMenuModal(true)}
                     openTruckPage={() => setShowTruckPage(true)}
                 />
