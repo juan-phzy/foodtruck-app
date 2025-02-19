@@ -93,6 +93,7 @@ export default function Index() {
                         id="foodTruckIcons"
                         style={{
                             iconImage: 'icon',
+                            iconSize: 0.05
                         }} 
                     />
                     <Images images={{icon}} />
