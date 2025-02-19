@@ -18,18 +18,12 @@ import { FoodTruck } from "@/types";
 
 interface SelectedTruckCardProps {
     truck: FoodTruck;
-    backFunction: () => void;
-    nextTruck: () => void;
-    previousTruck: () => void;
     openMenu: () => void;
     openTruckPage: () => void;
 }
 
 const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
     truck,
-    backFunction,
-    previousTruck,
-    nextTruck,
     openMenu,
     openTruckPage,
 }) => {
@@ -41,7 +35,7 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
             <View style={styles.titleBar}>
                 <Pressable
                     style={styles.backButtonContainer}
-                    onPress={backFunction}
+                    onPress={()=>{}}
                 >
                     <Ionicons
                         name="arrow-back"
@@ -173,7 +167,7 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
                 we have to put an inactive timer 
                 on them and raise the transition speed */}
             <View style={styles.navigationButtons}>
-                <Pressable onPress={previousTruck}>
+                <Pressable onPress={()=>{}}>
                     <Ionicons
                         name="chevron-back"
                         size={40}
@@ -181,7 +175,7 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
                         style={styles.navButton}
                     />
                 </Pressable>
-                <Pressable onPress={nextTruck}>
+                <Pressable onPress={()=>{}}>
                     <Ionicons
                         name="chevron-forward"
                         size={40}
