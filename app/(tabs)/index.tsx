@@ -38,7 +38,7 @@ export default function Index() {
     const foodTruckData: FoodTruck[] = FOOD_TRUCKS.map((truck) => {
         return {
             ...truck, // Spread the original truck object
-            distance: 1000, // Placeholder distance
+            distance: 1.12, // Placeholder distance
         };
     });
 
