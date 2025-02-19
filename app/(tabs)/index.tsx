@@ -45,6 +45,9 @@ export default function Index() {
         };
     });
 
+    const points = FOOD_TRUCKS.map((truck)=> point([truck.coordinates.longitude, truck.coordinates.latitude]));
+    const truckFeatures = featureCollection(points);
+
     return (
         <View style={styles.container}>
             {/* Category Modal */}
@@ -88,7 +91,7 @@ export default function Index() {
                 <Camera followUserLocation={true} followZoomLevel={14} />
                 <LocationPuck puckBearingEnabled={true} />
 
-                <ShapeSource id="foodTrucks" shape={featureCollection([point([-73.98803807961161,40.769842169115456])])}>
+                <ShapeSource id="foodTrucks" shape={truckFeatures}>
                     <SymbolLayer 
                         id="foodTruckIcons"
                         style={{
