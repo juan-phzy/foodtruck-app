@@ -7,7 +7,6 @@ import SearchBar from "@/components/SearchBar";
 import NearbyTrucksCard from "@/components/NearbyTrucksCard";
 import { FOOD_TRUCKS } from "@/constants";
 import SelectedTruckCard from "@/components/SelectedTruckCard";
-import { getDistance } from "geolib";
 import { FoodTruck } from "@/types";
 import CategoryModal from "@/components/CategoryModal";
 import MenuModal from "@/components/MenuModal";
@@ -38,11 +37,7 @@ export default function Index() {
     const foodTruckData: FoodTruck[] = FOOD_TRUCKS.map((truck) => {
         return {
             ...truck, // Spread the original truck object
-            distance:
-                getDistance(truck.coordinates, {
-                    latitude: 40.7698499519505,
-                    longitude: -73.98251936106666,
-                }) / 1609.344, // Add the calculated distance
+            distance: 1000 // Placeholder distance
         };
     });
 
