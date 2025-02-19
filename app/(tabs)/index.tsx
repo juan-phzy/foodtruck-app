@@ -11,20 +11,25 @@ import MenuModal from "@/components/MenuModal";
 import TruckPage from "@/components/TruckPage";
 
 // NEW MAPBOX IMPORTS
-import Mapbox, { Camera, LocationPuck, MapView, Images, ShapeSource, SymbolLayer, CircleLayer } from "@rnmapbox/maps";
-Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY || '');
+import Mapbox, {
+    Camera,
+    LocationPuck,
+    MapView,
+    Images,
+    ShapeSource,
+    SymbolLayer,
+    CircleLayer,
+} from "@rnmapbox/maps";
+Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY || "");
 
 import { featureCollection, point } from "@turf/helpers";
 import icon from "@/assets/images/icon.png";
 
+import useTruckStore from "@/store/useTruckStore";
 
 export default function Index() {
-    const [region, setRegion] = useState({
-        latitude: 40.76779159578361, // Default to NYC
-        longitude: -73.98228109243095,
-        latitudeDelta: 0.04, // Adjust for 5-mile radius
-        longitudeDelta: 0.02,
-    });
+    const { selectedTruckId, setSelectedTruckId, clearSelectedTruck } =
+        useTruckStore();
 
     const [categoryFilters, setCategoryFilters] = useState<string[]>([]); // Category filters
 
@@ -36,8 +41,6 @@ export default function Index() {
 
     const [isExpanded, setIsExpanded] = useState(false); // Card state
 
-    const [selectedTruckId, setSelectedTruckId] = useState<string | null>(null); // Track the selected truck
-
     const foodTruckData: FoodTruck[] = FOOD_TRUCKS.map((truck) => {
         return {
             ...truck, // Spread the original truck object
@@ -45,7 +48,9 @@ export default function Index() {
         };
     });
 
-    const points = FOOD_TRUCKS.map((truck)=> point([truck.coordinates.longitude, truck.coordinates.latitude]));
+    const points = FOOD_TRUCKS.map((truck) =>
+        point([truck.coordinates.longitude, truck.coordinates.latitude])
+    );
     const truckFeatures = featureCollection(points);
 
     return (
@@ -87,46 +92,57 @@ export default function Index() {
             <SearchBar onSearch={() => {}} />
 
             {/* Map */}
-            <MapView style={styles.map} styleURL={Mapbox.StyleURL.Street}>
+            <MapView
+                style={styles.map}
+                styleURL={Mapbox.StyleURL.Street}
+                onPress={() => clearSelectedTruck()}
+            >
                 <Camera followUserLocation={true} followZoomLevel={14} />
                 <LocationPuck puckBearingEnabled={true} />
 
-                <ShapeSource id="foodTrucks" cluster shape={truckFeatures}>
-
-                    
-
+                <ShapeSource
+                    id="foodTrucks"
+                    cluster
+                    shape={truckFeatures}
+                    onPress={(e) => {
+                        const { features } = e;
+                        if (features.length > 0) {
+                            const truckId = features[0].properties?.id;
+                            setSelectedTruckId(truckId);
+                        }
+                    }}
+                >
                     <CircleLayer
                         id="clusters"
-                        filter={['has', 'point_count']}
+                        filter={["has", "point_count"]}
                         style={{
                             circlePitchAlignment: "map",
                             circleColor: "orange",
                             circleRadius: 30,
-                            circleOpacity: .4,
+                            circleOpacity: 0.4,
                             circleStrokeWidth: 2,
-                            circleStrokeColor: 'orange'
+                            circleStrokeColor: "orange",
                         }}
                     />
 
                     <SymbolLayer
-                        id='clusters-count'
+                        id="clusters-count"
                         style={{
-                            textField: ['get','point_count'],
-                            textColor: 'white',
-                            textSize: 25
+                            textField: ["get", "point_count"],
+                            textColor: "white",
+                            textSize: 25,
                         }}
                     />
 
-                    <SymbolLayer 
+                    <SymbolLayer
                         id="foodTruckIcons"
-                        filter={['!',['has', 'point_count']]}
+                        filter={["!", ["has", "point_count"]]}
                         style={{
-                            iconImage: 'icon',
-                            iconSize: 0.05
-                        }} 
+                            iconImage: "icon",
+                            iconSize: 0.05,
+                        }}
                     />
-                    <Images images={{icon}} />
-
+                    <Images images={{ icon }} />
                 </ShapeSource>
             </MapView>
 
