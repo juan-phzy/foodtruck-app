@@ -16,6 +16,9 @@ import {
 import theme from "@/theme/theme";
 import { FoodTruck } from "@/types";
 
+// New imports
+import useTruckStore from "@/store/useTruckStore";
+
 interface SelectedTruckCardProps {
     truck: FoodTruck;
     openMenu: () => void;
@@ -29,13 +32,15 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
 }) => {
     // temporary state, get from user lists later
     const [isFavorite, setIsFavorite] = useState(false);
+
+    const { clearSelectedTruck, nextTruck, previousTruck } = useTruckStore();
     return (
         <BlurView intensity={10} style={styles.cardContainer}>
             {/* First View: Title Bar */}
             <View style={styles.titleBar}>
                 <Pressable
                     style={styles.backButtonContainer}
-                    onPress={()=>{}}
+                    onPress={()=> clearSelectedTruck()}
                 >
                     <Ionicons
                         name="arrow-back"
@@ -167,7 +172,7 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
                 we have to put an inactive timer 
                 on them and raise the transition speed */}
             <View style={styles.navigationButtons}>
-                <Pressable onPress={()=>{}}>
+                <Pressable onPress={()=>previousTruck()}>
                     <Ionicons
                         name="chevron-back"
                         size={40}
@@ -175,7 +180,7 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
                         style={styles.navButton}
                     />
                 </Pressable>
-                <Pressable onPress={()=>{}}>
+                <Pressable onPress={()=>nextTruck()}>
                     <Ionicons
                         name="chevron-forward"
                         size={40}

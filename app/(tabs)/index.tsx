@@ -49,7 +49,7 @@ export default function Index() {
     });
 
     const points = FOOD_TRUCKS.map((truck) =>
-        point([truck.coordinates.longitude, truck.coordinates.latitude])
+        point([truck.coordinates.longitude, truck.coordinates.latitude], {"id": truck.id})
     );
     const truckFeatures = featureCollection(points);
 
@@ -110,6 +110,7 @@ export default function Index() {
                             const truckId = features[0].properties?.id;
                             setSelectedTruckId(truckId);
                         }
+                        console.log(e)
                     }}
                 >
                     <CircleLayer
