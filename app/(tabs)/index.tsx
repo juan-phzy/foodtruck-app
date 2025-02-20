@@ -1,16 +1,24 @@
-// ORIGINAL IMPORTS
+// React & Hooks
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
+
+// React Native Components
+import { StyleSheet, View, Alert } from "react-native";
+
+// Expo Location API
+import * as Location from "expo-location";
+
+// Custom Components
 import SearchBar from "@/components/SearchBar";
 import NearbyTrucksCard from "@/components/NearbyTrucksCard";
-import { FOOD_TRUCKS } from "@/constants";
 import SelectedTruckCard from "@/components/SelectedTruckCard";
-import { FoodTruck } from "@/types";
 import CategoryModal from "@/components/CategoryModal";
 import MenuModal from "@/components/MenuModal";
 import TruckPage from "@/components/TruckPage";
 
-// NEW MAPBOX IMPORTS
+// Constants & Types
+import { FOOD_TRUCKS } from "@/constants";
+
+// Mapbox Imports
 import Mapbox, {
     Camera,
     LocationPuck,
@@ -20,11 +28,15 @@ import Mapbox, {
     SymbolLayer,
     CircleLayer,
 } from "@rnmapbox/maps";
-Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY || "");
+Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY ?? "");
 
+// Geospatial Utilities
 import { featureCollection, point } from "@turf/helpers";
+
+// Assets
 import icon from "@/assets/images/icon.png";
 
+// State Management (Zustand)
 import useTruckStore from "@/store/useTruckStore";
 
 export default function Index() {
@@ -35,58 +47,88 @@ export default function Index() {
         clearSelectedTruck,
     } = useTruckStore();
 
-    const [categoryFilters, setCategoryFilters] = useState<string[]>([]); // Category filters
+    const [userLocation, setUserLocation] = useState<{
+        latitude: number;
+        longitude: number;
+    } | null>(null);
+    const [categoryFilters, setCategoryFilters] = useState<string[]>([]);
+    const [showCategoryModal, setShowCategoryModal] = useState(false);
+    const [showMenuModal, setShowMenuModal] = useState(false);
+    const [showTruckPage, setShowTruckPage] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
 
-    const [showCategoryModal, setShowCategoryModal] = useState(false); // Category modal state
+    const cameraRef = useRef<Camera>(null);
 
-    const [showMenuModal, setShowMenuModal] = useState(false); // Menu modal state
+    // 🚀 Fetch User Location on Initial Load
+    useEffect(() => {
+        (async () => {
+            const { status } =
+                await Location.requestForegroundPermissionsAsync();
+            if (status !== "granted") {
+                Alert.alert(
+                    "Location Permission Required",
+                    "Please enable location services for best experience."
+                );
+                return;
+            }
 
-    const [showTruckPage, setShowTruckPage] = useState(false); // Truck page state
-
-    const [isExpanded, setIsExpanded] = useState(false); // Card state
-
-    const foodTruckData: FoodTruck[] = FOOD_TRUCKS.map((truck) => {
-        return {
-            ...truck, // Spread the original truck object
-            distance: 1.12, // Placeholder distance
-        };
-    });
-
-    const points = FOOD_TRUCKS.map((truck) =>
-        point([truck.coordinates.longitude, truck.coordinates.latitude], {
-            id: truck.id,
-        })
-    );
-    const truckFeatures = featureCollection(points);
-
-    const cameraRef = useRef<Camera>(null); // Camera reference
-
-    const handleSearch = ({ latitude, longitude }: { latitude: number; longitude: number }) => {
-        console.log("Moving camera to searched location:", latitude, longitude);
-        if (cameraRef.current) {
-            cameraRef.current.setCamera({
-                centerCoordinate: [longitude, latitude],
-                zoomLevel: 14,
-                animationDuration: 1000,
+            const location = await Location.getCurrentPositionAsync({});
+            setUserLocation({
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
             });
-        }
+
+            // Move camera to user's initial location
+            cameraRef.current?.setCamera({
+                centerCoordinate: [
+                    location.coords.longitude,
+                    location.coords.latitude,
+                ],
+                zoomLevel: 14,
+                animationDuration: 500,
+            });
+        })();
+    }, []);
+
+    // Compute food truck features (Avoid re-mapping FOOD_TRUCKS)
+    const truckFeatures = featureCollection(
+        FOOD_TRUCKS.map((truck) =>
+            point([truck.coordinates.longitude, truck.coordinates.latitude], {
+                id: truck.id,
+            })
+        )
+    );
+
+    // Handle Google Places Search
+    const handleSearch = ({
+        latitude,
+        longitude,
+    }: {
+        latitude: number;
+        longitude: number;
+    }) => {
+        cameraRef.current?.setCamera({
+            centerCoordinate: [longitude, latitude],
+            zoomLevel: 14,
+            animationDuration: 500,
+        });
     };
 
-
+    // Camera Updates on Truck Selection
     useEffect(() => {
-        if (selectedTruck && cameraRef.current) {
-            cameraRef.current.setCamera({
+        if (selectedTruck) {
+            cameraRef.current?.setCamera({
                 centerCoordinate: [
                     selectedTruck.coordinates.longitude,
                     selectedTruck.coordinates.latitude - 0.0012,
                 ],
                 zoomLevel: 16,
-                animationDuration: 1000,
+                animationDuration: 500,
             });
-        } else if (!selectedTruck && cameraRef.current) {
-            cameraRef.current.setCamera({
+        } else {
+            cameraRef.current?.setCamera({
                 zoomLevel: 14,
-                animationDuration: 1000,
+                animationDuration: 500,
             });
         }
     }, [selectedTruck]);
@@ -103,26 +145,18 @@ export default function Index() {
             )}
 
             {/* Menu Modal */}
-            {showMenuModal && (
+            {showMenuModal && selectedTruck && (
                 <MenuModal
                     closeMenu={() => setShowMenuModal(false)}
-                    truck={
-                        foodTruckData.find(
-                            (truck) => truck.id === selectedTruckId
-                        )!
-                    }
+                    truck={selectedTruck}
                 />
             )}
 
             {/* Truck Page */}
-            {showTruckPage && (
+            {showTruckPage && selectedTruck && (
                 <TruckPage
                     closeTruckPage={() => setShowTruckPage(false)}
-                    truck={
-                        foodTruckData.find(
-                            (truck) => truck.id === selectedTruckId
-                        )!
-                    }
+                    truck={selectedTruck}
                 />
             )}
 
@@ -133,52 +167,30 @@ export default function Index() {
             <MapView
                 style={styles.map}
                 styleURL={Mapbox.StyleURL.Street}
-                onPress={() => clearSelectedTruck()}
+                onPress={clearSelectedTruck}
             >
                 <Camera ref={cameraRef} />
-                <LocationPuck puckBearingEnabled={true} />
+                <LocationPuck puckBearingEnabled />
 
                 <ShapeSource
                     id="foodTrucks"
                     cluster
                     shape={truckFeatures}
                     onPress={(e) => {
-                        const { features } = e;
-                        if (features.length > 0) {
-                            const truckId = features[0].properties?.id;
-                            setSelectedTruckId(truckId);
-                        }
+                        const truckId = e.features?.[0]?.properties?.id;
+                        if (truckId) setSelectedTruckId(truckId);
                     }}
                 >
                     <CircleLayer
                         id="clusters"
                         filter={["has", "point_count"]}
-                        style={{
-                            circlePitchAlignment: "map",
-                            circleColor: "orange",
-                            circleRadius: 30,
-                            circleOpacity: 0.4,
-                            circleStrokeWidth: 2,
-                            circleStrokeColor: "orange",
-                        }}
+                        style={circleLayerStyle}
                     />
-
-                    <SymbolLayer
-                        id="clusters-count"
-                        style={{
-                            textField: ["get", "point_count"],
-                            textColor: "white",
-                            textSize: 25,
-                        }}
-                    />
-
+                    <SymbolLayer id="clusters-count" style={symbolCountStyle} />
                     <SymbolLayer
                         id="foodTruckIcons"
                         filter={["!", ["has", "point_count"]]}
-                        style={{
-                            iconImage: "icon",
-                            iconSize: 0.05,
-                        }}
+                        style={symbolLayerStyle}
                     />
                     <Images images={{ icon }} />
                 </ShapeSource>
@@ -187,11 +199,7 @@ export default function Index() {
             {/* Conditional Card Rendering */}
             {selectedTruckId ? (
                 <SelectedTruckCard
-                    truck={
-                        foodTruckData.find(
-                            (truck) => truck.id === selectedTruckId
-                        )!
-                    }
+                    truck={selectedTruck!}
                     openMenu={() => setShowMenuModal(true)}
                     openTruckPage={() => setShowTruckPage(true)}
                 />
@@ -200,11 +208,11 @@ export default function Index() {
                     isCategoryActive={categoryFilters.length > 0}
                     isExpanded={isExpanded}
                     onToggleExpand={() => setIsExpanded(!isExpanded)}
-                    trucks={foodTruckData.filter(
+                    trucks={FOOD_TRUCKS.filter(
                         (truck) =>
                             categoryFilters.length === 0 ||
-                            truck.categories.some((category) =>
-                                categoryFilters.includes(category)
+                            truck.categories.some((c) =>
+                                categoryFilters.includes(c)
                             )
                     )}
                     showCategories={() => setShowCategoryModal(true)}
@@ -214,20 +222,29 @@ export default function Index() {
     );
 }
 
+// Styles
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    map: {
-        flex: 1,
-    },
-    markerContainer: {
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    markerImage: {
-        width: 40, // Default width
-        height: 40, // Default height
-        resizeMode: "contain",
-    },
+    container: { flex: 1 },
+    map: { flex: 1 },
 });
+
+// Mapbox Layer Styles
+const circleLayerStyle = {
+    circlePitchAlignment: "map",
+    circleColor: "orange",
+    circleRadius: 30,
+    circleOpacity: 0.4,
+    circleStrokeWidth: 2,
+    circleStrokeColor: "orange",
+};
+
+const symbolCountStyle = {
+    textField: ["get", "point_count"],
+    textColor: "white",
+    textSize: 25,
+};
+
+const symbolLayerStyle = {
+    iconImage: "icon",
+    iconSize: 0.05,
+};
