@@ -1,149 +1,139 @@
-import React, { useState, useRef } from "react";
-import {
-    StyleSheet,
-    View,
-    Animated,
-    Pressable,
-    FlatList,
-    Text,
-    Image,
-} from "react-native";
-import MapView, { Marker } from "react-native-maps";
+// React & Hooks
+import React, { useEffect, useRef, useState } from "react";
+
+// React Native Components
+import { StyleSheet, View, Alert } from "react-native";
+
+// Expo Location API
+import * as Location from "expo-location";
+
+// Custom Components
 import SearchBar from "@/components/SearchBar";
 import NearbyTrucksCard from "@/components/NearbyTrucksCard";
-import { FOOD_TRUCKS } from "@/constants";
 import SelectedTruckCard from "@/components/SelectedTruckCard";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import theme from "@/theme/theme";
-import { Ionicons } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
-import { getDistance } from "geolib";
-import { FoodTruck } from "@/types";
 import CategoryModal from "@/components/CategoryModal";
 import MenuModal from "@/components/MenuModal";
 import TruckPage from "@/components/TruckPage";
 
+// Constants & Types
+import { FOOD_TRUCKS } from "@/constants";
+
+// Mapbox Imports
+import Mapbox, {
+    Camera,
+    LocationPuck,
+    MapView,
+    Images,
+    ShapeSource,
+    SymbolLayer,
+    CircleLayer,
+} from "@rnmapbox/maps";
+Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY ?? "");
+
+// Geospatial Utilities
+import { featureCollection, point } from "@turf/helpers";
+
+// Assets
+import icon from "@/assets/images/icon.png";
+
+// State Management (Zustand)
+import useTruckStore from "@/store/useTruckStore";
+
 export default function Index() {
-    const [region, setRegion] = useState({
-        latitude: 40.76779159578361, // Default to NYC
-        longitude: -73.98228109243095,
-        latitudeDelta: 0.04, // Adjust for 5-mile radius
-        longitudeDelta: 0.02,
-    });
+    const { selectedTruck, setSelectedTruckId, clearSelectedTruck } =
+        useTruckStore();
 
-    const [mapType, setMapType] = useState<
-        "standard" | "hybrid" | "mutedStandard"
-    >("mutedStandard"); // Map type
+    const [userLocation, setUserLocation] = useState<{
+        latitude: number;
+        longitude: number;
+    } | null>(null);
+    const [categoryFilters, setCategoryFilters] = useState<string[]>([]);
+    const [showCategoryModal, setShowCategoryModal] = useState(false);
+    const [showMenuModal, setShowMenuModal] = useState(false);
+    const [showTruckPage, setShowTruckPage] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
 
-    const [categoryFilters, setCategoryFilters] = useState<string[]>([]); // Category filters
+    const cameraRef = useRef<Camera>(null);
 
-    const [showCategoryModal, setShowCategoryModal] = useState(false); // Category modal state
-
-    const [showMenuModal, setShowMenuModal] = useState(false); // Menu modal state
-
-    const [showTruckPage, setShowTruckPage] = useState(false); // Truck page state
-
-    const [isExpanded, setIsExpanded] = useState(false); // Card state
-
-    const [selectedTruckId, setSelectedTruckId] = useState<string | null>(null); // Track the selected truck
-
-    const foodTruckData: FoodTruck[] = FOOD_TRUCKS.map((truck) => {
-        return {
-            ...truck, // Spread the original truck object
-            distance:
-                getDistance(truck.coordinates, {
-                    latitude: 40.7698499519505,
-                    longitude: -73.98251936106666,
-                }) / 1609.344, // Add the calculated distance
-        };
-    });
-
-    const mapRef = useRef<MapView>(null); // Ref for the MapView
-
-    const animationValues = useRef(
-        foodTruckData.reduce((acc, truck) => {
-            acc[truck.id] = new Animated.Value(1); // Initialize each truck with a default scale of 1
-            return acc;
-        }, {} as Record<string, Animated.Value>)
-    ).current; // Animated values for icon sizes
-
-    const handleMarkerPress = (truck: any) => {
-        if (selectedTruckId === truck.id) {
-            // If already selected, zoom out and deselect
-            mapRef.current?.animateToRegion(
-                {
-                    latitude: 40.76779159578361,
-                    longitude: -73.98228109243095,
-                    latitudeDelta: 0.04,
-                    longitudeDelta: 0.02,
-                },
-                650
-            );
-            setSelectedTruckId(null);
-
-            // Shrink the icon back
-            Animated.timing(animationValues[truck.id], {
-                toValue: 1,
-                duration: 650,
-                useNativeDriver: true,
-            }).start();
-        } else {
-            // Zoom into the selected truck
-            if (selectedTruckId) {
-                // Reset the previously selected truck
-                Animated.timing(animationValues[selectedTruckId], {
-                    toValue: 1,
-                    duration: 650,
-                    useNativeDriver: true,
-                }).start();
-            }
-
-            mapRef.current?.animateToRegion(
-                {
-                    latitude: truck.coordinates.latitude - 0.003,
-                    longitude: truck.coordinates.longitude,
-                    latitudeDelta: 0.01,
-                    longitudeDelta: 0.01,
-                },
-                650
-            );
-            setSelectedTruckId(truck.id);
-
-            // Enlarge the icon for the newly selected truck
-            Animated.timing(animationValues[truck.id], {
-                toValue: 1.8,
-                duration: 650,
-                useNativeDriver: true,
-            }).start();
-        }
+    // Helper function to move the camera
+    const moveCamera = (
+        longitude: number,
+        latitude: number,
+        zoomLevel: number = 14
+    ) => {
+        cameraRef.current?.setCamera({
+            centerCoordinate: [longitude, latitude],
+            zoomLevel,
+            animationDuration: 500,
+        });
     };
 
-    const handleSearch = (location: {
+    // Fetch User Location on Initial Load
+    useEffect(() => {
+        const getUserLocation = async () => {
+            try {
+                const { status } =
+                    await Location.requestForegroundPermissionsAsync();
+                if (status !== "granted") {
+                    Alert.alert(
+                        "Location Permission Required",
+                        "Please enable location services for best experience."
+                    );
+                    return;
+                }
+
+                const location = await Location.getCurrentPositionAsync({});
+                const { latitude, longitude } = location.coords;
+                setUserLocation({ latitude, longitude });
+                moveCamera(longitude, latitude);
+            } catch (error) {
+                console.error("Error getting user location:", error);
+            }
+        };
+
+        getUserLocation();
+    }, []);
+
+    // Compute food truck features only once
+    const truckFeatures = featureCollection(
+        FOOD_TRUCKS.filter(
+            (truck) =>
+                categoryFilters.length === 0 ||
+                truck.categories.some((c) => categoryFilters.includes(c))
+        ).map((truck) =>
+            point([truck.coordinates.longitude, truck.coordinates.latitude], {
+                id: truck.id,
+            })
+        )
+    );
+
+    // Handle Google Places Search
+    const handleSearch = ({
+        latitude,
+        longitude,
+    }: {
         latitude: number;
         longitude: number;
     }) => {
-        mapRef.current?.animateToRegion(
-            {
-                latitude: location.latitude,
-                longitude: location.longitude,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
-            },
-            650
-        );
+        moveCamera(longitude, latitude);
     };
 
-    const userLocation = () => {
-        mapRef.current?.animateToRegion(
-            {
-                latitude: 40.7698499519505,
-                longitude: -73.98251936106666,
-                latitudeDelta: 0.04,
-                longitudeDelta: 0.02,
-            },
-            650
-        );
-    };
+    // Camera Updates on Truck Selection
+    useEffect(() => {
+        if (selectedTruck) {
+            moveCamera(
+                selectedTruck.coordinates.longitude,
+                selectedTruck.coordinates.latitude - 0.0012,
+                16
+            );
+        } else {
+            moveCamera(
+                userLocation?.longitude ?? -122.4194,
+                userLocation?.latitude ?? 37.7749,
+                14
+            ); // Defaults to SF
+        }
+    }, [selectedTruck]);
 
     return (
         <View style={styles.container}>
@@ -157,175 +147,75 @@ export default function Index() {
             )}
 
             {/* Menu Modal */}
-            {showMenuModal && (
+            {showMenuModal && selectedTruck && (
                 <MenuModal
                     closeMenu={() => setShowMenuModal(false)}
-                    truck={
-                        foodTruckData.find(
-                            (truck) => truck.id === selectedTruckId
-                        )!
-                    }
+                    truck={selectedTruck}
                 />
             )}
 
             {/* Truck Page */}
-            { showTruckPage && (
+            {showTruckPage && selectedTruck && (
                 <TruckPage
                     closeTruckPage={() => setShowTruckPage(false)}
-                    truck={
-                        foodTruckData.find(
-                            (truck) => truck.id === selectedTruckId
-                        )!
-                    }
+                    truck={selectedTruck}
                 />
             )}
 
             {/* Search Bar */}
-            <SearchBar
-                onSearch={handleSearch}
-                onLocate={userLocation}
-                currentMap={mapType}
-                changeMapToSatellite={() => setMapType("hybrid")}
-                changeMapToDetailed={() => setMapType("standard")}
-                changeMapToRegular={() => setMapType("mutedStandard")}
-            />
+            <SearchBar onSearch={handleSearch} />
 
             {/* Map */}
             <MapView
-                ref={mapRef} // Attach ref to MapView
                 style={styles.map}
-                region={region}
-                onRegionChangeComplete={(newRegion) => setRegion(newRegion)}
-                loadingEnabled={true}
-                loadingBackgroundColor={theme.colors.white}
-                loadingIndicatorColor={theme.colors.primary}
-                showsCompass={false}
-                mapType={mapType}
+                styleURL={Mapbox.StyleURL.Street}
+                onPress={clearSelectedTruck}
+                scaleBarEnabled={false}
             >
-                <Marker
-                    coordinate={{
-                        latitude: 40.7698499519505,
-                        longitude: -73.98251936106666,
+                <Camera ref={cameraRef} />
+                <LocationPuck {...locationPuckStyle} />
+
+                <ShapeSource
+                    id="foodTrucks"
+                    cluster
+                    shape={truckFeatures}
+                    onPress={(e) => {
+                        const truckId = e.features?.[0]?.properties?.id;
+                        if (truckId) setSelectedTruckId(truckId);
                     }}
                 >
-                    {/* Custom Marker View */}
-                    <View
-                        style={{
-                            backgroundColor: theme.colors.primary,
-                            padding: 2,
-                            borderRadius: 30,
-                        }}
-                    >
-                        <MaterialIcons
-                            name="person-pin-circle"
-                            size={40}
-                            color="white"
-                        />
-                    </View>
-                </Marker>
-                {foodTruckData
-                    .filter(
-                        (truck) =>
-                            categoryFilters.length === 0 || // If no filters are applied, include all trucks
-                            truck.categories.some((category) =>
-                                categoryFilters.includes(category)
-                            )
-                    )
-                    .map((truck) => (
-                        <Marker
-                            key={truck.id}
-                            coordinate={{
-                                latitude: truck.coordinates.latitude,
-                                longitude: truck.coordinates.longitude,
-                            }}
-                            onPress={() => handleMarkerPress(truck)} // Handle press
-                        >
-                            {/* Custom Marker View */}
-                            <View style={styles.markerContainer}>
-                                <Animated.Image
-                                    source={require("@/assets/images/icon.png")}
-                                    style={[
-                                        styles.markerImage,
-                                        {
-                                            transform: [
-                                                {
-                                                    scale: animationValues[
-                                                        truck.id
-                                                    ],
-                                                },
-                                            ],
-                                        },
-                                    ]}
-                                />
-                            </View>
-                        </Marker>
-                    ))}
+                    <CircleLayer
+                        id="clusters"
+                        filter={["has", "point_count"]}
+                        style={circleLayerStyle}
+                    />
+                    <SymbolLayer id="clusters-count" style={symbolCountStyle} />
+                    <SymbolLayer
+                        id="foodTruckIcons"
+                        filter={["!", ["has", "point_count"]]}
+                        style={symbolLayerStyle}
+                    />
+                    <Images images={{ icon }} />
+                </ShapeSource>
             </MapView>
 
             {/* Conditional Card Rendering */}
-            {selectedTruckId ? (
+            {selectedTruck ? (
                 <SelectedTruckCard
-                    truck={
-                        foodTruckData.find(
-                            (truck) => truck.id === selectedTruckId
-                        )!
-                    }
-                    backFunction={() =>
-                        handleMarkerPress(
-                            foodTruckData.find(
-                                (truck) => truck.id === selectedTruckId
-                            )!
-                        )
-                    }
-                    nextTruck={() => {
-                        const num = parseInt(selectedTruckId, 10);
-                        if (num === 10) {
-                            handleMarkerPress(
-                                foodTruckData.find((truck) => truck.id === "1")!
-                            );
-                        } else {
-                            handleMarkerPress(
-                                foodTruckData.find(
-                                    (truck) => truck.id === (num + 1).toString()
-                                )!
-                            );
-                        }
-                    }}
-                    previousTruck={() => {
-                        const num = parseInt(selectedTruckId, 10);
-                        if (num === 1) {
-                            handleMarkerPress(
-                                foodTruckData.find(
-                                    (truck) => truck.id === "10"
-                                )!
-                            );
-                        } else {
-                            handleMarkerPress(
-                                foodTruckData.find(
-                                    (truck) => truck.id === (num - 1).toString()
-                                )!
-                            );
-                        }
-                    }}
+                    truck={selectedTruck}
                     openMenu={() => setShowMenuModal(true)}
                     openTruckPage={() => setShowTruckPage(true)}
                 />
             ) : (
-                /* Make The Truck Cards in the list pressable
-                 We most likely will need to redo the handleMarkerPress logic
-                 We might need to create a context instead for the selected
-                 and then run a function through useEffect whenever the selected
-                 truck changes 
-                 */
                 <NearbyTrucksCard
                     isCategoryActive={categoryFilters.length > 0}
                     isExpanded={isExpanded}
                     onToggleExpand={() => setIsExpanded(!isExpanded)}
-                    trucks={foodTruckData.filter(
+                    trucks={FOOD_TRUCKS.filter(
                         (truck) =>
-                            categoryFilters.length === 0 || // If no filters are applied, include all trucks
-                            truck.categories.some((category) =>
-                                categoryFilters.includes(category)
+                            categoryFilters.length === 0 ||
+                            truck.categories.some((c) =>
+                                categoryFilters.includes(c)
                             )
                     )}
                     showCategories={() => setShowCategoryModal(true)}
@@ -335,20 +225,33 @@ export default function Index() {
     );
 }
 
+// Styles
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    map: {
-        flex: 1,
-    },
-    markerContainer: {
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    markerImage: {
-        width: 40, // Default width
-        height: 40, // Default height
-        resizeMode: "contain",
-    },
+    container: { flex: 1 },
+    map: { flex: 1 },
 });
+
+// Mapbox Layer Styles
+const circleLayerStyle = {
+    circlePitchAlignment: "map",
+    circleColor: "orange",
+    circleRadius: 30,
+    circleOpacity: 0.4,
+    circleStrokeWidth: 2,
+    circleStrokeColor: "orange",
+};
+
+const symbolCountStyle = {
+    textField: ["get", "point_count"],
+    textColor: "white",
+    textSize: 25,
+};
+
+const symbolLayerStyle = {
+    iconImage: "icon",
+    iconSize: 0.05,
+};
+
+const locationPuckStyle = {
+    pulsing: { isEnabled: true, color: "orange" },
+};

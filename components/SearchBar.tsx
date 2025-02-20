@@ -1,31 +1,15 @@
-import React, { useState } from "react";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import CircleButton from "./CircleButton";
-import { Ionicons } from "@expo/vector-icons";
 import theme from "@/theme/theme";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 interface SearchBarProps {
     onSearch: (location: { latitude: number; longitude: number }) => void;
-    onLocate: () => void;
-    changeMapToSatellite: () => void;
-    changeMapToDetailed: () => void;
-    changeMapToRegular: () => void;
-    currentMap: string;
 }
 const GOOGLE_PLACES_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-const SearchBar: React.FC<SearchBarProps> = ({
-    onSearch,
-    onLocate,
-    changeMapToDetailed,
-    changeMapToRegular,
-    changeMapToSatellite,
-    currentMap
-}) => {
-    const [showLayerModal, setShowLayerModal] = useState(false);
-
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     return (
         <View style={styles.container}>
             {/* Gradient Background */}
@@ -44,9 +28,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
                     language: "en",
                 }}
                 onPress={(data, details = null) => {
-                    const latitude = details?.geometry?.location?.lat ?? 0;
-                    const longitude = details?.geometry?.location?.lng ?? 0;
-                    onSearch({ latitude, longitude });
+                    if (details?.geometry?.location) {
+                        const latitude = details.geometry.location.lat;
+                        const longitude = details.geometry.location.lng;
+                        onSearch({ latitude, longitude });
+                    }
                 }}
                 styles={{
                     container: {
@@ -83,68 +69,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
                     placeholderTextColor: theme.colors.primaryInactive,
                 }}
                 enablePoweredByContainer={false}
-                onFail={(error) => console.error(error)}
+                onFail={(error) => console.error("Google Places Error:", error)}
             />
-            <View style={styles.togglesContainer}>
-                <CircleButton
-                    icon={
-                        <Ionicons
-                            name="layers"
-                            size={25}
-                            color={theme.colors.primary}
-                        />
-                    }
-                    onPress={() => setShowLayerModal(!showLayerModal)}
-                />
-                <CircleButton
-                    icon={
-                        <Ionicons
-                            name="location"
-                            size={25}
-                            color={theme.colors.primary}
-                        />
-                    }
-                    onPress={onLocate}
-                />
-            </View>
-
-            {/* Layer Modal */}
-            {showLayerModal && (
-                <View style={styles.layerModal}>
-                    <Pressable
-                        onPress={changeMapToRegular}
-                        style={styles.layerOption}
-                    >
-                        <Text style={[styles.layerOptionText,{
-                            color: currentMap === "mutedStandard" ? theme.colors.primary : theme.colors.blackInactive
-                        }]}>Regular</Text>
-                    </Pressable>
-                    <Pressable
-                        onPress={changeMapToDetailed}
-                        style={[
-                            styles.layerOption,
-                            {
-                                borderTopWidth: 0.5,
-                                borderBottomWidth: 0.5,
-                                borderBottomColor: "rgba(0,0,0,.1)",
-                                borderTopColor: "rgba(0,0,0,.1)",
-                            },
-                        ]}
-                    >
-                        <Text style={[styles.layerOptionText,{
-                            color: currentMap === "standard" ? theme.colors.primary : theme.colors.blackInactive
-                        }]}>Detailed</Text>
-                    </Pressable>
-                    <Pressable
-                        onPress={changeMapToSatellite}
-                        style={styles.layerOption}
-                    >
-                        <Text style={[styles.layerOptionText,{
-                            color: currentMap === "hybrid" ? theme.colors.primary : theme.colors.blackInactive
-                        }]}>Satellite</Text>
-                    </Pressable>
-                </View>
-            )}
         </View>
     );
 };
@@ -174,31 +100,6 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         fontSize: 14,
         color: theme.colors.black,
-    },
-    togglesContainer: {
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        width: "100%",
-        gap: 10,
-    },
-    layerModal: {
-        position: "absolute",
-        bottom: -100,
-        right: 10,
-        backgroundColor: "white",
-        borderRadius: 10,
-        shadowColor: "rgba(0, 0, 0, 0.3)",
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        shadowOffset: { width: 0, height: 2 },
-        elevation: 5,
-    },
-    layerOption: {
-        paddingHorizontal: 30,
-        paddingVertical: 15,
-    },
-    layerOptionText: {
-        fontSize: 16,
     },
 });
 
