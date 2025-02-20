@@ -1,5 +1,5 @@
 // ORIGINAL IMPORTS
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import SearchBar from "@/components/SearchBar";
 import NearbyTrucksCard from "@/components/NearbyTrucksCard";
@@ -28,8 +28,12 @@ import icon from "@/assets/images/icon.png";
 import useTruckStore from "@/store/useTruckStore";
 
 export default function Index() {
-    const { selectedTruckId, setSelectedTruckId, clearSelectedTruck } =
-        useTruckStore();
+    const {
+        selectedTruckId,
+        selectedTruck,
+        setSelectedTruckId,
+        clearSelectedTruck,
+    } = useTruckStore();
 
     const [categoryFilters, setCategoryFilters] = useState<string[]>([]); // Category filters
 
@@ -49,9 +53,36 @@ export default function Index() {
     });
 
     const points = FOOD_TRUCKS.map((truck) =>
-        point([truck.coordinates.longitude, truck.coordinates.latitude], {"id": truck.id})
+        point([truck.coordinates.longitude, truck.coordinates.latitude], {
+            id: truck.id,
+        })
     );
     const truckFeatures = featureCollection(points);
+
+    const cameraRef = useRef<Camera>(null);
+
+    // useEffect(() => {
+    //     if (selectedTruck && cameraRef.current) {
+    //         console.log("camera ref exists");
+    //         console.log(selectedTruck.coordinates.longitude);
+    //         console.log(selectedTruck.coordinates.latitude);
+    //         cameraRef.current.flyTo(
+    //             [
+    //                 selectedTruck.coordinates.longitude,
+    //                 selectedTruck.coordinates.latitude,
+    //             ],
+    //             100
+    //         );
+    //     } else if (!selectedTruck && cameraRef.current) {
+    //         console.log("camera ref exists");
+    //         cameraRef.current.setCamera({
+    //             zoomLevel: 12,
+    //             animationDuration: 100,
+    //         });
+    //     } else {
+    //         console.log("camera ref does not exist");
+    //     }
+    // }, [selectedTruck]); // Depend on the selected truck object
 
     return (
         <View style={styles.container}>
@@ -97,7 +128,12 @@ export default function Index() {
                 styleURL={Mapbox.StyleURL.Street}
                 onPress={() => clearSelectedTruck()}
             >
-                <Camera followUserLocation={true} followZoomLevel={14} />
+                <Camera
+                    ref={cameraRef}
+                    followUserLocation={true}
+                    followZoomLevel={14}
+                    animationMode="flyTo"
+                />
                 <LocationPuck puckBearingEnabled={true} />
 
                 <ShapeSource
@@ -109,8 +145,8 @@ export default function Index() {
                         if (features.length > 0) {
                             const truckId = features[0].properties?.id;
                             setSelectedTruckId(truckId);
+                            cameraRef.current?.moveTo([e.coordinates.longitude, e.coordinates.latitude]);
                         }
-                        console.log(e)
                     }}
                 >
                     <CircleLayer

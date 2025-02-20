@@ -1,7 +1,10 @@
 import { create } from "zustand";
+import { FoodTruck } from "@/types";
+import { FOOD_TRUCKS } from "@/constants";
 
 interface TruckStore {
     selectedTruckId: string | null;
+    selectedTruck: FoodTruck | null;
     setSelectedTruckId: (id: string | null) => void;
     clearSelectedTruck: () => void;
     nextTruck: () => void;
@@ -10,24 +13,36 @@ interface TruckStore {
 
 const useTruckStore = create<TruckStore>((set, get) => ({
     selectedTruckId: null,
+    selectedTruck: null,
 
-    setSelectedTruckId: (id) => set({ selectedTruckId: id }),
+    setSelectedTruckId: (id) => {
+        const truck = FOOD_TRUCKS.find((t) => t.id === id) || null;
+        set({ selectedTruckId: id, selectedTruck: truck });
+    },
 
-    clearSelectedTruck: () => set({ selectedTruckId: null }),
+    clearSelectedTruck: () => set({ selectedTruckId: null, selectedTruck: null }),
 
     nextTruck: () => {
         set((state) => {
-            const currentId = state.selectedTruckId ? parseInt(state.selectedTruckId) : 0;
+            if (!state.selectedTruckId) return state; // If no truck is selected, do nothing
+            
+            const currentId = parseInt(state.selectedTruckId);
             const nextId = currentId < 10 ? currentId + 1 : 0;
-            return { selectedTruckId: nextId.toString() };
+            const truck = FOOD_TRUCKS.find((t) => t.id === nextId.toString()) || null;
+
+            return { selectedTruckId: nextId.toString(), selectedTruck: truck };
         });
     },
 
     previousTruck: () => {
         set((state) => {
-            const currentId = state.selectedTruckId ? parseInt(state.selectedTruckId) : 0;
+            if (!state.selectedTruckId) return state; // If no truck is selected, do nothing
+            
+            const currentId = parseInt(state.selectedTruckId);
             const prevId = currentId > 0 ? currentId - 1 : 10;
-            return { selectedTruckId: prevId.toString() };
+            const truck = FOOD_TRUCKS.find((t) => t.id === prevId.toString()) || null;
+
+            return { selectedTruckId: prevId.toString(), selectedTruck: truck };
         });
     },
 }));
