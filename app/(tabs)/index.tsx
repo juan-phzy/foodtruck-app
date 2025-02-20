@@ -41,7 +41,6 @@ import useTruckStore from "@/store/useTruckStore";
 
 export default function Index() {
     const {
-        selectedTruckId,
         selectedTruck,
         setSelectedTruckId,
         clearSelectedTruck,
@@ -59,77 +58,55 @@ export default function Index() {
 
     const cameraRef = useRef<Camera>(null);
 
-    // 🚀 Fetch User Location on Initial Load
+    // Helper function to move the camera
+    const moveCamera = (longitude: number, latitude: number, zoomLevel: number = 14) => {
+        cameraRef.current?.setCamera({
+            centerCoordinate: [longitude, latitude],
+            zoomLevel,
+            animationDuration: 500,
+        });
+    };
+
+    // Fetch User Location on Initial Load
     useEffect(() => {
-        (async () => {
-            const { status } =
-                await Location.requestForegroundPermissionsAsync();
-            if (status !== "granted") {
-                Alert.alert(
-                    "Location Permission Required",
-                    "Please enable location services for best experience."
-                );
-                return;
+        const getUserLocation = async () => {
+            try {
+                const { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== "granted") {
+                    Alert.alert("Location Permission Required", "Please enable location services for best experience.");
+                    return;
+                }
+
+                const location = await Location.getCurrentPositionAsync({});
+                const { latitude, longitude } = location.coords;
+                setUserLocation({ latitude, longitude });
+                moveCamera(longitude, latitude);
+            } catch (error) {
+                console.error("Error getting user location:", error);
             }
+        };
 
-            const location = await Location.getCurrentPositionAsync({});
-            setUserLocation({
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-            });
-
-            // Move camera to user's initial location
-            cameraRef.current?.setCamera({
-                centerCoordinate: [
-                    location.coords.longitude,
-                    location.coords.latitude,
-                ],
-                zoomLevel: 14,
-                animationDuration: 500,
-            });
-        })();
+        getUserLocation();
     }, []);
 
-    // Compute food truck features (Avoid re-mapping FOOD_TRUCKS)
+    // Compute food truck features only once
     const truckFeatures = featureCollection(
         FOOD_TRUCKS.map((truck) =>
-            point([truck.coordinates.longitude, truck.coordinates.latitude], {
-                id: truck.id,
-            })
+            point([truck.coordinates.longitude, truck.coordinates.latitude], { id: truck.id })
         )
     );
 
     // Handle Google Places Search
-    const handleSearch = ({
-        latitude,
-        longitude,
-    }: {
-        latitude: number;
-        longitude: number;
-    }) => {
-        cameraRef.current?.setCamera({
-            centerCoordinate: [longitude, latitude],
-            zoomLevel: 14,
-            animationDuration: 500,
-        });
+    const handleSearch = ({ latitude, longitude }: { latitude: number; longitude: number }) => {
+        moveCamera(longitude, latitude);
     };
 
     // Camera Updates on Truck Selection
     useEffect(() => {
         if (selectedTruck) {
-            cameraRef.current?.setCamera({
-                centerCoordinate: [
-                    selectedTruck.coordinates.longitude,
-                    selectedTruck.coordinates.latitude - 0.0012,
-                ],
-                zoomLevel: 16,
-                animationDuration: 500,
-            });
+            moveCamera(selectedTruck.coordinates.longitude, selectedTruck.coordinates.latitude - 0.0012, 16);
         } else {
-            cameraRef.current?.setCamera({
-                zoomLevel: 14,
-                animationDuration: 500,
-            });
+            moveCamera(userLocation?.longitude ?? -122.4194, userLocation?.latitude ?? 37.7749, 14); // Defaults to SF
         }
     }, [selectedTruck]);
 
@@ -146,31 +123,21 @@ export default function Index() {
 
             {/* Menu Modal */}
             {showMenuModal && selectedTruck && (
-                <MenuModal
-                    closeMenu={() => setShowMenuModal(false)}
-                    truck={selectedTruck}
-                />
+                <MenuModal closeMenu={() => setShowMenuModal(false)} truck={selectedTruck} />
             )}
 
             {/* Truck Page */}
             {showTruckPage && selectedTruck && (
-                <TruckPage
-                    closeTruckPage={() => setShowTruckPage(false)}
-                    truck={selectedTruck}
-                />
+                <TruckPage closeTruckPage={() => setShowTruckPage(false)} truck={selectedTruck} />
             )}
 
             {/* Search Bar */}
             <SearchBar onSearch={handleSearch} />
 
             {/* Map */}
-            <MapView
-                style={styles.map}
-                styleURL={Mapbox.StyleURL.Street}
-                onPress={clearSelectedTruck}
-            >
+            <MapView style={styles.map} styleURL={Mapbox.StyleURL.Street} onPress={clearSelectedTruck} scaleBarEnabled={false}>
                 <Camera ref={cameraRef} />
-                <LocationPuck puckBearingEnabled />
+                <LocationPuck {...locationPuckStyle} />
 
                 <ShapeSource
                     id="foodTrucks"
@@ -181,25 +148,17 @@ export default function Index() {
                         if (truckId) setSelectedTruckId(truckId);
                     }}
                 >
-                    <CircleLayer
-                        id="clusters"
-                        filter={["has", "point_count"]}
-                        style={circleLayerStyle}
-                    />
+                    <CircleLayer id="clusters" filter={["has", "point_count"]} style={circleLayerStyle} />
                     <SymbolLayer id="clusters-count" style={symbolCountStyle} />
-                    <SymbolLayer
-                        id="foodTruckIcons"
-                        filter={["!", ["has", "point_count"]]}
-                        style={symbolLayerStyle}
-                    />
+                    <SymbolLayer id="foodTruckIcons" filter={["!", ["has", "point_count"]]} style={symbolLayerStyle} />
                     <Images images={{ icon }} />
                 </ShapeSource>
             </MapView>
 
             {/* Conditional Card Rendering */}
-            {selectedTruckId ? (
+            {selectedTruck ? (
                 <SelectedTruckCard
-                    truck={selectedTruck!}
+                    truck={selectedTruck}
                     openMenu={() => setShowMenuModal(true)}
                     openTruckPage={() => setShowTruckPage(true)}
                 />
@@ -210,10 +169,7 @@ export default function Index() {
                     onToggleExpand={() => setIsExpanded(!isExpanded)}
                     trucks={FOOD_TRUCKS.filter(
                         (truck) =>
-                            categoryFilters.length === 0 ||
-                            truck.categories.some((c) =>
-                                categoryFilters.includes(c)
-                            )
+                            categoryFilters.length === 0 || truck.categories.some((c) => categoryFilters.includes(c))
                     )}
                     showCategories={() => setShowCategoryModal(true)}
                 />
@@ -247,4 +203,8 @@ const symbolCountStyle = {
 const symbolLayerStyle = {
     iconImage: "icon",
     iconSize: 0.05,
+};
+
+const locationPuckStyle = {
+    pulsing: { isEnabled: true, color: "orange" },
 };
