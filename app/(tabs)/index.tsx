@@ -59,30 +59,27 @@ export default function Index() {
     );
     const truckFeatures = featureCollection(points);
 
-    const cameraRef = useRef<Camera>(null);
+    const cameraRef = useRef<Camera>(null); // Camera reference
 
-    // useEffect(() => {
-    //     if (selectedTruck && cameraRef.current) {
-    //         console.log("camera ref exists");
-    //         console.log(selectedTruck.coordinates.longitude);
-    //         console.log(selectedTruck.coordinates.latitude);
-    //         cameraRef.current.flyTo(
-    //             [
-    //                 selectedTruck.coordinates.longitude,
-    //                 selectedTruck.coordinates.latitude,
-    //             ],
-    //             100
-    //         );
-    //     } else if (!selectedTruck && cameraRef.current) {
-    //         console.log("camera ref exists");
-    //         cameraRef.current.setCamera({
-    //             zoomLevel: 12,
-    //             animationDuration: 100,
-    //         });
-    //     } else {
-    //         console.log("camera ref does not exist");
-    //     }
-    // }, [selectedTruck]); // Depend on the selected truck object
+    useEffect(() => {
+        if (selectedTruck && cameraRef.current) {
+            console.log("Moving camera to:", selectedTruck.coordinates);
+            cameraRef.current.setCamera({
+                centerCoordinate: [
+                    selectedTruck.coordinates.longitude,
+                    selectedTruck.coordinates.latitude-0.0012,
+                ],
+                zoomLevel: 16,
+                animationDuration: 1000,
+            });
+        } else if (!selectedTruck && cameraRef.current) {
+            console.log("Resetting camera to default zoom");
+            cameraRef.current.setCamera({
+                zoomLevel: 14,
+                animationDuration: 1000,
+            });
+        }
+    }, [selectedTruck]);
 
     return (
         <View style={styles.container}>
@@ -130,9 +127,7 @@ export default function Index() {
             >
                 <Camera
                     ref={cameraRef}
-                    followUserLocation={true}
-                    followZoomLevel={14}
-                    animationMode="flyTo"
+
                 />
                 <LocationPuck puckBearingEnabled={true} />
 
@@ -145,7 +140,6 @@ export default function Index() {
                         if (features.length > 0) {
                             const truckId = features[0].properties?.id;
                             setSelectedTruckId(truckId);
-                            cameraRef.current?.moveTo([e.coordinates.longitude, e.coordinates.latitude]);
                         }
                     }}
                 >

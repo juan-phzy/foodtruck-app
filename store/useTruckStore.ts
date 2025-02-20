@@ -27,7 +27,7 @@ const useTruckStore = create<TruckStore>((set, get) => ({
             if (!state.selectedTruckId) return state; // If no truck is selected, do nothing
             
             const currentId = parseInt(state.selectedTruckId);
-            const nextId = currentId < 10 ? currentId + 1 : 0;
+            const nextId = currentId < 10 ? currentId + 1 : 1;
             const truck = FOOD_TRUCKS.find((t) => t.id === nextId.toString()) || null;
 
             return { selectedTruckId: nextId.toString(), selectedTruck: truck };
@@ -39,7 +39,7 @@ const useTruckStore = create<TruckStore>((set, get) => ({
             if (!state.selectedTruckId) return state; // If no truck is selected, do nothing
             
             const currentId = parseInt(state.selectedTruckId);
-            const prevId = currentId > 0 ? currentId - 1 : 10;
+            const prevId = currentId > 1 ? currentId - 1 : 10;
             const truck = FOOD_TRUCKS.find((t) => t.id === prevId.toString()) || null;
 
             return { selectedTruckId: prevId.toString(), selectedTruck: truck };
