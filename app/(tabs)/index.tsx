@@ -61,19 +61,29 @@ export default function Index() {
 
     const cameraRef = useRef<Camera>(null); // Camera reference
 
+    const handleSearch = ({ latitude, longitude }: { latitude: number; longitude: number }) => {
+        console.log("Moving camera to searched location:", latitude, longitude);
+        if (cameraRef.current) {
+            cameraRef.current.setCamera({
+                centerCoordinate: [longitude, latitude],
+                zoomLevel: 14,
+                animationDuration: 1000,
+            });
+        }
+    };
+
+
     useEffect(() => {
         if (selectedTruck && cameraRef.current) {
-            console.log("Moving camera to:", selectedTruck.coordinates);
             cameraRef.current.setCamera({
                 centerCoordinate: [
                     selectedTruck.coordinates.longitude,
-                    selectedTruck.coordinates.latitude-0.0012,
+                    selectedTruck.coordinates.latitude - 0.0012,
                 ],
                 zoomLevel: 16,
                 animationDuration: 1000,
             });
         } else if (!selectedTruck && cameraRef.current) {
-            console.log("Resetting camera to default zoom");
             cameraRef.current.setCamera({
                 zoomLevel: 14,
                 animationDuration: 1000,
@@ -117,7 +127,7 @@ export default function Index() {
             )}
 
             {/* Search Bar */}
-            <SearchBar onSearch={() => {}} />
+            <SearchBar onSearch={handleSearch} />
 
             {/* Map */}
             <MapView
@@ -125,10 +135,7 @@ export default function Index() {
                 styleURL={Mapbox.StyleURL.Street}
                 onPress={() => clearSelectedTruck()}
             >
-                <Camera
-                    ref={cameraRef}
-
-                />
+                <Camera ref={cameraRef} />
                 <LocationPuck puckBearingEnabled={true} />
 
                 <ShapeSource
@@ -189,19 +196,13 @@ export default function Index() {
                     openTruckPage={() => setShowTruckPage(true)}
                 />
             ) : (
-                /* Make The Truck Cards in the list pressable
-                 We most likely will need to redo the handleMarkerPress logic
-                 We might need to create a context instead for the selected
-                 and then run a function through useEffect whenever the selected
-                 truck changes 
-                 */
                 <NearbyTrucksCard
                     isCategoryActive={categoryFilters.length > 0}
                     isExpanded={isExpanded}
                     onToggleExpand={() => setIsExpanded(!isExpanded)}
                     trucks={foodTruckData.filter(
                         (truck) =>
-                            categoryFilters.length === 0 || // If no filters are applied, include all trucks
+                            categoryFilters.length === 0 ||
                             truck.categories.some((category) =>
                                 categoryFilters.includes(category)
                             )

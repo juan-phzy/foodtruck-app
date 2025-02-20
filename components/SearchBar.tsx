@@ -9,10 +9,7 @@ interface SearchBarProps {
 }
 const GOOGLE_PLACES_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
-const SearchBar: React.FC<SearchBarProps> = ({
-    onSearch,
-}) => {
-
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     return (
         <View style={styles.container}>
             {/* Gradient Background */}
@@ -31,9 +28,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
                     language: "en",
                 }}
                 onPress={(data, details = null) => {
-                    const latitude = details?.geometry?.location?.lat ?? 0;
-                    const longitude = details?.geometry?.location?.lng ?? 0;
-                    onSearch({ latitude, longitude });
+                    if (details?.geometry?.location) {
+                        const latitude = details.geometry.location.lat;
+                        const longitude = details.geometry.location.lng;
+                        onSearch({ latitude, longitude });
+                    }
                 }}
                 styles={{
                     container: {
@@ -70,9 +69,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
                     placeholderTextColor: theme.colors.primaryInactive,
                 }}
                 enablePoweredByContainer={false}
-                onFail={(error) => console.error(error)}
+                onFail={(error) => console.error("Google Places Error:", error)}
             />
-
         </View>
     );
 };
