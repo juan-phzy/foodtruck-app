@@ -40,11 +40,8 @@ import icon from "@/assets/images/icon.png";
 import useTruckStore from "@/store/useTruckStore";
 
 export default function Index() {
-    const {
-        selectedTruck,
-        setSelectedTruckId,
-        clearSelectedTruck,
-    } = useTruckStore();
+    const { selectedTruck, setSelectedTruckId, clearSelectedTruck } =
+        useTruckStore();
 
     const [userLocation, setUserLocation] = useState<{
         latitude: number;
@@ -59,7 +56,11 @@ export default function Index() {
     const cameraRef = useRef<Camera>(null);
 
     // Helper function to move the camera
-    const moveCamera = (longitude: number, latitude: number, zoomLevel: number = 14) => {
+    const moveCamera = (
+        longitude: number,
+        latitude: number,
+        zoomLevel: number = 14
+    ) => {
         cameraRef.current?.setCamera({
             centerCoordinate: [longitude, latitude],
             zoomLevel,
@@ -71,9 +72,13 @@ export default function Index() {
     useEffect(() => {
         const getUserLocation = async () => {
             try {
-                const { status } = await Location.requestForegroundPermissionsAsync();
+                const { status } =
+                    await Location.requestForegroundPermissionsAsync();
                 if (status !== "granted") {
-                    Alert.alert("Location Permission Required", "Please enable location services for best experience.");
+                    Alert.alert(
+                        "Location Permission Required",
+                        "Please enable location services for best experience."
+                    );
                     return;
                 }
 
@@ -91,22 +96,42 @@ export default function Index() {
 
     // Compute food truck features only once
     const truckFeatures = featureCollection(
-        FOOD_TRUCKS.map((truck) =>
-            point([truck.coordinates.longitude, truck.coordinates.latitude], { id: truck.id })
+        FOOD_TRUCKS.filter(
+            (truck) =>
+                categoryFilters.length === 0 ||
+                truck.categories.some((c) => categoryFilters.includes(c))
+        ).map((truck) =>
+            point([truck.coordinates.longitude, truck.coordinates.latitude], {
+                id: truck.id,
+            })
         )
     );
 
     // Handle Google Places Search
-    const handleSearch = ({ latitude, longitude }: { latitude: number; longitude: number }) => {
+    const handleSearch = ({
+        latitude,
+        longitude,
+    }: {
+        latitude: number;
+        longitude: number;
+    }) => {
         moveCamera(longitude, latitude);
     };
 
     // Camera Updates on Truck Selection
     useEffect(() => {
         if (selectedTruck) {
-            moveCamera(selectedTruck.coordinates.longitude, selectedTruck.coordinates.latitude - 0.0012, 16);
+            moveCamera(
+                selectedTruck.coordinates.longitude,
+                selectedTruck.coordinates.latitude - 0.0012,
+                16
+            );
         } else {
-            moveCamera(userLocation?.longitude ?? -122.4194, userLocation?.latitude ?? 37.7749, 14); // Defaults to SF
+            moveCamera(
+                userLocation?.longitude ?? -122.4194,
+                userLocation?.latitude ?? 37.7749,
+                14
+            ); // Defaults to SF
         }
     }, [selectedTruck]);
 
@@ -123,19 +148,30 @@ export default function Index() {
 
             {/* Menu Modal */}
             {showMenuModal && selectedTruck && (
-                <MenuModal closeMenu={() => setShowMenuModal(false)} truck={selectedTruck} />
+                <MenuModal
+                    closeMenu={() => setShowMenuModal(false)}
+                    truck={selectedTruck}
+                />
             )}
 
             {/* Truck Page */}
             {showTruckPage && selectedTruck && (
-                <TruckPage closeTruckPage={() => setShowTruckPage(false)} truck={selectedTruck} />
+                <TruckPage
+                    closeTruckPage={() => setShowTruckPage(false)}
+                    truck={selectedTruck}
+                />
             )}
 
             {/* Search Bar */}
             <SearchBar onSearch={handleSearch} />
 
             {/* Map */}
-            <MapView style={styles.map} styleURL={Mapbox.StyleURL.Street} onPress={clearSelectedTruck} scaleBarEnabled={false}>
+            <MapView
+                style={styles.map}
+                styleURL={Mapbox.StyleURL.Street}
+                onPress={clearSelectedTruck}
+                scaleBarEnabled={false}
+            >
                 <Camera ref={cameraRef} />
                 <LocationPuck {...locationPuckStyle} />
 
@@ -148,9 +184,17 @@ export default function Index() {
                         if (truckId) setSelectedTruckId(truckId);
                     }}
                 >
-                    <CircleLayer id="clusters" filter={["has", "point_count"]} style={circleLayerStyle} />
+                    <CircleLayer
+                        id="clusters"
+                        filter={["has", "point_count"]}
+                        style={circleLayerStyle}
+                    />
                     <SymbolLayer id="clusters-count" style={symbolCountStyle} />
-                    <SymbolLayer id="foodTruckIcons" filter={["!", ["has", "point_count"]]} style={symbolLayerStyle} />
+                    <SymbolLayer
+                        id="foodTruckIcons"
+                        filter={["!", ["has", "point_count"]]}
+                        style={symbolLayerStyle}
+                    />
                     <Images images={{ icon }} />
                 </ShapeSource>
             </MapView>
@@ -169,7 +213,10 @@ export default function Index() {
                     onToggleExpand={() => setIsExpanded(!isExpanded)}
                     trucks={FOOD_TRUCKS.filter(
                         (truck) =>
-                            categoryFilters.length === 0 || truck.categories.some((c) => categoryFilters.includes(c))
+                            categoryFilters.length === 0 ||
+                            truck.categories.some((c) =>
+                                categoryFilters.includes(c)
+                            )
                     )}
                     showCategories={() => setShowCategoryModal(true)}
                 />
