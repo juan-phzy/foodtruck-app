@@ -35,6 +35,6 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# prebuilds
-android/
-ios/
+# Ignore native directories (if you are using EAS Build)
+/android
+/ios
