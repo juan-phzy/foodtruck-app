@@ -9,6 +9,10 @@ dist/
 web-build/
 expo-env.d.ts
 
+# Ignore native directories (if you are using EAS Build)
+android/
+ios/
+
 # Native
 *.orig.*
 *.jks
@@ -35,6 +39,3 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# Ignore native directories (if you are using EAS Build)
-/android
-/ios
