@@ -164,6 +164,16 @@ Follow these instructions to set up and run the project locally.
    EXPO_PUBLIC_MAPBOX_KEY=your-mapbox-key
    ```
 
+5. Set up your `.expo-env.d.ts` file for expo env definition:  
+   ```env
+   /// <reference types="expo/types" />
+   // NOTE: This file should not be edited and should be in your git ignore
+   ```
+
+6. Run expo doctor to ensure all dependencies are compatible:  
+   ```bash
+   npx expo-doctor
+   ```
 ---
 
 ### Running the App
