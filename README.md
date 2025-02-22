@@ -11,12 +11,22 @@ MunchMap is a mobile-first application designed to help users discover nearby fo
 - **Dynamic Forms**: Toggle between sign-in options (Phone or Email) with reusable and modular components.  
 - **Theming**: Unified theme for consistent design, including primary and secondary colors.  
 - **Custom Components**:  
+  - `CategoryModal`: Full screen modal that shows categories to select which will affect truck filtering.
+  - `CircleButton`: Custom circle button ui.
   - `CustomButton`: Fully customizable button styles.  
   - `CustomTextInput`: Reusable input fields with labels and borders.  
   - `IconButton`: Icon-based buttons with labels for alternate sign-in methods.  
+  - `MenuModal`: Full screen modal that shows a truck's menu items.
+  - `NearbyTrucksCard`: Card that lists the visible trucks on the map.
+  - `SearchBar`: Google API address search UI on top of the map.
+  - `SelectedTruckCard`: Modal that shows the selected truck's information.
+  - `TruckCardList`: Returns a list of small truck cards.
+  - `TruckCardSmall`: Minimized truck card displaying key information.
+  - `TruckPage`: Full truck page that shows all specific truck information.
 - **Blur and Gradient Effects**: Modern design elements such as background blur and gradients.  
 - **Food Truck List and Search**:  
   - Dynamically filter food trucks by category.  
+  - Dynamically order trucks by rating or by distance.
   - Interactive Google Places search integration for seamless location updates.  
 - **Interactive Map**:  
   - Custom marker icons for food trucks.  
@@ -33,6 +43,12 @@ MunchMap is a mobile-first application designed to help users discover nearby fo
 ```
 FOODTRUCK-APP
 │
+│── .expo                    # This folder automatically appears when a dev server is ran
+│
+│── android                  # This folder automatically appears when an android prebuild is created
+│
+│── ios                      # This folder automatically appears when an ios prebuild is created
+│
 ├── app
 │   ├── (tabs)               # Tab layout and related screens
 │   │   ├── _layout.tsx      # Tab layout file
@@ -44,17 +60,6 @@ FOODTRUCK-APP
 │   ├── create-account.tsx   # Create Account screen
 │   └── Sign-in.tsx          # Sign In Screen
 │
-├── components               # Reusable UI components
-│   ├── CircleButton.tsx
-│   ├── CustomButton.tsx
-│   ├── CustomTextInput.tsx
-│   ├── IconButton.tsx
-│   ├── NearbyTrucksCard.tsx
-│   ├── SearchBar.tsx
-│   ├── SelectedTruckCard.tsx
-│   ├── TruckCardList.tsx
-│   └── TruckCardSmall.tsx
-│
 ├── assets                   # Static assets
 │   ├── images
 │   │   ├── favicon.png
@@ -63,22 +68,56 @@ FOODTRUCK-APP
 │   │   └── truckImages      # Images of food trucks
 │   └── fonts                # Fonts used in the application
 │
+├── components               # Reusable UI components
+│   ├── CategoryModal.tsx
+│   ├── CircleButton.tsx
+│   ├── CustomButton.tsx
+│   ├── CustomTextInput.tsx
+│   ├── IconButton.tsx
+│   ├── MenuModal.tsx
+│   ├── NearbyTrucksCard.tsx
+│   ├── SearchBar.tsx
+│   ├── SelectedTruckCard.tsx
+│   ├── TruckCardList.tsx
+│   ├── TruckCardSmall.tsx
+│   └── TruckPage.tsx
+│
+├── context                  # Placeholder context for authentication (not actually implemented)
+│   └── ctx.tsx
+│
+├── node_modules             # Automatically appears when npm and expo is initialized
+│
+├── storage                  # Placeholder local storage utilities (not fully implemented)
+│   └── useStorageState.ts
+│
+├── store                    # Contains Zustand custom hooks
+│   ├── useFilterStore.tsx   # State management for selected category filters
+│   └── useTruckStore.tsx    # State management for selected truck on map
+│
 ├── theme                    # Theme and styling variables
 │   └── theme.ts
 │
-├── context                  # Context for authentication and state management
-│   └── ctx.tsx
+├── .env.local               # Local environment variables
 │
-├── storage                  # Local storage utilities
-│   └── useStorageState.ts
+├── .gitignore               # List of files to be ignored on github
+│
+├── app.json                 # Expo project configuration
 │
 ├── constants.ts             # Shared constants (e.g., category list, initial data)
-├── types.ts                 # Type and Interface definitions for data handling
+│
 ├── expo-env.d.ts            # Environment variable definitions
-├── app.json                 # Expo project configuration
-├── .env                     # Environment variables
-├── .gitignore               # Ignored files for version control
-└── README.md                # Project documentation
+│
+├── global.d.ts              # Global module definitions
+│
+├── package-lock.json        # Dependencies
+│
+├── package.json             # Dependencies
+│
+├── README.md                # Project documentation
+│
+├── tsconfig.json            # TypeScript configuration
+│
+└── types.ts                 # Type and Interface definitions for data handling 
 ```
 
 ---
@@ -92,10 +131,16 @@ Follow these instructions to set up and run the project locally.
 - **Node.js** (Latest stable version recommended)  
 - **Expo CLI** (or use `npx expo` commands, preferred)  
 - **Git** (for version control)
+- **Android Studio** (for android emulator/android prebuilds)
+- **XCode/Mac** (for ios emulator/ios prebuilds)
 
 ---
 
 ### Installation
+
+#### WARNINGS: 
+   1. MAKE SURE THE REPO IS NOT WITHIN A LONG PATH ON YOUR MACHINE
+   2. MAKE SURE THE REPO IS NOT WITHIN A ONEDRIVE OR DROPBOX SYNCED FOLDER
 
 1. Clone the repository:  
    ```bash
@@ -113,24 +158,28 @@ Follow these instructions to set up and run the project locally.
    npx expo install
    ```
 
-4. Set up your `.env` file with your Google API Key:  
+4. Set up your `.env.local` file with your Google API & Mapbox Key:  
    ```env
    EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-api-key
+   EXPO_PUBLIC_MAPBOX_KEY=your-mapbox-key
    ```
 
 ---
 
 ### Running the App
 
-1. Start the development server:  
+#### WARNINGS
+   1. Expo GO is NOT supported for this project.
+   2. Prebuilds are NECESSARY to run the project
+
+1. Create a prebuild if android or ios folder is not present within your project:  
    ```bash
-   npx expo start
+   npx expo prebuild --clean
    ```
 
 2. Choose a platform to run the app:  
-   - Press `w` to run in the browser (WebView).  
-   - Press `a` to run on Android.  
-   - Press `i` to run on iOS (requires macOS).
+   - npx expo run:android
+   - npx expo run:ios
 
 ---
 
@@ -146,9 +195,12 @@ Follow these instructions to set up and run the project locally.
 
 3. **View Food Truck Details**:  
    - Tap on a marker or truck card to view detailed information, including ratings, categories, and images.
+   - Tap on truck card's menu to view food items
+   - Tap on truck card's truck button to view full truck page
 
 4. **Filter Trucks**:  
    - Filter food trucks by categories dynamically.
+   - Reorder food truck list by distance or rating
 
 ---
 
@@ -161,6 +213,7 @@ Follow these instructions to set up and run the project locally.
 - **Google Places API**: Integrated location search functionality.  
 - **Expo Blur**: Background blur effects.  
 - **Expo Linear Gradient**: Stylish gradient overlays.
+- **rnmapbox**: Interactive map rendering
 
 ---
 
