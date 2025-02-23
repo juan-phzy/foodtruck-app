@@ -1,12 +1,36 @@
+/**
+ * @file SearchBar.tsx
+ * @description A search bar component utilizing Google Places Autocomplete for searching locations.
+ *
+ * Features:
+ * - Uses Google Places API to fetch place details.
+ * - Provides real-time search suggestions.
+ * - Calls `onSearch` callback with selected location's latitude and longitude.
+ * - Implements a gradient background for UI enhancement.
+ * - Includes customizable styling for input, dropdown, and shadow effects.
+ */
+
+// React & Hooks
 import React from "react";
+
+// React Native Components
 import { StyleSheet, View } from "react-native";
+
+// Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
-import theme from "@/theme/theme";
+
+// External Libraries
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
+// Constants & Theme
+import theme from "@/theme/theme";
+
+// Type Definitions
 interface SearchBarProps {
     onSearch: (location: { latitude: number; longitude: number }) => void;
 }
+
+// Google Places API Key (Environment Variable)
 const GOOGLE_PLACES_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
@@ -18,20 +42,20 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
                 locations={[0.2, 0.8]}
                 style={styles.gradient}
             />
-            {/* Google Places Autocomplete */}
+
+            {/* Google Places Autocomplete Search Bar */}
             <GooglePlacesAutocomplete
                 placeholder="Search other places"
-                minLength={2}
-                fetchDetails={true}
+                minLength={2} // Minimum characters before search triggers
+                fetchDetails={true} // Fetches full place details
                 query={{
                     key: GOOGLE_PLACES_API_KEY,
                     language: "en",
                 }}
                 onPress={(data, details = null) => {
                     if (details?.geometry?.location) {
-                        const latitude = details.geometry.location.lat;
-                        const longitude = details.geometry.location.lng;
-                        onSearch({ latitude, longitude });
+                        const { lat: latitude, lng: longitude } = details.geometry.location;
+                        onSearch({ latitude, longitude }); // Pass selected location to parent component
                     }
                 }}
                 styles={{
@@ -41,7 +65,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
                         shadowOpacity: 0.3,
                         shadowRadius: 3,
                         shadowOffset: { width: 0, height: 2 },
-                        elevation: 3,
+                        elevation: 3, // Android shadow effect
                     },
                     textInput: styles.inputText,
                     listView: {
@@ -50,12 +74,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
                         marginTop: 0,
                     },
                     row: {
-                        flex: 1,
                         flexDirection: "row",
                         justifyContent: "flex-start",
                         alignItems: "center",
                         padding: 10,
-                        margin: 0,
                         backgroundColor: "#fff",
                         borderBottomWidth: 0.5,
                         borderBottomColor: "rgba(0,0,0,.1)",
@@ -66,15 +88,16 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
                     },
                 }}
                 textInputProps={{
-                    placeholderTextColor: theme.colors.primaryInactive,
+                    placeholderTextColor: theme.colors.primaryInactive, // Custom placeholder color
                 }}
-                enablePoweredByContainer={false}
-                onFail={(error) => console.error("Google Places Error:", error)}
+                enablePoweredByContainer={false} // Removes "Powered by Google" branding
+                onFail={(error) => console.error("Google Places Error:", error)} // Error handling
             />
         </View>
     );
 };
 
+// Styles
 const styles = StyleSheet.create({
     container: {
         flexDirection: "column",
@@ -88,10 +111,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         width: "100%",
         alignSelf: "center",
-        zIndex: 10,
+        zIndex: 10, // Ensures it appears above other components
     },
     gradient: {
-        ...StyleSheet.absoluteFillObject,
+        ...StyleSheet.absoluteFillObject, // Applies gradient to entire component
     },
     inputText: {
         flex: 1,
