@@ -12,6 +12,8 @@ expo-env.d.ts
 # Ignore native directories (if you are using EAS Build)
 android/
 ios/
+/android/
+/ios/
 
 # Native
 *.orig.*
