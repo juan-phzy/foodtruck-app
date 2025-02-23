@@ -1,245 +1,287 @@
+// React & Hooks
 import React, { useState } from "react";
-import { StyleSheet, View, Text, ImageBackground } from "react-native";
+
+// React Native Components
+import {
+    StyleSheet,
+    View,
+    Text,
+    ImageBackground,
+    Dimensions,
+} from "react-native";
+
+// Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import CustomTextInput from "@/components/CustomTextInput";
-import CustomButton from "@/components/CustomButton";
-import theme from "@/theme/theme";
-import IconButton from "@/components/IconButton";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import { useSession } from "@/context/ctx";
 import { router } from "expo-router";
 
+// Custom Components
+import CustomTextInput from "@/components/CustomTextInput";
+import CustomButton from "@/components/CustomButton";
+import IconButton from "@/components/IconButton";
+
+// Context & State Management
+import { useSession } from "@/context/ctx";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+// Theme & Styles
+import theme from "@/theme/theme";
+
+// Get screen dimensions for responsive UI scaling
+const { width, height } = Dimensions.get("window");
+
+/**
+ * SignIn Component
+ *
+ * This screen provides a user-friendly interface for signing in.
+ *
+ * Features:
+ * - Background image with gradient overlay.
+ * - Toggle between Email and Phone sign-in.
+ * - Input fields for credentials.
+ * - Alternative sign-in options (Email, Gmail, Phone).
+ * - Navigation to Create Account screen.
+ * - Fully responsive layout for different screen sizes.
+ */
 export default function SignIn() {
+    // State for toggling between Phone and Email sign-in
     const [signInOption, setSignInOption] = useState<"Phone" | "Email">(
         "Phone"
-    ); // Toggle between sign-in options
+    );
 
     const { signIn } = useSession();
+
+    /**
+     * Handles the sign-in process
+     */
+    const handleSignIn = () => {
+        console.log("Sign In Button Pressed");
+        signIn();
+        router.replace("/");
+    };
+
+    /**
+     * Handles navigation to the Create Account screen
+     */
+    const handleCreateAccount = () => {
+        console.log("Create Account Button Pressed");
+        router.push("/create-account");
+    };
+
+    /**
+     * Renders the toggle button to switch between Phone and Email sign-in
+     */
+    const renderSignInToggle = () => {
+        return signInOption === "Phone" ? (
+            <IconButton
+                icon={<MaterialIcons name="email" size={25} color="white" />}
+                label="Email"
+                iconBackground={theme.colors.primary}
+                onPress={() => setSignInOption("Email")}
+            />
+        ) : (
+            <IconButton
+                icon={
+                    <MaterialCommunityIcons
+                        name="phone"
+                        size={25}
+                        color="white"
+                    />
+                }
+                label="Phone"
+                iconBackground={theme.colors.primary}
+                onPress={() => setSignInOption("Phone")}
+            />
+        );
+    };
 
     return (
         // Main Container
         <View style={styles.container}>
-            {/* MAIN CONTAINER IMAGE BG START */}
+            {/* Background Image with Overlay */}
             <ImageBackground
                 source={require("@/assets/images/sign-in-bg.jpg")}
                 style={styles.background}
                 imageStyle={{ resizeMode: "cover" }}
             >
-                {/* BG GRADIENT START - POSITION ABSOLUTE*/}
-                <LinearGradient
-                    colors={[
-                        "rgba(255, 132, 0, 1)", // Orange, Primary Theme Color
-                        "rgba(122, 63, 0, 0.85)", // Orange/Black
-                        "rgba(0, 0, 0, 1)", // Black
-                    ]}
-                    locations={[0, 0.3, 0.95]}
-                    style={styles.gradient}
-                />
-                {/* BG GRADIENT END */}
+                <SafeAreaView style={styles.safeArea}>
+                    {/* Background Gradient Overlay */}
+                    <LinearGradient
+                        colors={[
+                            "rgba(255, 132, 0, 1)", // Orange (Primary Theme Color)
+                            "rgba(122, 63, 0, 0.85)", // Dark Orange
+                            "rgba(0, 0, 0, 1)", // Black
+                        ]}
+                        locations={[0, 0.3, 0.95]}
+                        style={styles.gradient}
+                    />
 
-                {/* CONTENT CONTAINER START */}
-                <View style={styles.content}>
-                    {/* LOGO CONTAINER START */}
-                    <View style={styles.logoContainer}>
-                        <Text style={styles.title}>MunchMap</Text>
-                        <Text style={styles.subtitle}>
-                            Find Nearby Food Trucks
-                        </Text>
-                    </View>
-                    {/* LOGO CONTAINER END */}
+                    {/* Main Content */}
+                    <View style={styles.content}>
+                        {/* Logo Section */}
+                        <View style={styles.logoContainer}>
+                            <Text style={styles.title}>MunchMap</Text>
+                            <Text style={styles.subtitle}>
+                                Find Nearby Food Trucks
+                            </Text>
+                        </View>
 
-                    {/* Shadow Container */}
-                    <View style={styles.shadowContainer}>
-                        {/* BlurView for Background */}
-                        <BlurView intensity={8} style={styles.bodyContainer}>
-                            {/* BODY CONTAINER BG GRADIENT START */}
-                            <LinearGradient
-                                colors={[
-                                    "rgba(210, 210, 210, 0.2)",
-                                    "rgba(0, 0, 0, 0)",
-                                ]}
-                                locations={[0.5, 1]}
-                                style={styles.gradient}
-                            />
-                            {/* BODY CONTAINER BG GRADIENT END */}
-
-                            {/* INPUT FORM START */}
-                            <View style={styles.child}>
-                                <CustomTextInput
-                                    label={signInOption}
-                                    placeholder={
-                                        signInOption != "Email"
-                                            ? "(123)-456-7890"
-                                            : "muncher@email.com"
-                                    }
+                        {/* Form Container with Shadow Effect */}
+                        <View style={styles.shadowContainer}>
+                            {/* Blurred Background for Form */}
+                            <BlurView
+                                intensity={8}
+                                style={styles.bodyContainer}
+                            >
+                                {/* Form Gradient Overlay */}
+                                <LinearGradient
+                                    colors={[
+                                        "rgba(210, 210, 210, 0.2)",
+                                        "rgba(0, 0, 0, 0)",
+                                    ]}
+                                    locations={[0.5, 1]}
+                                    style={styles.gradient}
                                 />
-                                <CustomTextInput
-                                    label="Password"
-                                    placeholder="Enter your password"
-                                />
-                                <CustomButton
-                                    style="light"
-                                    verticalPadding={10}
-                                    fontSize={16}
-                                    text="Sign In"
-                                    onPress={() => {
-                                        console.log("Sign In Button Pressed");
-                                        signIn();
-                                        router.replace("/");
-                                    }}
-                                />
-                            </View>
-                            {/* INPUT FORM END */}
 
-                            {/* DIVIDER LINE START */}
-                            <View style={styles.dividerContainer}>
-                                <View style={styles.dividerLine} />
-                                <Text style={styles.dividerText}>OR</Text>
-                                <View style={styles.dividerLine} />
-                            </View>
-                            {/* DIVIDER LINE END */}
-
-                            {/* OTHER SIGN-IN OPTIONS */}
-                            <View style={styles.otherOptionsContainer}>
-                                {signInOption === "Phone" ? (
-                                    <IconButton
-                                        icon={
-                                            <MaterialIcons
-                                                name="email"
-                                                size={25}
-                                                color="white"
-                                            />
+                                {/* Input Form */}
+                                <View style={styles.child}>
+                                    <CustomTextInput
+                                        label={signInOption}
+                                        placeholder={
+                                            signInOption !== "Email"
+                                                ? "(123)-456-7890"
+                                                : "muncher@email.com"
                                         }
-                                        label="Email"
-                                        iconBackground={theme.colors.primary}
-                                        onPress={() => setSignInOption("Email")}
                                     />
-                                ) : (
+                                    <CustomTextInput
+                                        label="Password"
+                                        placeholder="Enter your password"
+                                    />
+                                    <CustomButton
+                                        style="light"
+                                        verticalPadding={10}
+                                        fontSize={16}
+                                        text="Sign In"
+                                        onPress={handleSignIn}
+                                    />
+                                </View>
+
+                                {/* Divider Line */}
+                                <View style={styles.dividerContainer}>
+                                    <View style={styles.dividerLine} />
+                                    <Text style={styles.dividerText}>OR</Text>
+                                    <View style={styles.dividerLine} />
+                                </View>
+
+                                {/* Other Sign-In Options */}
+                                <View style={styles.otherOptionsContainer}>
+                                    {renderSignInToggle()}
                                     <IconButton
                                         icon={
                                             <MaterialCommunityIcons
-                                                name="phone"
+                                                name="gmail"
                                                 size={25}
                                                 color="white"
                                             />
                                         }
-                                        label="Phone"
+                                        label="Gmail"
                                         iconBackground={theme.colors.primary}
-                                        onPress={() => setSignInOption("Phone")}
+                                        onPress={() =>
+                                            console.log("Gmail Button Pressed")
+                                        }
                                     />
-                                )}
-                                <IconButton
-                                    icon={
-                                        <MaterialCommunityIcons
-                                            name="gmail"
-                                            size={25}
-                                            color="white"
-                                        />
-                                    }
-                                    label="Gmail"
-                                    iconBackground={theme.colors.primary}
-                                    onPress={() =>
-                                        console.log("Gmail Button Pressed")
-                                    }
-                                />
-                            </View>
-                            {/* NEW USER SECTION */}
-                            <View style={styles.newUserContainer}>
-                                <Text style={styles.newUserLabel}>
-                                    New User?
-                                </Text>
-                                <CustomButton
-                                    style="outlineLight"
-                                    verticalPadding={10}
-                                    fontSize={16}
-                                    text="Create Account Here"
-                                    onPress={() =>
-                                    {
-                                        console.log(
-                                            "Create Account Button Pressed"
-                                        );
-                                        router.push("/create-account"); // Navigate to the CreateAccountScreen
-                                    }
-                                    }
-                                />
-                            </View>
+                                </View>
 
-                            {/* SWITCH TO VENDOR */}
-                            <View style={styles.switchVendorContainer}>
-                                <Text style={styles.switchVendorText}>
-                                    Switch to Vendor Login
-                                </Text>
-                            </View>
-                        </BlurView>
+                                {/* New User Section */}
+                                <View style={styles.newUserContainer}>
+                                    <Text style={styles.newUserLabel}>
+                                        New User?
+                                    </Text>
+                                    <CustomButton
+                                        style="outlineLight"
+                                        verticalPadding={10}
+                                        fontSize={16}
+                                        text="Create Account Here"
+                                        onPress={handleCreateAccount}
+                                    />
+                                </View>
+
+                                {/* Switch to Vendor Login */}
+                                <View style={styles.switchVendorContainer}>
+                                    <Text style={styles.switchVendorText}>
+                                        Switch to Vendor Login
+                                    </Text>
+                                </View>
+                            </BlurView>
+                        </View>
                     </View>
-                </View>
-                {/* CONTENT CONTAINER END */}
+                </SafeAreaView>
             </ImageBackground>
-            {/* MAIN CONTAINER IMAGE BG END */}
         </View>
-        // Main Container End
     );
 }
 
+/**
+ * Styles for SignIn Screen
+ */
 const styles = StyleSheet.create({
     // Main Container
     container: {
-        // Size and Positioning
         flex: 1,
-        flexDirection: "column",
-        position: "relative",
         justifyContent: "center",
     },
+
     background: {
-        // Size and Positioning
         flex: 1,
-        position: "relative",
         justifyContent: "center",
+        position: "relative",
     },
+
     gradient: {
         ...StyleSheet.absoluteFillObject,
     },
 
+    safeArea: {
+        flex: 1,
+        position: "relative",
+    },
+
     // Content Container
     content: {
-        // Flexbox
         flex: 1,
+        position: "relative",
         flexDirection: "column",
         justifyContent: "flex-end",
         alignItems: "center",
-        gap: 20,
     },
 
     // Logo Container
     logoContainer: {
-        // Flexbox
         width: "100%",
-        flex: 1,
-        flexDirection: "column",
+        position: "relative",
         alignItems: "center",
         justifyContent: "center",
+        paddingVertical: 30,
     },
+
     title: {
-        // Typography
-        fontSize: 64,
+        fontSize: width * 0.12, // Dynamically adjusts based on screen width
         color: "white",
     },
+
     subtitle: {
-        // Typography
-        fontSize: 16,
+        fontSize: width * 0.05, // Dynamically adjusts based on screen width
         color: "white",
     },
 
     // Shadow Container
     shadowContainer: {
-        // Flexbox
         flexDirection: "column",
         justifyContent: "flex-end",
-
-        // Size and Positioning
+        position: "relative",
         width: "100%",
-        height: 525,
+        height: "70%",
 
         // Shadow (iOS + Android)
         shadowColor: theme.colors.primary,
@@ -251,12 +293,10 @@ const styles = StyleSheet.create({
 
     // Body Container
     bodyContainer: {
-        // Flexbox
         flexDirection: "column",
+        position: "relative",
         padding: 25,
         gap: 15,
-
-        // Size and Positioning
         width: "100%",
         height: "100%",
 
@@ -265,12 +305,10 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 40,
         overflow: "hidden", // Clips the gradient to rounded corners
     },
+
     child: {
-        // Size and Positioning
         width: "100%",
         minHeight: 20,
-
-        // Flexbox
         flexDirection: "column",
         gap: 10,
 
@@ -281,10 +319,7 @@ const styles = StyleSheet.create({
 
     // Divider Container
     dividerContainer: {
-        // Size and Positioning
         width: "100%",
-
-        // Flexbox
         flexDirection: "row",
         alignItems: "center",
         paddingVertical: 10,
@@ -293,17 +328,15 @@ const styles = StyleSheet.create({
         borderWidth: 0,
         borderColor: "red",
     },
+
     dividerLine: {
-        // Size and Positioning
         flex: 1,
         height: 1,
         marginHorizontal: 10,
-
-        // Background
         backgroundColor: theme.colors.white,
     },
+
     dividerText: {
-        // Typography
         color: theme.colors.white,
         fontSize: 16,
         fontWeight: "medium",
@@ -311,7 +344,6 @@ const styles = StyleSheet.create({
 
     // Other Options Container
     otherOptionsContainer: {
-        // Flexbox
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
@@ -320,15 +352,14 @@ const styles = StyleSheet.create({
 
     // New User View Styles
     newUserContainer: {
-        // Flexbox
         flexDirection: "column",
         alignItems: "flex-start",
         justifyContent: "flex-start",
         gap: 10,
         width: "100%",
     },
+
     newUserLabel: {
-        // Typography
         color: theme.colors.white,
         fontSize: 14,
         fontWeight: "medium",
@@ -336,7 +367,6 @@ const styles = StyleSheet.create({
 
     // Switch to Vendor Login Styles
     switchVendorContainer: {
-        // Borders
         borderTopWidth: 1,
         borderTopColor: theme.colors.white,
 
@@ -348,8 +378,8 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         width: "100%",
     },
+
     switchVendorText: {
-        // Typography
         color: theme.colors.white,
         fontSize: 14,
     },

@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 // React Native Components
-import { StyleSheet, View, Alert } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 // Expo Location API
 import * as Location from "expo-location";
@@ -40,12 +40,9 @@ import icon from "@/assets/images/icon.png";
 import useTruckStore from "@/store/useTruckStore";
 import { useSession } from "@/context/ctx"; // Ensure session provider is properly used
 
-
 export default function Index() {
 
     const { session } = useSession(); // Track session state
-
-    
 
     const { selectedTruck, setSelectedTruckId, clearSelectedTruck } =
         useTruckStore();
@@ -78,29 +75,28 @@ export default function Index() {
             }, 200); // Delay the camera update
         }
     };
-    
 
     // Fetch User Location on Initial Load
     useEffect(() => {
         const getUserLocation = async () => {
             try {
-                const { status } = await Location.requestForegroundPermissionsAsync();
+                const { status } =
+                    await Location.requestForegroundPermissionsAsync();
                 if (status !== "granted") return;
-        
+
                 const location = await Location.getCurrentPositionAsync({});
                 if (!location || !location.coords) return; // Prevent null errors
-        
+
                 setUserLocation({
                     latitude: location.coords.latitude,
                     longitude: location.coords.longitude,
                 });
-        
+
                 moveCamera(location.coords.longitude, location.coords.latitude);
             } catch (error) {
                 console.error("Error getting user location:", error);
             }
         };
-        
 
         getUserLocation();
     }, []);
@@ -140,8 +136,7 @@ export default function Index() {
         } else if (userLocation) {
             moveCamera(userLocation.longitude, userLocation.latitude, 14);
         }
-    }, [selectedTruck, userLocation]); 
-    
+    }, [selectedTruck, userLocation]);
 
     if (!session) {
         return null; // Prevent MapView from rendering when user is not logged in

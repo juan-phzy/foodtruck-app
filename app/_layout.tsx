@@ -1,8 +1,16 @@
+// React Native Libraries
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+// Expo Libraries
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+// Context Providers
 import { SessionProvider } from "@/context/ctx";
+
+// Polyfills and Utilities
 import "react-native-get-random-values";
+
 
 /**
  * RootLayout Component

@@ -1,5 +1,14 @@
 // constants.ts
 
+export const FORM_FIELDS = [
+    { label: "First Name", placeholder: "Enter your first name" },
+    { label: "Last Name", placeholder: "Enter your last name" },
+    { label: "Date of Birth", placeholder: "mm/dd/yyyy" },
+    { label: "Email", placeholder: "you@email.com" },
+    { label: "Confirm Email", placeholder: "you@email.com" },
+    { label: "Phone Number", placeholder: "(123)-456-7890" },
+];
+
 import { FoodTruck } from "./types";
 
 export const CATEGORIES: { name: string; url: string }[] = [

@@ -46,11 +46,11 @@ export async function getStorageItemAsync(key: string): Promise<StorageValue> {
     if (Platform.OS === "web") {
       const item = localStorage.getItem(key);
       console.log(`Retrieved from localStorage: "${item}"`);
-      return item || null;
+      return item ?? null;
     } else {
       const value = await SecureStore.getItemAsync(key);
       console.log(`Retrieved from SecureStore: "${value}"`);
-      return value || null;
+      return value ?? null;
     }
   } catch (error) {
     console.error(`Error reading key "${key}":`, error);
