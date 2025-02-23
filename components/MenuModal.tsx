@@ -1,3 +1,7 @@
+// React & Hooks
+import React, { useMemo } from "react";
+
+// React Native Components
 import {
     FlatList,
     Image,
@@ -6,27 +10,58 @@ import {
     Text,
     View,
 } from "react-native";
-import theme from "@/theme/theme";
+
+// Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+
+// Constants & Theme
+import theme from "@/theme/theme";
+
+// Zustand Store
+import useMenuModalStore from "@/store/useMenuModalStore";
+
+// Types
 import { FoodTruck } from "@/types";
 
+/**
+ * @file MenuModal.tsx
+ * @description This component displays a modal with a food truck's menu items.
+ * It allows users to browse different categories of food items and view details.
+ *
+ * Features:
+ * - Displays food categories and items dynamically.
+ * - Uses memoization to optimize rendering.
+ * - Implements React Native's `FlatList` for efficient rendering of long lists.
+ * - Provides a back button to close the modal.
+ * - Ensures unique keys for list items to prevent React warnings.
+ *
+ */
+
+// Props Interface
 interface MenuModalProps {
-    closeMenu: () => void;
     truck: FoodTruck;
 }
 
-const MenuModal: React.FC<MenuModalProps> = ({ closeMenu, truck }) => {
+const MenuModal: React.FC<MenuModalProps> = ({ truck }) => {
+    /**
+     * Memoized menu categories to prevent unnecessary recalculations.
+     */
+    const menuCategories = useMemo(() => truck.menu, [truck.menu]);
+    const { toggleMenuModal } = useMenuModalStore();
+
     return (
         <View style={styles.menuModal}>
+            {/* Header with Back Button */}
             <View style={styles.categoryHeader}>
-                {/* Gradient Background */}
                 <LinearGradient
                     colors={["rgba(255, 132, 0, 0.9)", "rgba(255, 132, 0, 0)"]}
-                    // locations={[0.2, 0.8]}
                     style={styles.gradient}
                 />
-                <Pressable style={styles.backBtnContainer} onPress={closeMenu}>
+                <Pressable
+                    style={styles.backBtnContainer}
+                    onPress={toggleMenuModal}
+                >
                     <Ionicons
                         name="arrow-back"
                         size={30}
@@ -35,82 +70,61 @@ const MenuModal: React.FC<MenuModalProps> = ({ closeMenu, truck }) => {
                 </Pressable>
             </View>
 
+            {/* Menu Title */}
             <View style={styles.categoryTitleBar}>
-                <Text
-                    style={{
-                        fontSize: 24,
-                        fontWeight: "bold",
-                        color: theme.colors.primary,
-                    }}
-                >
-                    Menu
-                </Text>
+                <Text style={styles.menuTitle}>Menu</Text>
             </View>
 
+            {/* Menu List */}
             <FlatList
-                style={{ flex: 1, paddingHorizontal: 10 }}
-                data={truck.menu}
-                ListHeaderComponent={() => <View style={{ height: 10 }} />}
-                ListFooterComponent={() => <View style={{ height: 20 }} />}
-                ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+                style={styles.menuList}
+                data={menuCategories}
+                keyExtractor={(item, catIndex) => `${item.category + catIndex}`}
+                ListHeaderComponent={<View style={styles.spacerHeader} />}
+                ListFooterComponent={<View style={styles.spacerFooter} />}
+                ItemSeparatorComponent={() => (
+                    // Move this component definition out of
+                    // the parent component and pass data as props.
+                    <View style={styles.itemSeparator} />
+                )}
                 renderItem={({ item: menu }) => {
                     return (
                         <View style={styles.foodCategoryContainer}>
-                            <View
-                                style={{
-                                    paddingVertical: 5,
-                                    borderBottomColor: "rgba(0,0,0,.1)",
-                                    borderBottomWidth: 1,
-                                    marginBottom: 10,
-                                }}
-                            >
-                                <Text style={{ fontSize: 20 }}>
+                            {/* Category Name */}
+                            <View style={styles.categoryHeaderContainer}>
+                                <Text style={styles.categoryText}>
                                     {menu.category}
                                 </Text>
                             </View>
 
+                            {/* Food Items */}
                             <FlatList
-                                style={{ flex: 1 }}
                                 data={menu.items}
+                                keyExtractor={(item, index) =>
+                                    `${item.name + index}`
+                                }
                                 ItemSeparatorComponent={() => (
-                                    <View style={{ height: 10 }} />
+                                    // Move this component definition out of
+                                    // the parent component and pass data as props.
+                                    <View style={styles.itemSeparator} />
                                 )}
-                                renderItem={({ item }) => {
-                                    return (
-                                        <View
-                                            style={{
-                                                flexDirection: "row",
-                                                overflow: "hidden",
-                                                borderRadius: 5,
-                                            }}
-                                        >
-                                            <View
-                                                style={{
-                                                    flex: 1,
-                                                    alignItems: "flex-start",
-                                                    gap: 5,
-                                                }}
-                                            >
-                                                <Text
-                                                    style={{
-                                                        fontWeight: "bold",
-                                                    }}
-                                                >
-                                                    {item.name}
-                                                </Text>
-                                                <Text>{item.description}</Text>
-                                                <Text>{item.price}</Text>
-                                            </View>
-                                            <Image
-                                                source={{ uri: item.imageUrl }}
-                                                style={{
-                                                    width: 100,
-                                                    height: 100,
-                                                }}
-                                            />
+                                renderItem={({ item }) => (
+                                    <View style={styles.foodItemContainer}>
+                                        {/* Food Details */}
+                                        <View style={styles.foodDetails}>
+                                            <Text style={styles.foodName}>
+                                                {item.name}
+                                            </Text>
+                                            <Text>{item.description}</Text>
+                                            <Text>{item.price}</Text>
                                         </View>
-                                    );
-                                }}
+                                        {/* Food Image */}
+                                        <Image
+                                            source={{ uri: item.imageUrl }}
+                                            style={styles.foodImage}
+                                        />
+                                    </View>
+                                )}
                             />
                         </View>
                     );
@@ -130,6 +144,24 @@ const styles = StyleSheet.create({
         backgroundColor: theme.colors.white,
         zIndex: 100,
     },
+    categoryHeader: {
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        paddingHorizontal: 10,
+        paddingTop: 80,
+        paddingBottom: 30,
+    },
+    gradient: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    backBtnContainer: {
+        padding: 10,
+        backgroundColor: theme.colors.primary,
+        borderRadius: 30,
+        justifyContent: "center",
+        alignItems: "center",
+    },
     categoryTitleBar: {
         flexDirection: "row",
         justifyContent: "flex-start",
@@ -140,23 +172,23 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginBottom: 20,
     },
-    backBtnContainer: {
-        padding: 10,
-        backgroundColor: theme.colors.primary,
-        borderRadius: 30,
-        justifyContent: "center",
-        alignItems: "center",
+    menuTitle: {
+        fontSize: 24,
+        fontWeight: "bold",
+        color: theme.colors.primary,
     },
-    gradient: {
-        ...StyleSheet.absoluteFillObject,
-    },
-    categoryHeader: {
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "center",
+    menuList: {
+        flex: 1,
         paddingHorizontal: 10,
-        paddingTop: 80,
-        paddingBottom: 30,
+    },
+    spacerHeader: {
+        height: 10,
+    },
+    spacerFooter: {
+        height: 20,
+    },
+    itemSeparator: {
+        height: 10,
     },
     foodCategoryContainer: {
         backgroundColor: theme.colors.white,
@@ -171,6 +203,32 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowRadius: 4,
         elevation: 5,
+    },
+    categoryHeaderContainer: {
+        paddingVertical: 5,
+        borderBottomColor: "rgba(0,0,0,.1)",
+        borderBottomWidth: 1,
+        marginBottom: 10,
+    },
+    categoryText: {
+        fontSize: 20,
+    },
+    foodItemContainer: {
+        flexDirection: "row",
+        overflow: "hidden",
+        borderRadius: 5,
+    },
+    foodDetails: {
+        flex: 1,
+        alignItems: "flex-start",
+        gap: 5,
+    },
+    foodName: {
+        fontWeight: "bold",
+    },
+    foodImage: {
+        width: 100,
+        height: 100,
     },
 });
 

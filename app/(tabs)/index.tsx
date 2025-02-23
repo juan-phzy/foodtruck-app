@@ -1,5 +1,11 @@
 // React & Hooks
-import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import React, {
+    useEffect,
+    useRef,
+    useState,
+    useCallback,
+    useMemo,
+} from "react";
 
 // React Native Components
 import { StyleSheet, View, Alert } from "react-native";
@@ -39,31 +45,38 @@ import icon from "@/assets/images/icon.png";
 // Zustand State Management
 import useTruckStore from "@/store/useTruckStore";
 import useFilterStore from "@/store/useFilterStore";
+import useMenuModalStore from "@/store/useMenuModalStore";
 
 // Types
 type Coordinates = { latitude: number; longitude: number };
 
 export default function Index() {
     // Zustand store for managing selected truck
-    const { selectedTruck, setSelectedTruckId, clearSelectedTruck } = useTruckStore();
-    const { categoryFilters, showCategoryModal, setShowCategoryModal } = useFilterStore(); // ✅ Import Zustand Store
+    const { selectedTruck, setSelectedTruckId, clearSelectedTruck } =
+        useTruckStore();
+    const { categoryFilters, showCategoryModal, setShowCategoryModal } =
+        useFilterStore();
+    const { showMenuModal, toggleMenuModal } = useMenuModalStore();
 
     // State Hooks
     const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
-    const [showMenuModal, setShowMenuModal] = useState(false);
     const [showTruckPage, setShowTruckPage] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
 
     // Map Camera Reference
     const cameraRef = useRef<Camera>(null);
 
-    /** 
+    /**
      * Moves the Mapbox camera to a specific location.
      * Uses useCallback to prevent re-renders.
      */
     const moveCamera = useCallback(
         (longitude: number, latitude: number, zoomLevel: number = 14) => {
-            console.log("Moving camera to:", { latitude, longitude, zoomLevel });
+            console.log("Moving camera to:", {
+                latitude,
+                longitude,
+                zoomLevel,
+            });
             cameraRef.current?.setCamera({
                 centerCoordinate: [longitude, latitude],
                 zoomLevel,
@@ -80,7 +93,8 @@ export default function Index() {
         const getUserLocation = async () => {
             try {
                 console.log("Requesting location permissions...");
-                const { status } = await Location.requestForegroundPermissionsAsync();
+                const { status } =
+                    await Location.requestForegroundPermissionsAsync();
 
                 if (status !== "granted") {
                     Alert.alert(
@@ -114,11 +128,19 @@ export default function Index() {
                 FOOD_TRUCKS.filter(
                     (truck) =>
                         categoryFilters.length === 0 ||
-                        truck.categories.some((c) => categoryFilters.includes(c))
+                        truck.categories.some((c) =>
+                            categoryFilters.includes(c)
+                        )
                 ).map((truck) =>
-                    point([truck.coordinates.longitude, truck.coordinates.latitude], {
-                        id: truck.id,
-                    })
+                    point(
+                        [
+                            truck.coordinates.longitude,
+                            truck.coordinates.latitude,
+                        ],
+                        {
+                            id: truck.id,
+                        }
+                    )
                 )
             ),
         [categoryFilters]
@@ -129,7 +151,10 @@ export default function Index() {
      */
     const handleSearch = useCallback(
         ({ latitude, longitude }: Coordinates) => {
-            console.log("Search triggered, moving camera:", { latitude, longitude });
+            console.log("Search triggered, moving camera:", {
+                latitude,
+                longitude,
+            });
             moveCamera(longitude, latitude);
         },
         [moveCamera]
@@ -159,18 +184,19 @@ export default function Index() {
     return (
         <View style={styles.container}>
             {/* Category Modal */}
-            {showCategoryModal && (
-                <CategoryModal/>
-            )}
+            {showCategoryModal && <CategoryModal />}
 
             {/* Menu Modal */}
             {showMenuModal && selectedTruck && (
-                <MenuModal closeMenu={() => setShowMenuModal(false)} truck={selectedTruck} />
+                <MenuModal truck={selectedTruck} />
             )}
 
             {/* Truck Page */}
             {showTruckPage && selectedTruck && (
-                <TruckPage closeTruckPage={() => setShowTruckPage(false)} truck={selectedTruck} />
+                <TruckPage
+                    closeTruckPage={() => setShowTruckPage(false)}
+                    truck={selectedTruck}
+                />
             )}
 
             {/* Search Bar */}
@@ -198,9 +224,17 @@ export default function Index() {
                         }
                     }}
                 >
-                    <CircleLayer id="clusters" filter={["has", "point_count"]} style={circleLayerStyle} />
+                    <CircleLayer
+                        id="clusters"
+                        filter={["has", "point_count"]}
+                        style={circleLayerStyle}
+                    />
                     <SymbolLayer id="clusters-count" style={symbolCountStyle} />
-                    <SymbolLayer id="foodTruckIcons" filter={["!", ["has", "point_count"]]} style={symbolLayerStyle} />
+                    <SymbolLayer
+                        id="foodTruckIcons"
+                        filter={["!", ["has", "point_count"]]}
+                        style={symbolLayerStyle}
+                    />
                     <Images images={{ icon }} />
                 </ShapeSource>
             </MapView>
@@ -209,7 +243,7 @@ export default function Index() {
             {selectedTruck ? (
                 <SelectedTruckCard
                     truck={selectedTruck}
-                    openMenu={() => setShowMenuModal(true)}
+                    openMenu={() => toggleMenuModal()}
                     openTruckPage={() => setShowTruckPage(true)}
                 />
             ) : (
@@ -220,7 +254,9 @@ export default function Index() {
                     trucks={FOOD_TRUCKS.filter(
                         (truck) =>
                             categoryFilters.length === 0 ||
-                            truck.categories.some((c) => categoryFilters.includes(c))
+                            truck.categories.some((c) =>
+                                categoryFilters.includes(c)
+                            )
                     )}
                     showCategories={() => setShowCategoryModal(true)}
                 />
