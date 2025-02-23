@@ -1,9 +1,25 @@
+/**
+ * @file TruckPage.tsx
+ * @description Displays detailed information about a selected food truck.
+ * 
+ * Features:
+ * - Shows truck name, location, category, type, and operational hours.
+ * - Allows toggling of business hours and bookmarking as a favorite.
+ * - Displays existing user ratings and allows rating submissions.
+ * - Implements memoization to optimize rendering performance.
+ */
+
+// React & Hooks
+import { useState, useMemo, useCallback } from "react";
+
+// State Management (Zustand)
 import useTruckStore from "@/store/useTruckStore";
-import theme from "@/theme/theme";
-import { FoodTruck, Hours } from "@/types";
+
+// Expo Libraries
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
+
+// React Native Components
 import {
     ImageBackground,
     Pressable,
@@ -13,18 +29,30 @@ import {
     View,
 } from "react-native";
 
+// Constants & Theme
+import theme from "@/theme/theme";
+
+// Types
+import { FoodTruck, Hours } from "@/types";
+
+// Component Props
 interface TruckPageProps {
     truck: FoodTruck;
 }
 
 const TruckPage: React.FC<TruckPageProps> = ({ truck }) => {
-    const {toggleTruckPage} = useTruckStore();
+    const { toggleTruckPage } = useTruckStore();
+
+    // State Hooks
     const [isFavorite, setIsFavorite] = useState(false);
     const [showHours, setShowHours] = useState(false);
     const [userRating, setUserRating] = useState(0);
-    const [hoveredRating, setHoveredRating] = useState(0);
 
-    const today = new Date();
+    // Helper Functions
+    const toggleFavorite = useCallback(() => setIsFavorite((prev) => !prev), []);
+    const toggleShowHours = useCallback(() => setShowHours((prev) => !prev), []);
+
+    // Compute Current Day's Hours using Memoization
     const weekdays: (keyof Hours)[] = [
         "sunday",
         "monday",
@@ -34,14 +62,27 @@ const TruckPage: React.FC<TruckPageProps> = ({ truck }) => {
         "friday",
         "saturday",
     ];
-    const weekday: keyof Hours = weekdays[today.getDay()];
+    const weekday: keyof Hours = useMemo(() => weekdays[new Date().getDay()], []);
 
-    const handleRatingSubmit = () => {
+    // Memoized Social Media Links
+    const socialLinks = useMemo(
+        () =>
+            Object.entries(truck.contact.social).map(([platform, handle]) => (
+                <Text key={platform}>
+                    {platform.charAt(0).toUpperCase() + platform.slice(1)}: {handle}
+                </Text>
+            )),
+        [truck.contact.social]
+    );
+
+    // Handle Rating Submission
+    const handleRatingSubmit = useCallback(() => {
         alert(`You rated ${userRating} stars!`);
-    };
+    }, [userRating]);
 
     return (
         <View style={styles.truckPageContainer}>
+            {/* Truck Header */}
             <View style={styles.truckPageHeader}>
                 <ImageBackground
                     source={{ uri: truck.imageUrl }}
@@ -52,182 +93,118 @@ const TruckPage: React.FC<TruckPageProps> = ({ truck }) => {
                     }}
                     imageStyle={{ resizeMode: "cover" }}
                 >
-                    <LinearGradient
-                        colors={[
-                            theme.colors.primarySuperLight,
-                            theme.colors.primary,
-                        ]}
-                        style={styles.gradient}
-                    />
+                    <LinearGradient colors={[theme.colors.primarySuperLight, theme.colors.primary]} style={styles.gradient} />
+                    
+                    {/* Header Content */}
                     <View style={styles.headerContent}>
                         <View style={styles.headerRow}>
-                            <Pressable
-                                style={styles.backBtnContainer}
-                                onPress={toggleTruckPage}
-                            >
-                                <Ionicons
-                                    name="arrow-back"
-                                    size={30}
-                                    color={theme.colors.white}
-                                />
+                            {/* Back Button */}
+                            <Pressable style={styles.backBtnContainer} onPress={toggleTruckPage}>
+                                <Ionicons name="arrow-back" size={30} color={theme.colors.white} />
                             </Pressable>
-                            <Pressable
-                                style={styles.bookmarkIcon}
-                                onPress={() => setIsFavorite(!isFavorite)}
-                            >
-                                <Ionicons
-                                    name={
-                                        isFavorite
-                                            ? "bookmark"
-                                            : "bookmark-outline"
-                                    }
-                                    size={30}
-                                    color={theme.colors.primary}
-                                />
+
+                            {/* Favorite Button */}
+                            <Pressable style={styles.bookmarkIcon} onPress={toggleFavorite}>
+                                <Ionicons name={isFavorite ? "bookmark" : "bookmark-outline"} size={30} color={theme.colors.primary} />
                             </Pressable>
                         </View>
+
+                        {/* Truck Name & Open Status */}
                         <View style={styles.headerRow}>
                             <Text style={styles.headerTitle}>{truck.name}</Text>
-                            <View
-                                style={[
-                                    styles.openCloseContainer,
-                                    truck.isOpen ? styles.open : styles.closed,
-                                ]}
-                            >
-                                <Text style={[styles.openCloseText]}>
-                                    {truck.isOpen ? "Open" : "Closed"}
-                                </Text>
+                            <View style={[styles.openCloseContainer, truck.isOpen ? styles.open : styles.closed]}>
+                                <Text style={styles.openCloseText}>{truck.isOpen ? "Open" : "Closed"}</Text>
                             </View>
                         </View>
                     </View>
                 </ImageBackground>
             </View>
+
+            {/* Scrollable Content */}
             <ScrollView style={styles.truckPageContent}>
+                {/* Location */}
                 <View style={styles.contentRow}>
                     <Text style={styles.contentRowTitle}>Location</Text>
                     <Text style={styles.contentRowBody}>{truck.location}</Text>
                 </View>
+
+                {/* Categories */}
                 <View style={styles.contentRow}>
                     <Text style={styles.contentRowTitle}>Categories</Text>
-                    <Text style={styles.contentRowBody}>
-                        {truck.categories.join(", ")}
-                    </Text>
+                    <Text style={styles.contentRowBody}>{truck.categories.join(", ")}</Text>
                 </View>
+
+                {/* Type */}
                 <View style={styles.contentRow}>
                     <Text style={styles.contentRowTitle}>Type</Text>
                     <Text style={styles.contentRowBody}>{truck.type}</Text>
                 </View>
+
+                {/* Business Hours */}
                 <View style={styles.contentRow}>
                     <View style={styles.hoursTitleRow}>
                         <Text style={styles.hoursTitleText}>Hours</Text>
-                        <Pressable
-                            onPress={() => setShowHours(!showHours)}
-                            style={styles.dropdownButton}
-                        >
-                            <Ionicons
-                                name={showHours ? "chevron-down" : "chevron-up"}
-                                size={30}
-                                color={theme.colors.primary}
-                            />
+                        <Pressable onPress={toggleShowHours} style={styles.dropdownButton}>
+                            <Ionicons name={showHours ? "chevron-down" : "chevron-up"} size={30} color={theme.colors.primary} />
                         </Pressable>
                     </View>
-
-                    <Text style={styles.contentRowBody}>
-                        {`Today: ${truck.hours[weekday]}`}
-                    </Text>
+                    <Text style={styles.contentRowBody}>{`Today: ${truck.hours[weekday]}`}</Text>
                     {showHours && (
                         <View style={styles.scheduleContainer}>
                             {weekdays.map((day) => (
                                 <View style={styles.scheduleRow} key={day}>
-                                    <Text>
-                                        {day.charAt(0).toUpperCase() +
-                                            day.slice(1)}
-                                        :{" "}
-                                    </Text>
+                                    <Text>{day.charAt(0).toUpperCase() + day.slice(1)}:</Text>
                                     <Text>{truck.hours[day]}</Text>
                                 </View>
                             ))}
                         </View>
                     )}
                 </View>
+
+                {/* Ratings */}
                 <View style={styles.contentRow}>
                     <Text style={styles.contentRowTitle}>Ratings</Text>
                     <View style={styles.contentRowBody}>
                         {/* Display existing ratings */}
                         <View style={styles.ratingContainer}>
-                            <Text
-                                style={{
-                                    marginLeft: 5,
-                                    fontSize: 14,
-                                    color: theme.colors.primary,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
+                            <Text style={{ marginLeft: 5, fontSize: 14, color: theme.colors.primary }}>
                                 {truck.rating}
                             </Text>
                             {Array.from({ length: 5 }, (_, index) => (
                                 <Ionicons
                                     key={index}
-                                    name={
-                                        index < Math.floor(truck.rating)
-                                            ? "star"
-                                            : "star-outline"
-                                    }
+                                    name={index < Math.floor(truck.rating) ? "star" : "star-outline"}
                                     size={16}
                                     color={theme.colors.primary}
                                 />
                             ))}
-
-                            <Text style={{ fontSize: 12 }}>
-                                ({truck.reviewCount})
-                            </Text>
+                            <Text style={{ fontSize: 12 }}>({truck.reviewCount})</Text>
                         </View>
 
-                        {/* Interactive rating submission */}
+                        {/* Interactive Rating Submission */}
                         <View style={styles.starContainer}>
                             {[1, 2, 3, 4, 5].map((star) => (
-                                <Pressable
-                                    key={star}
-                                    onPress={() => setUserRating(star)}
-                                >
+                                <Pressable key={star} onPress={() => setUserRating(star)}>
                                     <Ionicons
-                                        name={
-                                            star <=
-                                            (hoveredRating || userRating)
-                                                ? "star"
-                                                : "star-outline"
-                                        }
+                                        name={star <= userRating ? "star" : "star-outline"}
                                         size={30}
                                         color={theme.colors.primary}
                                     />
                                 </Pressable>
                             ))}
                         </View>
-                        <Pressable
-                            style={styles.submitButton}
-                            onPress={handleRatingSubmit}
-                        >
+                        <Pressable style={styles.submitButton} onPress={handleRatingSubmit}>
                             <Text style={styles.submitText}>Submit</Text>
                         </Pressable>
                     </View>
                 </View>
+
+                {/* Contact */}
                 <View style={styles.contentRow}>
                     <Text style={styles.contentRowTitle}>Contact</Text>
                     <View style={styles.contentRowBody}>
-                        {/* Email */}
                         <Text>Email: {truck.contact.email}</Text>
-
-                        {/* Social Links */}
-                        {Object.entries(truck.contact.social).map(
-                            ([platform, handle]) => (
-                                <Text key={platform}>
-                                    {platform.charAt(0).toUpperCase() +
-                                        platform.slice(1)}
-                                    : {handle}
-                                </Text>
-                            )
-                        )}
+                        {socialLinks}
                     </View>
                 </View>
             </ScrollView>
@@ -246,8 +223,6 @@ const styles = StyleSheet.create({
         right: 0,
         bottom: 0,
         zIndex: 100,
-        borderColor: "red",
-        borderWidth: 2,
         overflowY: "scroll",
     },
     truckPageHeader: {
