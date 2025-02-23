@@ -5,15 +5,20 @@ import { FOOD_TRUCKS } from "@/constants";
 interface TruckStore {
     selectedTruckId: string | null;
     selectedTruck: FoodTruck | null;
+    showTruckPage: boolean;
     setSelectedTruckId: (id: string | null) => void;
     clearSelectedTruck: () => void;
     nextTruck: () => void;
     previousTruck: () => void;
+    toggleTruckPage: () => void;
 }
 
 const useTruckStore = create<TruckStore>((set, get) => ({
     selectedTruckId: null,
     selectedTruck: null,
+    showTruckPage: false,
+
+    toggleTruckPage: () => set((state) => ({ showTruckPage: !state.showTruckPage })),
 
     setSelectedTruckId: (id) => {
         const truck = FOOD_TRUCKS.find((t) => t.id === id) || null;

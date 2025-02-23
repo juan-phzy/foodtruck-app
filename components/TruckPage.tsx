@@ -1,3 +1,4 @@
+import useTruckStore from "@/store/useTruckStore";
 import theme from "@/theme/theme";
 import { FoodTruck, Hours } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
@@ -13,11 +14,11 @@ import {
 } from "react-native";
 
 interface TruckPageProps {
-    closeTruckPage: () => void;
     truck: FoodTruck;
 }
 
-const TruckPage: React.FC<TruckPageProps> = ({ closeTruckPage, truck }) => {
+const TruckPage: React.FC<TruckPageProps> = ({ truck }) => {
+    const {toggleTruckPage} = useTruckStore();
     const [isFavorite, setIsFavorite] = useState(false);
     const [showHours, setShowHours] = useState(false);
     const [userRating, setUserRating] = useState(0);
@@ -62,7 +63,7 @@ const TruckPage: React.FC<TruckPageProps> = ({ closeTruckPage, truck }) => {
                         <View style={styles.headerRow}>
                             <Pressable
                                 style={styles.backBtnContainer}
-                                onPress={closeTruckPage}
+                                onPress={toggleTruckPage}
                             >
                                 <Ionicons
                                     name="arrow-back"

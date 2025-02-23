@@ -52,15 +52,14 @@ type Coordinates = { latitude: number; longitude: number };
 
 export default function Index() {
     // Zustand store for managing selected truck
-    const { selectedTruck, setSelectedTruckId, clearSelectedTruck } =
+    const { selectedTruck, showTruckPage, setSelectedTruckId, clearSelectedTruck } =
         useTruckStore();
     const { categoryFilters, showCategoryModal, setShowCategoryModal } =
         useFilterStore();
-    const { showMenuModal, toggleMenuModal } = useMenuModalStore();
+    const { showMenuModal } = useMenuModalStore();
 
     // State Hooks
     const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
-    const [showTruckPage, setShowTruckPage] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
 
     // Map Camera Reference
@@ -194,7 +193,6 @@ export default function Index() {
             {/* Truck Page */}
             {showTruckPage && selectedTruck && (
                 <TruckPage
-                    closeTruckPage={() => setShowTruckPage(false)}
                     truck={selectedTruck}
                 />
             )}
@@ -243,8 +241,6 @@ export default function Index() {
             {selectedTruck ? (
                 <SelectedTruckCard
                     truck={selectedTruck}
-                    openMenu={() => toggleMenuModal()}
-                    openTruckPage={() => setShowTruckPage(true)}
                 />
             ) : (
                 <NearbyTrucksCard

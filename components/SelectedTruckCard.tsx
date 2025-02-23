@@ -18,22 +18,20 @@ import { FoodTruck } from "@/types";
 
 // New imports
 import useTruckStore from "@/store/useTruckStore";
+import useMenuModalStore from "@/store/useMenuModalStore";
 
 interface SelectedTruckCardProps {
     truck: FoodTruck;
-    openMenu: () => void;
-    openTruckPage: () => void;
 }
 
 const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
     truck,
-    openMenu,
-    openTruckPage,
 }) => {
     // temporary state, get from user lists later
     const [isFavorite, setIsFavorite] = useState(false);
 
-    const { clearSelectedTruck, nextTruck, previousTruck } = useTruckStore();
+    const { clearSelectedTruck, nextTruck, previousTruck, toggleTruckPage } = useTruckStore();
+    const { toggleMenuModal } = useMenuModalStore();
     return (
         <BlurView intensity={10} style={styles.cardContainer}>
             {/* First View: Title Bar */}
@@ -120,7 +118,7 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
                 <View style={styles.divider} />
 
                 <View style={styles.buttonRow}>
-                    <Pressable style={styles.button} onPress={openMenu}>
+                    <Pressable style={styles.button} onPress={toggleMenuModal}>
                         <MaterialIcons
                             name="restaurant-menu"
                             size={35}
@@ -138,7 +136,7 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
                         <Text style={styles.buttonText}>Directions</Text>
                     </Pressable>
 
-                    <Pressable style={styles.button} onPress={openTruckPage}>
+                    <Pressable style={styles.button} onPress={toggleTruckPage}>
                         <MaterialCommunityIcons
                             name="truck-outline"
                             size={35}
