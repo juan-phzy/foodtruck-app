@@ -1,3 +1,7 @@
+// React & Hooks
+import React, { useCallback } from "react";
+
+// React Native Components
 import {
     FlatList,
     Image,
@@ -5,35 +9,54 @@ import {
     StyleSheet,
     Text,
     View,
+    Dimensions,
 } from "react-native";
-import theme from "@/theme/theme";
+
+// Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+
+// State Management (Zustand)
+import useFilterStore from "@/store/useFilterStore";
+
+// Constants & Theme
 import { CATEGORIES } from "@/constants";
+import theme from "@/theme/theme";
 
-interface CategoryModalProps {
-    setShowCategoryModal: (show: boolean) => void;
-    setCategoryFilters: (filters: string[]) => void;
-    categoryFilters: string[];
-}
+// Get screen dimensions for responsive UI scaling
+const { width, height } = Dimensions.get("window");
 
-const CategoryModal: React.FC<CategoryModalProps> = ({
-    setShowCategoryModal,
-    setCategoryFilters,
-    categoryFilters,
-}) => {
+const CategoryModal: React.FC = () => {
+    // Zustand store hooks for category state management
+    const {
+        categoryFilters,
+        toggleCategory,
+        clearCategoryFilters,
+        setShowCategoryModal,
+    } = useFilterStore();
+
+    /**
+     * Handles category selection/deselection.
+     * Memoized with `useCallback` to prevent unnecessary re-renders.
+     */
+    const handleCategoryPress = useCallback(
+        (category: string) => {
+            toggleCategory(category);
+        },
+        [toggleCategory]
+    );
+
     return (
         <View style={styles.categoryModal}>
             <View style={styles.categoryHeader}>
                 {/* Gradient Background */}
                 <LinearGradient
                     colors={["rgba(255, 132, 0, 0.9)", "rgba(255, 132, 0, 0)"]}
-                    // locations={[0.2, 0.8]}
                     style={styles.gradient}
                 />
                 <Pressable
                     style={styles.backBtnContainer}
-                    onPress={() => setShowCategoryModal(false)}
+                    onPress={() => setShowCategoryModal(false)} // Uses Zustand store function
                 >
                     <Ionicons
                         name="arrow-back"
@@ -43,36 +66,21 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
                 </Pressable>
             </View>
 
+            {/* Category Title Bar */}
             <View style={styles.categoryTitleBar}>
-                <Text
-                    style={{
-                        fontSize: 24,
-                        fontWeight: "bold",
-                        color: theme.colors.primary,
-                    }}
-                >
-                    Select Categories
-                </Text>
-                <Pressable
-                    style={{ paddingHorizontal: 15 }}
-                    onPress={() => setCategoryFilters([])}
-                >
-                    <Text
-                        style={{
-                            color: theme.colors.primary,
-                            fontSize: 16,
-                        }}
-                    >
-                        Clear All
-                    </Text>
+                <Text style={styles.title}>Select Categories</Text>
+                <Pressable style={{ paddingHorizontal: 15 }} onPress={clearCategoryFilters}>
+                    <Text style={styles.clearText}>Clear All</Text>
                 </Pressable>
             </View>
 
+            {/* Category Selection List */}
             <FlatList
                 style={styles.categoryListView}
-                columnWrapperStyle={styles.columnWrapper} // Add gap between columns
+                columnWrapperStyle={styles.columnWrapper} // Adds spacing between columns
                 data={CATEGORIES}
                 numColumns={3}
+                keyExtractor={(item) => item.name}
                 renderItem={({ item }) => (
                     <Pressable
                         style={[
@@ -81,26 +89,13 @@ const CategoryModal: React.FC<CategoryModalProps> = ({
                                 ? styles.categorySelected
                                 : {},
                         ]}
-                        onPress={() => {
-                            if (categoryFilters.includes(item.name)) {
-                                setCategoryFilters(
-                                    categoryFilters.filter(
-                                        (name) => name !== item.name
-                                    )
-                                );
-                            } else {
-                                setCategoryFilters([
-                                    ...categoryFilters,
-                                    item.name,
-                                ]);
-                            }
-                        }}
+                        onPress={() => handleCategoryPress(item.name)}
                     >
                         <Image
                             source={{ uri: item.url }}
                             style={styles.image}
                         />
-                        <Text>{item.name}</Text>
+                        <Text style={styles.btnText}>{item.name}</Text>
                     </Pressable>
                 )}
             />
@@ -118,8 +113,29 @@ const styles = StyleSheet.create({
         backgroundColor: theme.colors.white,
         zIndex: 100,
     },
+    categoryHeader: {
+        position: "relative",
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        paddingHorizontal: 10,
+        paddingTop: 80,
+        paddingBottom: 30,
+    },
+    gradient: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    backBtnContainer: {
+        padding: 10,
+        position: "relative",
+        backgroundColor: theme.colors.primary,
+        borderRadius: 30,
+        justifyContent: "center",
+        alignItems: "center",
+    },
     categoryTitleBar: {
         flexDirection: "row",
+        position: "relative",
         justifyContent: "space-between",
         alignItems: "flex-end",
         paddingVertical: 20,
@@ -128,16 +144,27 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginBottom: 20,
     },
+    title: {
+        fontSize: 24,
+        fontWeight: "bold",
+        color: theme.colors.primary,
+    },
+    clearText: {
+        color: theme.colors.primary,
+        fontSize: 16,
+    },
     categoryListView: {
         flex: 1,
         marginHorizontal: 10,
+        position: "relative",
     },
     columnWrapper: {
-        justifyContent: "space-between", // Space between columns
+        justifyContent: "space-between",
     },
     categoryButton: {
-        width: 120,
-        height: 120,
+        position: "relative",
+        width: width * 0.28,
+        height: width * 0.28,
         borderRadius: 15,
         justifyContent: "center",
         alignItems: "center",
@@ -146,31 +173,17 @@ const styles = StyleSheet.create({
         gap: 5,
         backgroundColor: theme.colors.primarySuperLight,
     },
+    btnText: {
+        color: theme.colors.black,
+        fontSize: 12,
+    },
     image: {
-        width: 50,
-        height: 50,
+        width: "50%",
+        height: "50%",
     },
     categorySelected: {
         borderColor: theme.colors.primary,
         borderWidth: 2,
-    },
-    backBtnContainer: {
-        padding: 10,
-        backgroundColor: theme.colors.primary,
-        borderRadius: 30,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    gradient: {
-        ...StyleSheet.absoluteFillObject,
-    },
-    categoryHeader: {
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        paddingHorizontal: 10,
-        paddingTop: 80,
-        paddingBottom: 30,
     },
 });
 

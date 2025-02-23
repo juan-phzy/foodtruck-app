@@ -1,8 +1,8 @@
 // React & Hooks
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 
 // React Native Components
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Alert } from "react-native";
 
 // Expo Location API
 import * as Location from "expo-location";
@@ -36,137 +36,141 @@ import { featureCollection, point } from "@turf/helpers";
 // Assets
 import icon from "@/assets/images/icon.png";
 
-// State Management (Zustand)
+// Zustand State Management
 import useTruckStore from "@/store/useTruckStore";
-import { useSession } from "@/context/ctx"; // Ensure session provider is properly used
+import useFilterStore from "@/store/useFilterStore";
+
+// Types
+type Coordinates = { latitude: number; longitude: number };
 
 export default function Index() {
+    // Zustand store for managing selected truck
+    const { selectedTruck, setSelectedTruckId, clearSelectedTruck } = useTruckStore();
+    const { categoryFilters, showCategoryModal, setShowCategoryModal } = useFilterStore(); // ✅ Import Zustand Store
 
-    const { session } = useSession(); // Track session state
-
-    const { selectedTruck, setSelectedTruckId, clearSelectedTruck } =
-        useTruckStore();
-
-    const [userLocation, setUserLocation] = useState<{
-        latitude: number;
-        longitude: number;
-    } | null>(null);
-    const [categoryFilters, setCategoryFilters] = useState<string[]>([]);
-    const [showCategoryModal, setShowCategoryModal] = useState(false);
+    // State Hooks
+    const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
     const [showMenuModal, setShowMenuModal] = useState(false);
     const [showTruckPage, setShowTruckPage] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
 
+    // Map Camera Reference
     const cameraRef = useRef<Camera>(null);
 
-    // Helper function to move the camera
-    const moveCamera = (
-        longitude: number,
-        latitude: number,
-        zoomLevel: number = 14
-    ) => {
-        if (cameraRef.current) {
-            setTimeout(() => {
-                cameraRef.current?.setCamera({
-                    centerCoordinate: [longitude, latitude],
-                    zoomLevel,
-                    animationDuration: 500,
-                });
-            }, 200); // Delay the camera update
-        }
-    };
+    /** 
+     * Moves the Mapbox camera to a specific location.
+     * Uses useCallback to prevent re-renders.
+     */
+    const moveCamera = useCallback(
+        (longitude: number, latitude: number, zoomLevel: number = 14) => {
+            console.log("Moving camera to:", { latitude, longitude, zoomLevel });
+            cameraRef.current?.setCamera({
+                centerCoordinate: [longitude, latitude],
+                zoomLevel,
+                animationDuration: 500,
+            });
+        },
+        []
+    );
 
-    // Fetch User Location on Initial Load
+    /**
+     * Fetch User Location on Initial Load.
+     */
     useEffect(() => {
         const getUserLocation = async () => {
             try {
-                const { status } =
-                    await Location.requestForegroundPermissionsAsync();
-                if (status !== "granted") return;
+                console.log("Requesting location permissions...");
+                const { status } = await Location.requestForegroundPermissionsAsync();
+
+                if (status !== "granted") {
+                    Alert.alert(
+                        "Location Permission Required",
+                        "Please enable location services for the best experience."
+                    );
+                    return;
+                }
 
                 const location = await Location.getCurrentPositionAsync({});
-                if (!location || !location.coords) return; // Prevent null errors
+                const { latitude, longitude } = location.coords;
+                console.log("User location obtained:", { latitude, longitude });
 
-                setUserLocation({
-                    latitude: location.coords.latitude,
-                    longitude: location.coords.longitude,
-                });
-
-                moveCamera(location.coords.longitude, location.coords.latitude);
+                setUserLocation({ latitude, longitude });
+                moveCamera(longitude, latitude);
             } catch (error) {
                 console.error("Error getting user location:", error);
             }
         };
 
         getUserLocation();
-    }, []);
+    }, [moveCamera]);
 
-    // Compute food truck features only once
-    const truckFeatures = featureCollection(
-        FOOD_TRUCKS.filter(
-            (truck) =>
-                categoryFilters.length === 0 ||
-                truck.categories.some((c) => categoryFilters.includes(c))
-        ).map((truck) =>
-            point([truck.coordinates.longitude, truck.coordinates.latitude], {
-                id: truck.id,
-            })
-        )
+    /**
+     * Filters and computes food truck features only when dependencies change.
+     * Uses useMemo to optimize re-renders.
+     */
+    const truckFeatures = useMemo(
+        () =>
+            featureCollection(
+                FOOD_TRUCKS.filter(
+                    (truck) =>
+                        categoryFilters.length === 0 ||
+                        truck.categories.some((c) => categoryFilters.includes(c))
+                ).map((truck) =>
+                    point([truck.coordinates.longitude, truck.coordinates.latitude], {
+                        id: truck.id,
+                    })
+                )
+            ),
+        [categoryFilters]
     );
 
-    // Handle Google Places Search
-    const handleSearch = ({
-        latitude,
-        longitude,
-    }: {
-        latitude: number;
-        longitude: number;
-    }) => {
-        moveCamera(longitude, latitude);
-    };
+    /**
+     * Handles Google Places Search and moves the camera.
+     */
+    const handleSearch = useCallback(
+        ({ latitude, longitude }: Coordinates) => {
+            console.log("Search triggered, moving camera:", { latitude, longitude });
+            moveCamera(longitude, latitude);
+        },
+        [moveCamera]
+    );
 
-    // Camera Updates on Truck Selection
+    /**
+     * Camera Updates on Truck Selection.
+     */
     useEffect(() => {
         if (selectedTruck) {
+            console.log("Truck selected, moving camera:", selectedTruck.name);
             moveCamera(
                 selectedTruck.coordinates.longitude,
                 selectedTruck.coordinates.latitude - 0.0012,
                 16
             );
-        } else if (userLocation) {
-            moveCamera(userLocation.longitude, userLocation.latitude, 14);
+        } else {
+            console.log("No truck selected, resetting camera...");
+            moveCamera(
+                userLocation?.longitude ?? -122.4194, // Default to SF
+                userLocation?.latitude ?? 37.7749,
+                14
+            );
         }
-    }, [selectedTruck, userLocation]);
-
-    if (!session) {
-        return null; // Prevent MapView from rendering when user is not logged in
-    }
+    }, [selectedTruck, userLocation, moveCamera]);
 
     return (
         <View style={styles.container}>
             {/* Category Modal */}
             {showCategoryModal && (
-                <CategoryModal
-                    setCategoryFilters={setCategoryFilters}
-                    categoryFilters={categoryFilters}
-                    setShowCategoryModal={setShowCategoryModal}
-                />
+                <CategoryModal/>
             )}
 
             {/* Menu Modal */}
             {showMenuModal && selectedTruck && (
-                <MenuModal
-                    closeMenu={() => setShowMenuModal(false)}
-                    truck={selectedTruck}
-                />
+                <MenuModal closeMenu={() => setShowMenuModal(false)} truck={selectedTruck} />
             )}
 
             {/* Truck Page */}
             {showTruckPage && selectedTruck && (
-                <TruckPage
-                    closeTruckPage={() => setShowTruckPage(false)}
-                    truck={selectedTruck}
-                />
+                <TruckPage closeTruckPage={() => setShowTruckPage(false)} truck={selectedTruck} />
             )}
 
             {/* Search Bar */}
@@ -188,20 +192,15 @@ export default function Index() {
                     shape={truckFeatures}
                     onPress={(e) => {
                         const truckId = e.features?.[0]?.properties?.id;
-                        if (truckId) setSelectedTruckId(truckId);
+                        if (truckId) {
+                            console.log("Truck pressed, selecting:", truckId);
+                            setSelectedTruckId(truckId);
+                        }
                     }}
                 >
-                    <CircleLayer
-                        id="clusters"
-                        filter={["has", "point_count"]}
-                        style={circleLayerStyle}
-                    />
+                    <CircleLayer id="clusters" filter={["has", "point_count"]} style={circleLayerStyle} />
                     <SymbolLayer id="clusters-count" style={symbolCountStyle} />
-                    <SymbolLayer
-                        id="foodTruckIcons"
-                        filter={["!", ["has", "point_count"]]}
-                        style={symbolLayerStyle}
-                    />
+                    <SymbolLayer id="foodTruckIcons" filter={["!", ["has", "point_count"]]} style={symbolLayerStyle} />
                     <Images images={{ icon }} />
                 </ShapeSource>
             </MapView>
@@ -221,9 +220,7 @@ export default function Index() {
                     trucks={FOOD_TRUCKS.filter(
                         (truck) =>
                             categoryFilters.length === 0 ||
-                            truck.categories.some((c) =>
-                                categoryFilters.includes(c)
-                            )
+                            truck.categories.some((c) => categoryFilters.includes(c))
                     )}
                     showCategories={() => setShowCategoryModal(true)}
                 />
