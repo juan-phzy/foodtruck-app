@@ -38,8 +38,15 @@ import icon from "@/assets/images/icon.png";
 
 // State Management (Zustand)
 import useTruckStore from "@/store/useTruckStore";
+import { useSession } from "@/context/ctx"; // Ensure session provider is properly used
+
 
 export default function Index() {
+
+    const { session } = useSession(); // Track session state
+
+    
+
     const { selectedTruck, setSelectedTruckId, clearSelectedTruck } =
         useTruckStore();
 
@@ -61,35 +68,39 @@ export default function Index() {
         latitude: number,
         zoomLevel: number = 14
     ) => {
-        cameraRef.current?.setCamera({
-            centerCoordinate: [longitude, latitude],
-            zoomLevel,
-            animationDuration: 500,
-        });
+        if (cameraRef.current) {
+            setTimeout(() => {
+                cameraRef.current?.setCamera({
+                    centerCoordinate: [longitude, latitude],
+                    zoomLevel,
+                    animationDuration: 500,
+                });
+            }, 200); // Delay the camera update
+        }
     };
+    
 
     // Fetch User Location on Initial Load
     useEffect(() => {
         const getUserLocation = async () => {
             try {
-                const { status } =
-                    await Location.requestForegroundPermissionsAsync();
-                if (status !== "granted") {
-                    Alert.alert(
-                        "Location Permission Required",
-                        "Please enable location services for best experience."
-                    );
-                    return;
-                }
-
+                const { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== "granted") return;
+        
                 const location = await Location.getCurrentPositionAsync({});
-                const { latitude, longitude } = location.coords;
-                setUserLocation({ latitude, longitude });
-                moveCamera(longitude, latitude);
+                if (!location || !location.coords) return; // Prevent null errors
+        
+                setUserLocation({
+                    latitude: location.coords.latitude,
+                    longitude: location.coords.longitude,
+                });
+        
+                moveCamera(location.coords.longitude, location.coords.latitude);
             } catch (error) {
                 console.error("Error getting user location:", error);
             }
         };
+        
 
         getUserLocation();
     }, []);
@@ -126,14 +137,15 @@ export default function Index() {
                 selectedTruck.coordinates.latitude - 0.0012,
                 16
             );
-        } else {
-            moveCamera(
-                userLocation?.longitude ?? -122.4194,
-                userLocation?.latitude ?? 37.7749,
-                14
-            ); // Defaults to SF
+        } else if (userLocation) {
+            moveCamera(userLocation.longitude, userLocation.latitude, 14);
         }
-    }, [selectedTruck]);
+    }, [selectedTruck, userLocation]); 
+    
+
+    if (!session) {
+        return null; // Prevent MapView from rendering when user is not logged in
+    }
 
     return (
         <View style={styles.container}>
