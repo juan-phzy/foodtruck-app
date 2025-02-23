@@ -1,3 +1,17 @@
+/**
+ * @file CategoryModal.tsx
+ * @description This component displays a modal where users can filter food trucks based on categories.
+ *
+ * Features:
+ * - Displays a list of selectable food categories.
+ * - Uses Zustand for global state management.
+ * - Implements `FlatList` for optimized performance with category selection.
+ * - Allows users to toggle category selections dynamically.
+ * - Includes a "Clear All" button to reset category filters.
+ * - Uses memoization (`useCallback`) to optimize performance.
+ * - Provides a back button to close the modal.
+ */
+
 // React & Hooks
 import React, { useCallback } from "react";
 

@@ -1,3 +1,17 @@
+/**
+ * @file MenuModal.tsx
+ * @description This component displays a modal with a food truck's menu items.
+ * It allows users to browse different categories of food items and view details.
+ *
+ * Features:
+ * - Displays food categories and items dynamically.
+ * - Uses memoization to optimize rendering.
+ * - Implements React Native's `FlatList` for efficient rendering of long lists.
+ * - Provides a back button to close the modal.
+ * - Ensures unique keys for list items to prevent React warnings.
+ *
+ */
+
 // React & Hooks
 import React, { useMemo } from "react";
 
@@ -23,20 +37,6 @@ import useMenuModalStore from "@/store/useMenuModalStore";
 
 // Types
 import { FoodTruck } from "@/types";
-
-/**
- * @file MenuModal.tsx
- * @description This component displays a modal with a food truck's menu items.
- * It allows users to browse different categories of food items and view details.
- *
- * Features:
- * - Displays food categories and items dynamically.
- * - Uses memoization to optimize rendering.
- * - Implements React Native's `FlatList` for efficient rendering of long lists.
- * - Provides a back button to close the modal.
- * - Ensures unique keys for list items to prevent React warnings.
- *
- */
 
 // Props Interface
 interface MenuModalProps {
