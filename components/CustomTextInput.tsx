@@ -1,6 +1,10 @@
 /**
  * @file CustomTextInput.tsx
  * @description A reusable custom text input component with a label and stylized input field.
+ * 
+ * Used In:
+ * - create-account.tsx
+ * - sign-in.tsx
  *
  * Features:
  * - Displays a label above the input field.

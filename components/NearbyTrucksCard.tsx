@@ -2,6 +2,9 @@
  * @file NearbyTrucksCard.tsx
  * @description Displays a card listing nearby food trucks with filtering and sorting options.
  * 
+ * Used In:
+ * - index.tsx
+ * 
  * Features:
  * - Expands and collapses to show/hide nearby food truck list.
  * - Allows sorting trucks by rating or distance.

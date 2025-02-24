@@ -2,6 +2,9 @@
  * @file MenuModal.tsx
  * @description This component displays a modal with a food truck's menu items.
  * It allows users to browse different categories of food items and view details.
+ * 
+ * Used In:
+ * - index.tsx
  *
  * Features:
  * - Displays food categories and items dynamically.

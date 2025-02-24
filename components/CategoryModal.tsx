@@ -1,6 +1,9 @@
 /**
  * @file CategoryModal.tsx
  * @description This component displays a modal where users can filter food trucks based on categories.
+ * 
+ * Used In:
+ * - index.tsx: Used in the main app file to render the category filters selection modal.
  *
  * Features:
  * - Displays a list of selectable food categories.

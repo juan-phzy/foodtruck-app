@@ -1,6 +1,11 @@
 /**
  * @file CustomButton.tsx
  * @description A customizable button component that supports different styles, padding, font sizes, and widths.
+ * 
+ * Used In:
+ * - create-account.tsx
+ * - sign-in.tsx
+ * - NearbyTrucksCard.tsx
  *
  * Features:
  * - Four style variations: `dark`, `light`, `outlineDark`, and `outlineLight`.

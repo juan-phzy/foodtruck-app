@@ -1,6 +1,9 @@
 /**
  * @file SearchBar.tsx
  * @description A search bar component utilizing Google Places Autocomplete for searching locations.
+ * 
+ * Used In:
+ * - index.tsx
  *
  * Features:
  * - Uses Google Places API to fetch place details.
