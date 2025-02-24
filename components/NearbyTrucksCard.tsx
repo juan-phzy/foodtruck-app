@@ -9,16 +9,27 @@
  * - Uses memoization to optimize sorting performance.
  */
 
+// React & Hooks
 import React, { useState, useMemo } from "react";
+
+// React Native Components
 import { StyleSheet, View, Text, Pressable } from "react-native";
+
+// Expo & Third-Party Libraries
 import { BlurView } from "expo-blur";
 import { Ionicons } from "@expo/vector-icons";
 
+// Theme & Types
 import theme from "@/theme/theme";
-import CustomButton from "./CustomButton";
 import { FoodTruck } from "@/types";
-import TruckCardList from "./TruckCardList";
+
+// State Management (Zustand)
 import useFilterStore from "@/store/useFilterStore";
+
+// Custom Components
+import CustomButton from "./CustomButton";
+import TruckCardList from "./TruckCardList";
+
 
 interface NearbyTrucksCardProps {
     isCategoryActive: boolean;
