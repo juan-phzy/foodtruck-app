@@ -1,14 +1,37 @@
+/**
+ * @file IconButton.tsx
+ * @description A reusable button component with an icon and a label.
+ * 
+ * Used In:
+ * - sign-in.tsx: renders phone and email sign-in buttons
+ *
+ * Features:
+ * - Displays an icon inside a circular container.
+ * - Shows a text label beside the icon.
+ * - Accepts a custom background color for the icon.
+ * - Uses React Native's `Pressable` for interactive touch feedback.
+ * - Ensures accessibility with clear visual spacing and styling.
+ */
+
+// React & React Native Imports
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+
+// Theme & Styles
 import theme from "@/theme/theme";
 
+// Type Definition for Component Props
 type IconButtonProps = Readonly<{
-  icon: React.ReactNode; // Pass the icon component as a prop
-  label: string;
+  icon: React.ReactNode; // Icon element to be displayed
+  label: string; // Text label beside the icon
   iconBackground: string; // Background color for the icon container
-  onPress: () => void; // Function triggered on press
+  onPress: () => void; // Callback function triggered on press
 }>;
 
+/**
+ * IconButton Component
+ * A button with an icon and a label.
+ */
 export default function IconButton({
   icon,
   label,
@@ -27,36 +50,24 @@ export default function IconButton({
   );
 }
 
+// Styles for the IconButton Component
 const styles = StyleSheet.create({
   container: {
-    // Flexbox
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "row", // Arranges icon and label horizontally
+    alignItems: "center", // Aligns items vertically in the center
     gap: 10, // Space between icon and label
-
-    // Size and Positioning
-    alignSelf: "flex-start",
-
-    // Borders
-    borderWidth: 0,
-    borderColor: theme.colors.white,
+    alignSelf: "flex-start", // Ensures button does not stretch
   },
   iconContainer: {
-    // Size and Positioning
-    width: 40,
-    height: 40,
-
-    // Flexbox
-    justifyContent: "center",
-    alignItems: "center",
-
-    // Borders
-    borderRadius: 20, // Fully rounded corners (half of width/height)
+    width: 40, // Fixed width for the icon container
+    height: 40, // Fixed height for the icon container
+    justifyContent: "center", // Centers the icon
+    alignItems: "center", // Centers the icon
+    borderRadius: 20, // Fully rounded for a circular look
   },
   label: {
-    // Typography
-    fontSize: 16,
-    color: theme.colors.white,
-    fontWeight: "medium",
+    fontSize: 16, // Readable font size
+    color: theme.colors.white, // Ensures good contrast on dark backgrounds
+    fontWeight: "500", // Medium font weight for clarity
   },
 });

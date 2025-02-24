@@ -1,3 +1,17 @@
+/**
+ * SignIn Component
+ *
+ * This screen provides a user-friendly interface for signing in.
+ *
+ * Features:
+ * - Background image with gradient overlay.
+ * - Toggle between Email and Phone sign-in.
+ * - Input fields for credentials.
+ * - Alternative sign-in options (Email, Gmail, Phone).
+ * - Navigation to Create Account screen.
+ * - Fully responsive layout for different screen sizes.
+ */
+
 // React & Hooks
 import React, { useState } from "react";
 
@@ -31,19 +45,6 @@ import theme from "@/theme/theme";
 // Get screen dimensions for responsive UI scaling
 const { width, height } = Dimensions.get("window");
 
-/**
- * SignIn Component
- *
- * This screen provides a user-friendly interface for signing in.
- *
- * Features:
- * - Background image with gradient overlay.
- * - Toggle between Email and Phone sign-in.
- * - Input fields for credentials.
- * - Alternative sign-in options (Email, Gmail, Phone).
- * - Navigation to Create Account screen.
- * - Fully responsive layout for different screen sizes.
- */
 export default function SignIn() {
     // State for toggling between Phone and Email sign-in
     const [signInOption, setSignInOption] = useState<"Phone" | "Email">(
