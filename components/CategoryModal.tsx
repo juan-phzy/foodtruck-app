@@ -98,6 +98,7 @@ const CategoryModal: React.FC = () => {
                 data={CATEGORIES}
                 numColumns={3}
                 keyExtractor={(item) => item.name}
+                showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => (
                     <Pressable
                         style={[
