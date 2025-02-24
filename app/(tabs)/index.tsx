@@ -34,7 +34,6 @@ import Mapbox, {
     SymbolLayer,
     CircleLayer,
 } from "@rnmapbox/maps";
-Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY ?? "");
 
 // Geospatial Utilities
 import { featureCollection, point } from "@turf/helpers";
@@ -50,15 +49,15 @@ import useMenuModalStore from "@/store/useMenuModalStore";
 // Types
 type Coordinates = { latitude: number; longitude: number };
 
+Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY ?? "");
+
 export default function Index() {
     // Zustand store for managing selected truck
-    const { selectedTruck, showTruckPage, setSelectedTruckId, clearSelectedTruck } =
-        useTruckStore();
-    const { categoryFilters, showCategoryModal } =
-        useFilterStore();
+    const { selectedTruck, showTruckPage, setSelectedTruckId, clearSelectedTruck } = useTruckStore();
+    const { categoryFilters, showCategoryModal } = useFilterStore();
     const { showMenuModal } = useMenuModalStore();
 
-    // State Hooks
+    // State for user location
     const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
 
     // Map Camera Reference
@@ -66,23 +65,14 @@ export default function Index() {
 
     /**
      * Moves the Mapbox camera to a specific location.
-     * Uses useCallback to prevent re-renders.
      */
-    const moveCamera = useCallback(
-        (longitude: number, latitude: number, zoomLevel: number = 14) => {
-            console.log("Moving camera to:", {
-                latitude,
-                longitude,
-                zoomLevel,
-            });
-            cameraRef.current?.setCamera({
-                centerCoordinate: [longitude, latitude],
-                zoomLevel,
-                animationDuration: 500,
-            });
-        },
-        []
-    );
+    const moveCamera = useCallback((longitude: number, latitude: number, zoomLevel: number = 14) => {
+        cameraRef.current?.setCamera({
+            centerCoordinate: [longitude, latitude],
+            zoomLevel,
+            animationDuration: 500,
+        });
+    }, []);
 
     /**
      * Fetch User Location on Initial Load.
@@ -90,22 +80,14 @@ export default function Index() {
     useEffect(() => {
         const getUserLocation = async () => {
             try {
-                console.log("Requesting location permissions...");
-                const { status } =
-                    await Location.requestForegroundPermissionsAsync();
-
+                const { status } = await Location.requestForegroundPermissionsAsync();
                 if (status !== "granted") {
-                    Alert.alert(
-                        "Location Permission Required",
-                        "Please enable location services for the best experience."
-                    );
+                    Alert.alert("Location Permission Required", "Please enable location services for the best experience.");
                     return;
                 }
 
                 const location = await Location.getCurrentPositionAsync({});
                 const { latitude, longitude } = location.coords;
-                console.log("User location obtained:", { latitude, longitude });
-
                 setUserLocation({ latitude, longitude });
                 moveCamera(longitude, latitude);
             } catch (error) {
@@ -117,59 +99,44 @@ export default function Index() {
     }, [moveCamera]);
 
     /**
-     * Handles Google Places Search and moves the camera.
-     */
-    const handleSearch = useCallback(
-        ({ latitude, longitude }: Coordinates) => {
-            console.log("Search triggered, moving camera:", {
-                latitude,
-                longitude,
-            });
-            moveCamera(longitude, latitude);
-        },
-        [moveCamera]
-    );
-
-    /**
-     * Camera Updates on Truck Selection.
+     * Moves the camera when a truck is selected.
      */
     useEffect(() => {
         if (selectedTruck) {
-            console.log("Truck selected, moving camera:", selectedTruck.name);
-            moveCamera(
-                selectedTruck.coordinates.longitude,
-                selectedTruck.coordinates.latitude - 0.0012,
-                16
-            );
-        } else {
-            console.log("No truck selected, resetting camera...");
-            moveCamera(
-                userLocation?.longitude ?? -122.4194, // Default to SF
-                userLocation?.latitude ?? 37.7749,
-                14
-            );
+            moveCamera(selectedTruck.coordinates.longitude, selectedTruck.coordinates.latitude - 0.0012, 16);
         }
-    }, [selectedTruck, userLocation, moveCamera]);
+    }, [selectedTruck, moveCamera]);
 
-    const filteredTrucks = useMemo(() => {
-        if (categoryFilters.length === 0) return FOOD_TRUCKS;
-        return FOOD_TRUCKS.filter((truck) =>
-            truck.categories.some((c) => categoryFilters.includes(c))
-        );
-    }, [categoryFilters]);
-    
-    const truckFeatures = useMemo(
-        () =>
-            featureCollection(
+    /**
+     * Handles Google Places Search and moves the camera.
+     */
+    const handleSearch = useCallback(({ latitude, longitude }: Coordinates) => {
+        moveCamera(longitude, latitude);
+        setSelectedTruckId(null);
+    }, [moveCamera, setSelectedTruckId]);
+
+    /**
+     * Filters and computes food truck features only when dependencies change.
+     */
+    const truckFeatures = useMemo(() => {
+        const filteredTrucks =
+            categoryFilters.length === 0
+                ? FOOD_TRUCKS
+                : FOOD_TRUCKS.filter((truck) =>
+                      truck.categories.some((c) => categoryFilters.includes(c))
+                  );
+
+        return {
+            filteredTrucks,
+            featureCollection: featureCollection(
                 filteredTrucks.map((truck) =>
-                    point(
-                        [truck.coordinates.longitude, truck.coordinates.latitude],
-                        { id: truck.id }
-                    )
+                    point([truck.coordinates.longitude, truck.coordinates.latitude], {
+                        id: truck.id,
+                    })
                 )
             ),
-        [filteredTrucks]
-    );
+        };
+    }, [categoryFilters]);
 
     return (
         <View style={styles.container}>
@@ -177,68 +144,39 @@ export default function Index() {
             {showCategoryModal && <CategoryModal />}
 
             {/* Menu Modal */}
-            {showMenuModal && selectedTruck && (
-                <MenuModal truck={selectedTruck} />
-            )}
+            {showMenuModal && selectedTruck && <MenuModal truck={selectedTruck} />}
 
             {/* Truck Page */}
-            {showTruckPage && selectedTruck && (
-                <TruckPage
-                    truck={selectedTruck}
-                />
-            )}
+            {showTruckPage && selectedTruck && <TruckPage truck={selectedTruck} />}
 
             {/* Search Bar */}
             <SearchBar onSearch={handleSearch} />
 
             {/* Map */}
-            <MapView
-                style={styles.map}
-                styleURL={Mapbox.StyleURL.Street}
-                onPress={clearSelectedTruck}
-                scaleBarEnabled={false}
-            >
+            <MapView style={styles.map} styleURL={Mapbox.StyleURL.Street} onPress={clearSelectedTruck} scaleBarEnabled={false}>
                 <Camera ref={cameraRef} />
-                <LocationPuck {...locationPuckStyle} />
+                <LocationPuck />
 
                 <ShapeSource
                     id="foodTrucks"
                     cluster
-                    shape={truckFeatures}
+                    shape={truckFeatures.featureCollection}
                     onPress={(e) => {
                         const truckId = e.features?.[0]?.properties?.id;
                         if (truckId) {
-                            console.log("Truck pressed, selecting:", truckId);
                             setSelectedTruckId(truckId);
                         }
                     }}
                 >
-                    <CircleLayer
-                        id="clusters"
-                        filter={["has", "point_count"]}
-                        style={circleLayerStyle}
-                    />
+                    <CircleLayer id="clusters" filter={["has", "point_count"]} style={circleLayerStyle} />
                     <SymbolLayer id="clusters-count" style={symbolCountStyle} />
-                    <SymbolLayer
-                        id="foodTruckIcons"
-                        filter={["!", ["has", "point_count"]]}
-                        style={symbolLayerStyle}
-                    />
+                    <SymbolLayer id="foodTruckIcons" filter={["!", ["has", "point_count"]]} style={symbolLayerStyle} />
                     <Images images={{ icon }} />
                 </ShapeSource>
             </MapView>
 
             {/* Conditional Card Rendering */}
-            {selectedTruck ? (
-                <SelectedTruckCard
-                    truck={selectedTruck}
-                />
-            ) : (
-                <NearbyTrucksCard
-                    isCategoryActive={categoryFilters.length > 0}
-                    trucks={filteredTrucks}
-                />
-            )}
+            {selectedTruck ? <SelectedTruckCard truck={selectedTruck} /> : <NearbyTrucksCard trucks={truckFeatures.filteredTrucks} />}
         </View>
     );
 }

@@ -35,15 +35,13 @@ import TruckCardList from "./TruckCardList";
 
 
 interface NearbyTrucksCardProps {
-    isCategoryActive: boolean;
     trucks: FoodTruck[];
 }
 
 const NearbyTrucksCard: React.FC<NearbyTrucksCardProps> = ({
-    isCategoryActive,
     trucks,
 }) => {
-    const { toggleCategoryModal } = useFilterStore();
+    const { toggleCategoryModal, categoryFilters } = useFilterStore();
 
     const [isExpanded, setIsExpanded] = useState(false);
     const [sortBy, setSortBy] = useState<"rating" | "distance" | null>(null);
@@ -79,7 +77,7 @@ const NearbyTrucksCard: React.FC<NearbyTrucksCardProps> = ({
                 <Text style={{ fontSize: 18, fontWeight: "bold", flex: 1 }}>Filters:</Text>
                 
                 <CustomButton
-                    style={isCategoryActive ? "dark" : "outlineDark"}
+                    style={categoryFilters.length > 0 ? "dark" : "outlineDark"}
                     verticalPadding={5}
                     fontSize={12}
                     width="fit"
