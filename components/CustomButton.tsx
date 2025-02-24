@@ -1,22 +1,41 @@
+/**
+ * @file CustomButton.tsx
+ * @description A customizable button component that supports different styles, padding, font sizes, and widths.
+ *
+ * Features:
+ * - Four style variations: `dark`, `light`, `outlineDark`, and `outlineLight`.
+ * - Adjustable width (`fill` for full width, `fit` for auto width).
+ * - Customizable text size and padding.
+ * - Uses a `Pressable` component for better user interactions.
+ */
+
+// React & React Native Imports
 import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
+
+// Theme & Styles
 import theme from "@/theme/theme";
 
+// Type Definition for Component Props
 type ButtonProps = Readonly<{
-  style?: "dark" | "light" | "outlineDark" | "outlineLight";
-  text: string;
-  onPress: () => void;
-  width?: "fill" | "fit";
-  horizontalPadding?: number;
-  verticalPadding?: number;
-  fontSize?: number;
+  style?: "dark" | "light" | "outlineDark" | "outlineLight"; // Button style options
+  text: string; // Text to display on the button
+  onPress: () => void; // Callback function when the button is pressed
+  width?: "fill" | "fit"; // Determines if the button spans full width or auto width
+  horizontalPadding?: number; // Customizable horizontal padding
+  verticalPadding?: number; // Customizable vertical padding
+  fontSize?: number; // Customizable font size
 }>;
 
+/**
+ * CustomButton Component
+ * A reusable and customizable button with various styles and configurations.
+ */
 export default function CustomButton({
-  style = "dark", // Default style
+  style = "dark", // Default button style
   text,
   onPress,
-  width = "fill", // Default width
+  width = "fill", // Default to full width
   horizontalPadding = 10, // Default horizontal padding
   verticalPadding = 5, // Default vertical padding
   fontSize = 12, // Default font size
@@ -26,11 +45,11 @@ export default function CustomButton({
       onPress={onPress}
       style={[
         styles.base,
-        styles[style], // Apply the style based on the "style" prop
+        styles[style], // Apply the selected style
         {
           paddingHorizontal: horizontalPadding,
           paddingVertical: verticalPadding,
-          width: width === "fill" ? "100%" : "auto", // Handle width based on prop
+          width: width === "fill" ? "100%" : "auto", // Conditional width
         },
       ]}
     >
@@ -41,15 +60,16 @@ export default function CustomButton({
   );
 }
 
+// Styles for the CustomButton Component
 const styles = StyleSheet.create({
-  // Base style for the button
+  // Base button style
   base: {
     borderRadius: 20, // Rounded corners
     justifyContent: "center",
     alignItems: "center",
   },
 
-  // Style variants
+  // Button style variants
   dark: {
     backgroundColor: theme.colors.primary,
     borderWidth: 2,
