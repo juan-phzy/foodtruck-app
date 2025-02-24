@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
     StyleSheet,
     Text,
@@ -16,7 +16,6 @@ import {
 import theme from "@/theme/theme";
 import { FoodTruck } from "@/types";
 
-// New imports
 import useTruckStore from "@/store/useTruckStore";
 import useMenuModalStore from "@/store/useMenuModalStore";
 
@@ -24,70 +23,56 @@ interface SelectedTruckCardProps {
     truck: FoodTruck;
 }
 
-const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
-    truck,
-}) => {
-    // temporary state, get from user lists later
+const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({ truck }) => {
     const [isFavorite, setIsFavorite] = useState(false);
 
-    const { clearSelectedTruck, nextTruck, previousTruck, toggleTruckPage } = useTruckStore();
+    const { clearSelectedTruck, nextTruck, previousTruck, toggleTruckPage } =
+        useTruckStore();
     const { toggleMenuModal } = useMenuModalStore();
+
+    // Memoized function for toggling favorite state
+    const handleToggleFavorite = useCallback(() => {
+        setIsFavorite((prev) => !prev);
+    }, []);
+
+    // Calculate estimated driving & walking time once
+    const estimatedDriveTime = Math.round(truck.distance * 3);
+    const estimatedWalkTime = Math.round(truck.distance * 20);
+
     return (
         <BlurView intensity={10} style={styles.cardContainer}>
-            {/* First View: Title Bar */}
+            {/* Title Bar */}
             <View style={styles.titleBar}>
-                <Pressable
-                    style={styles.backButtonContainer}
-                    onPress={()=> clearSelectedTruck()}
-                >
-                    <Ionicons
-                        name="arrow-back"
-                        size={30}
-                        color={theme.colors.white}
-                    />
+                <Pressable style={styles.backButtonContainer} onPress={clearSelectedTruck}>
+                    <Ionicons name="arrow-back" size={30} color={theme.colors.white} />
                 </Pressable>
 
                 <Text style={styles.title}>{truck.name}</Text>
-                <View
-                    style={[
-                        styles.openCloseContainer,
-                        truck.isOpen ? styles.open : styles.closed,
-                    ]}
-                >
-                    <Text style={[styles.openCloseText]}>
-                        {truck.isOpen ? "Open" : "Closed"}
-                    </Text>
+
+                <View style={[styles.openCloseContainer, truck.isOpen ? styles.open : styles.closed]}>
+                    <Text style={styles.openCloseText}>{truck.isOpen ? "Open" : "Closed"}</Text>
                 </View>
 
-                <Pressable
-                    style={styles.bookmarkIcon}
-                    onPress={() => setIsFavorite(!isFavorite)}
-                >
+                <Pressable style={styles.bookmarkIcon} onPress={handleToggleFavorite}>
                     <Ionicons
                         name={isFavorite ? "bookmark" : "bookmark-outline"}
-                        size={30}
+                        size={25}
                         color={theme.colors.primary}
                     />
                 </Pressable>
             </View>
 
-            {/* Second View: Information and Buttons */}
+            {/* Truck Info */}
             <View style={styles.infoSection}>
-                <View style={styles.categoryDistance}>
-                    <Text style={styles.bolded}>
-                        {truck.categories.join(", ")}
-                    </Text>
-                    <Text style={[styles.bolded,{fontSize:12}]}>
-                        {`${truck.distance.toFixed(2)} mi ⦁ `}
-                        {`${Math.round(truck.distance * 3)} min drive ⦁ `}
-                        {`${Math.round(truck.distance * 20)} min walk `}
-                    </Text>
-                </View>
+                <Text style={styles.bolded}>
+                    {`${truck.distance.toFixed(2)} mi ⦁ ${estimatedDriveTime} min drive ⦁ ${estimatedWalkTime} min walk`}
+                </Text>
 
+                <View style={styles.divider} />
+                <Text style={styles.bolded}>{truck.categories.join(", ")}</Text>
                 <View style={styles.divider} />
 
                 <Text style={styles.bolded}>Stationary Truck</Text>
-
                 <View style={styles.divider} />
 
                 <View style={styles.vert}>
@@ -103,11 +88,7 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
                         {Array.from({ length: 5 }, (_, index) => (
                             <Ionicons
                                 key={index}
-                                name={
-                                    index < Math.floor(truck.rating)
-                                        ? "star"
-                                        : "star-outline"
-                                }
+                                name={index < Math.floor(truck.rating) ? "star" : "star-outline"}
                                 size={12}
                                 color={theme.colors.primary}
                             />
@@ -117,31 +98,20 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
 
                 <View style={styles.divider} />
 
+                {/* Action Buttons */}
                 <View style={styles.buttonRow}>
                     <Pressable style={styles.button} onPress={toggleMenuModal}>
-                        <MaterialIcons
-                            name="restaurant-menu"
-                            size={35}
-                            color="white"
-                        />
+                        <MaterialIcons name="restaurant-menu" size={20} color="white" />
                         <Text style={styles.buttonText}>Menu</Text>
                     </Pressable>
 
                     <Pressable style={styles.button}>
-                        <MaterialCommunityIcons
-                            name="directions"
-                            size={35}
-                            color="white"
-                        />
+                        <MaterialCommunityIcons name="directions" size={20} color="white" />
                         <Text style={styles.buttonText}>Directions</Text>
                     </Pressable>
 
                     <Pressable style={styles.button} onPress={toggleTruckPage}>
-                        <MaterialCommunityIcons
-                            name="truck-outline"
-                            size={35}
-                            color="white"
-                        />
+                        <MaterialCommunityIcons name="truck-outline" size={20} color="white" />
                         <Text style={styles.buttonText}>View Truck</Text>
                     </Pressable>
                 </View>
@@ -149,42 +119,26 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({
                 <View style={styles.divider} />
             </View>
 
-            {/* Third View: Image Gallery */}
+            {/* Image Gallery */}
             <View style={styles.imageGallery}>
                 <FlatList
-                    data={truck.images} // Array of image URLs from the truck
-                    horizontal // Enable horizontal scrolling
-                    keyExtractor={(item, index) => index.toString()} // Unique key for each image
+                    data={truck.images}
+                    horizontal
+                    keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
-                        <Image
-                            source={{ uri: item }} // Render each image dynamically
-                            style={styles.image}
-                        />
+                        <Image source={{ uri: item }} style={styles.image} />
                     )}
-                    showsHorizontalScrollIndicator={false} // Hide the scroll indicator for better UI
+                    showsHorizontalScrollIndicator={false}
                 />
             </View>
 
-            {/* Forward and Back Buttons
-                These break when tapped too fast, 
-                we have to put an inactive timer 
-                on them and raise the transition speed */}
+            {/* Navigation Buttons */}
             <View style={styles.navigationButtons}>
-                <Pressable onPress={()=>previousTruck()}>
-                    <Ionicons
-                        name="chevron-back"
-                        size={40}
-                        color={theme.colors.primary}
-                        style={styles.navButton}
-                    />
+                <Pressable onPress={previousTruck}>
+                    <Ionicons name="chevron-back" size={40} color={theme.colors.primary} style={styles.navButton} />
                 </Pressable>
-                <Pressable onPress={()=>nextTruck()}>
-                    <Ionicons
-                        name="chevron-forward"
-                        size={40}
-                        color={theme.colors.primary}
-                        style={styles.navButton}
-                    />
+                <Pressable onPress={nextTruck}>
+                    <Ionicons name="chevron-forward" size={40} color={theme.colors.primary} style={styles.navButton} />
                 </Pressable>
             </View>
         </BlurView>
@@ -196,6 +150,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         width: "100%",
+        height: "60%",
         paddingVertical: 15,
         paddingHorizontal: 10,
         backgroundColor: "rgba(255, 255, 255, 0.90)",
@@ -214,13 +169,13 @@ const styles = StyleSheet.create({
     backButtonContainer: {
         justifyContent: "center",
         alignItems: "center",
-        height: 35,
-        paddingHorizontal: 15,
+        height: 30,
+        paddingHorizontal: 10,
         backgroundColor: theme.colors.primary,
         borderRadius: 20,
     },
     title: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: "bold",
         color: theme.colors.primary,
         flex: 1,
@@ -228,13 +183,13 @@ const styles = StyleSheet.create({
     openCloseContainer: {
         justifyContent: "center",
         alignItems: "center",
-        height: 30,
+        height: 25,
         borderRadius: 20,
     },
     openCloseText: {
         borderRadius: 15,
-        paddingHorizontal: 15,
-        fontSize: 16,
+        paddingHorizontal: 10,
+        fontSize: 12,
         fontWeight: "bold",
         color: theme.colors.white,
     },
@@ -249,7 +204,7 @@ const styles = StyleSheet.create({
     },
     infoSection: {},
     bolded: {
-        fontSize: 14,
+        fontSize: 12,
         color: theme.colors.black,
         fontWeight: "bold",
     },
@@ -266,17 +221,16 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "flex-start",
         alignItems: "flex-start",
-        gap: 5,
+        gap: 1,
     },
     ratingContainer: {
         flexDirection: "row",
         alignItems: "center",
     },
     ratingText: {
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: "bold",
         color: theme.colors.black,
-        marginRight: 10,
     },
     stars: {
         flexDirection: "row",
@@ -302,7 +256,7 @@ const styles = StyleSheet.create({
     },
     imageGallery: {
         flexDirection: "row",
-        marginVertical: 10,
+        marginVertical: 2,
     },
     image: {
         width: 150, // Adjust width for each image
@@ -314,6 +268,7 @@ const styles = StyleSheet.create({
     navigationButtons: {
         flexDirection: "row",
         justifyContent: "space-between",
+        
     },
     navButton: {
         paddingHorizontal: 10,

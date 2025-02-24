@@ -12,6 +12,9 @@
  * - Implements React Native's `FlatList` for efficient rendering of long lists.
  * - Provides a back button to close the modal.
  * - Ensures unique keys for list items to prevent React warnings.
+ * 
+ * TO DO:
+ * - Move component definitions out of the parent component.
  *
  */
 
@@ -86,6 +89,7 @@ const MenuModal: React.FC<MenuModalProps> = ({ truck }) => {
                 ListHeaderComponent={<View style={styles.spacerHeader} />}
                 ListFooterComponent={<View style={styles.spacerFooter} />}
                 ItemSeparatorComponent={() => (
+                    // TO DO
                     // Move this component definition out of
                     // the parent component and pass data as props.
                     <View style={styles.itemSeparator} />
@@ -107,6 +111,7 @@ const MenuModal: React.FC<MenuModalProps> = ({ truck }) => {
                                     `${item.name + index}`
                                 }
                                 ItemSeparatorComponent={() => (
+                                    // TO DO
                                     // Move this component definition out of
                                     // the parent component and pass data as props.
                                     <View style={styles.itemSeparator} />
