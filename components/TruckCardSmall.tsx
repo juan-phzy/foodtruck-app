@@ -1,4 +1,15 @@
-import React, { useState } from "react";
+/**
+ * @file TruckCardSmall.tsx
+ * @description A compact card component displaying essential information about a food truck.
+ *
+ * Features:
+ * - Displays truck name, status (open/closed), distance, estimated travel time, and categories.
+ * - Shows a star rating and number of reviews.
+ * - Includes a favorite (bookmark) button to toggle favorite status.
+ * - Optimized for performance and readability.
+ */
+
+import React, { useState, useCallback } from "react";
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import theme from "@/theme/theme";
@@ -9,8 +20,13 @@ interface TruckCardSmallProps {
 }
 
 const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
-    //temporary state for favorite icon, should be extracted from user data
     const [isFavorite, setIsFavorite] = useState(false);
+
+    // Memoized function to handle favorite toggle
+    const toggleFavorite = useCallback(() => {
+        setIsFavorite((prev) => !prev);
+        console.log("Bookmark icon pressed");
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -27,47 +43,33 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
                     </Text>
                 </Text>
 
-                {/* Distance and Time */}
+                {/* Distance and Estimated Travel Time */}
                 <Text style={styles.details}>
                     {`${truck.distance.toFixed(2)} mi ⦁ `}
                     {`${Math.round(truck.distance * 3)} min drive ⦁ `}
-                    {`${Math.round(truck.distance * 20)} min walk `}
+                    {`${Math.round(truck.distance * 20)} min walk`}
                 </Text>
 
-                {/* Description / Categories */}
-                <Text style={styles.categories}>
-                    {truck.categories.join(", ")}
-                </Text>
+                {/* Categories */}
+                <Text style={styles.categories}>{truck.categories.join(", ")}</Text>
 
                 {/* Star Ratings */}
                 <View style={styles.ratingContainer}>
                     {Array.from({ length: 5 }, (_, index) => (
                         <Ionicons
                             key={index}
-                            name={
-                                index < Math.floor(truck.rating)
-                                    ? "star"
-                                    : "star-outline"
-                            }
+                            name={index < Math.floor(truck.rating) ? "star" : "star-outline"}
                             size={16}
                             color={theme.colors.primary}
                         />
                     ))}
-                    <Text style={{ marginLeft: 5, fontSize: 12 }}>
-                        {truck.rating}
-                    </Text>
-                    <Text style={{ fontSize: 12 }}>({truck.reviewCount})</Text>
+                    <Text style={styles.ratingText}>{truck.rating}</Text>
+                    <Text style={styles.reviewCount}>({truck.reviewCount})</Text>
                 </View>
             </View>
 
             {/* Favorite Icon */}
-            <Pressable
-                style={styles.bookmarkIcon}
-                onPress={() => {
-                    setIsFavorite(!isFavorite);
-                    console.log("Bookmark icon pressed");
-                }}
-            >
+            <Pressable style={styles.bookmarkIcon} onPress={toggleFavorite}>
                 <Ionicons
                     name={isFavorite ? "bookmark" : "bookmark-outline"}
                     size={35}
@@ -96,8 +98,6 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         paddingLeft: 10,
         gap: 2,
-        borderColor: "red",
-        borderWidth: 0,
     },
     name: {
         fontSize: 14,
@@ -122,6 +122,15 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         gap: 2,
+    },
+    ratingText: {
+        marginLeft: 5,
+        fontSize: 12,
+        color: theme.colors.black,
+    },
+    reviewCount: {
+        fontSize: 12,
+        color: theme.colors.black,
     },
     bookmarkIcon: {
         justifyContent: "center",
