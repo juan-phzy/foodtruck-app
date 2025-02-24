@@ -54,13 +54,12 @@ export default function Index() {
     // Zustand store for managing selected truck
     const { selectedTruck, showTruckPage, setSelectedTruckId, clearSelectedTruck } =
         useTruckStore();
-    const { categoryFilters, showCategoryModal, setShowCategoryModal } =
+    const { categoryFilters, showCategoryModal } =
         useFilterStore();
     const { showMenuModal } = useMenuModalStore();
 
     // State Hooks
     const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
-    const [isExpanded, setIsExpanded] = useState(false);
 
     // Map Camera Reference
     const cameraRef = useRef<Camera>(null);
@@ -118,34 +117,6 @@ export default function Index() {
     }, [moveCamera]);
 
     /**
-     * Filters and computes food truck features only when dependencies change.
-     * Uses useMemo to optimize re-renders.
-     */
-    const truckFeatures = useMemo(
-        () =>
-            featureCollection(
-                FOOD_TRUCKS.filter(
-                    (truck) =>
-                        categoryFilters.length === 0 ||
-                        truck.categories.some((c) =>
-                            categoryFilters.includes(c)
-                        )
-                ).map((truck) =>
-                    point(
-                        [
-                            truck.coordinates.longitude,
-                            truck.coordinates.latitude,
-                        ],
-                        {
-                            id: truck.id,
-                        }
-                    )
-                )
-            ),
-        [categoryFilters]
-    );
-
-    /**
      * Handles Google Places Search and moves the camera.
      */
     const handleSearch = useCallback(
@@ -179,6 +150,26 @@ export default function Index() {
             );
         }
     }, [selectedTruck, userLocation, moveCamera]);
+
+    const filteredTrucks = useMemo(() => {
+        if (categoryFilters.length === 0) return FOOD_TRUCKS;
+        return FOOD_TRUCKS.filter((truck) =>
+            truck.categories.some((c) => categoryFilters.includes(c))
+        );
+    }, [categoryFilters]);
+    
+    const truckFeatures = useMemo(
+        () =>
+            featureCollection(
+                filteredTrucks.map((truck) =>
+                    point(
+                        [truck.coordinates.longitude, truck.coordinates.latitude],
+                        { id: truck.id }
+                    )
+                )
+            ),
+        [filteredTrucks]
+    );
 
     return (
         <View style={styles.container}>
@@ -245,16 +236,7 @@ export default function Index() {
             ) : (
                 <NearbyTrucksCard
                     isCategoryActive={categoryFilters.length > 0}
-                    isExpanded={isExpanded}
-                    onToggleExpand={() => setIsExpanded(!isExpanded)}
-                    trucks={FOOD_TRUCKS.filter(
-                        (truck) =>
-                            categoryFilters.length === 0 ||
-                            truck.categories.some((c) =>
-                                categoryFilters.includes(c)
-                            )
-                    )}
-                    showCategories={() => setShowCategoryModal(true)}
+                    trucks={filteredTrucks}
                 />
             )}
         </View>

@@ -28,7 +28,7 @@ interface FilterStore {
      * - If the category is not selected, it adds it.
      * @param category - The category name to toggle.
      */
-    toggleCategory: (category: string) => void;
+    updateCategories: (category: string) => void;
 
     /**
      * Clears all selected category filters.
@@ -39,7 +39,9 @@ interface FilterStore {
      * Sets the visibility of the category modal.
      * @param show - Boolean value to show or hide the modal.
      */
-    setShowCategoryModal: (show: boolean) => void;
+    toggleCategoryModal: () => void;
+
+
 }
 
 const useFilterStore = create<FilterStore>((set) => ({
@@ -50,7 +52,7 @@ const useFilterStore = create<FilterStore>((set) => ({
     setCategoryFilters: (filters) => set({ categoryFilters: filters }),
 
     /** Adds or removes a category from the selected filters */
-    toggleCategory: (category) =>
+    updateCategories: (category) =>
         set((state) => ({
             categoryFilters: state.categoryFilters.includes(category)
                 ? state.categoryFilters.filter((c) => c !== category)
@@ -61,7 +63,7 @@ const useFilterStore = create<FilterStore>((set) => ({
     clearCategoryFilters: () => set({ categoryFilters: [] }),
 
     /** Controls the visibility of the category modal */
-    setShowCategoryModal: (show) => set({ showCategoryModal: show }),
+    toggleCategoryModal: () => set((state)=>({showCategoryModal: !state.showCategoryModal})),
 }));
 
 export default useFilterStore;

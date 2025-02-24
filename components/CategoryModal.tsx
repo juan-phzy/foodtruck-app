@@ -44,9 +44,9 @@ const CategoryModal: React.FC = () => {
     // Zustand store hooks for category state management
     const {
         categoryFilters,
-        toggleCategory,
+        updateCategories,
         clearCategoryFilters,
-        setShowCategoryModal,
+        toggleCategoryModal,
     } = useFilterStore();
 
     /**
@@ -55,9 +55,9 @@ const CategoryModal: React.FC = () => {
      */
     const handleCategoryPress = useCallback(
         (category: string) => {
-            toggleCategory(category);
+            updateCategories(category);
         },
-        [toggleCategory]
+        [updateCategories]
     );
 
     return (
@@ -70,7 +70,7 @@ const CategoryModal: React.FC = () => {
                 />
                 <Pressable
                     style={styles.backBtnContainer}
-                    onPress={() => setShowCategoryModal(false)} // Uses Zustand store function
+                    onPress={toggleCategoryModal} // Uses Zustand store function
                 >
                     <Ionicons
                         name="arrow-back"
