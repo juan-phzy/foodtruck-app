@@ -43,17 +43,34 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({ truck }) => {
         <BlurView intensity={10} style={styles.cardContainer}>
             {/* Title Bar */}
             <View style={styles.titleBar}>
-                <Pressable style={styles.backButtonContainer} onPress={clearSelectedTruck}>
-                    <Ionicons name="arrow-back" size={30} color={theme.colors.white} />
+                <Pressable
+                    style={styles.backButtonContainer}
+                    onPress={clearSelectedTruck}
+                >
+                    <Ionicons
+                        name="arrow-back"
+                        size={30}
+                        color={theme.colors.white}
+                    />
                 </Pressable>
 
                 <Text style={styles.title}>{truck.name}</Text>
 
-                <View style={[styles.openCloseContainer, truck.isOpen ? styles.open : styles.closed]}>
-                    <Text style={styles.openCloseText}>{truck.isOpen ? "Open" : "Closed"}</Text>
+                <View
+                    style={[
+                        styles.openCloseContainer,
+                        truck.isOpen ? styles.open : styles.closed,
+                    ]}
+                >
+                    <Text style={styles.openCloseText}>
+                        {truck.isOpen ? "Open" : "Closed"}
+                    </Text>
                 </View>
 
-                <Pressable style={styles.bookmarkIcon} onPress={handleToggleFavorite}>
+                <Pressable
+                    style={styles.bookmarkIcon}
+                    onPress={handleToggleFavorite}
+                >
                     <Ionicons
                         name={isFavorite ? "bookmark" : "bookmark-outline"}
                         size={25}
@@ -65,7 +82,9 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({ truck }) => {
             {/* Truck Info */}
             <View style={styles.infoSection}>
                 <Text style={styles.bolded}>
-                    {`${truck.distance.toFixed(2)} mi ⦁ ${estimatedDriveTime} min drive ⦁ ${estimatedWalkTime} min walk`}
+                    {`${truck.distance.toFixed(
+                        2
+                    )} mi ⦁ ${estimatedDriveTime} min drive ⦁ ${estimatedWalkTime} min walk`}
                 </Text>
 
                 <View style={styles.divider} />
@@ -88,7 +107,11 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({ truck }) => {
                         {Array.from({ length: 5 }, (_, index) => (
                             <Ionicons
                                 key={index}
-                                name={index < Math.floor(truck.rating) ? "star" : "star-outline"}
+                                name={
+                                    index < Math.floor(truck.rating)
+                                        ? "star"
+                                        : "star-outline"
+                                }
                                 size={12}
                                 color={theme.colors.primary}
                             />
@@ -101,17 +124,29 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({ truck }) => {
                 {/* Action Buttons */}
                 <View style={styles.buttonRow}>
                     <Pressable style={styles.button} onPress={toggleMenuModal}>
-                        <MaterialIcons name="restaurant-menu" size={20} color="white" />
+                        <MaterialIcons
+                            name="restaurant-menu"
+                            size={20}
+                            color="white"
+                        />
                         <Text style={styles.buttonText}>Menu</Text>
                     </Pressable>
 
                     <Pressable style={styles.button}>
-                        <MaterialCommunityIcons name="directions" size={20} color="white" />
+                        <MaterialCommunityIcons
+                            name="directions"
+                            size={20}
+                            color="white"
+                        />
                         <Text style={styles.buttonText}>Directions</Text>
                     </Pressable>
 
                     <Pressable style={styles.button} onPress={toggleTruckPage}>
-                        <MaterialCommunityIcons name="truck-outline" size={20} color="white" />
+                        <MaterialCommunityIcons
+                            name="truck-outline"
+                            size={20}
+                            color="white"
+                        />
                         <Text style={styles.buttonText}>View Truck</Text>
                     </Pressable>
                 </View>
@@ -135,10 +170,20 @@ const SelectedTruckCard: React.FC<SelectedTruckCardProps> = ({ truck }) => {
             {/* Navigation Buttons */}
             <View style={styles.navigationButtons}>
                 <Pressable onPress={previousTruck}>
-                    <Ionicons name="chevron-back" size={40} color={theme.colors.primary} style={styles.navButton} />
+                    <Ionicons
+                        name="chevron-back"
+                        size={40}
+                        color={theme.colors.primary}
+                        style={styles.navButton}
+                    />
                 </Pressable>
                 <Pressable onPress={nextTruck}>
-                    <Ionicons name="chevron-forward" size={40} color={theme.colors.primary} style={styles.navButton} />
+                    <Ionicons
+                        name="chevron-forward"
+                        size={40}
+                        color={theme.colors.primary}
+                        style={styles.navButton}
+                    />
                 </Pressable>
             </View>
         </BlurView>
@@ -268,7 +313,6 @@ const styles = StyleSheet.create({
     navigationButtons: {
         flexDirection: "row",
         justifyContent: "space-between",
-        
     },
     navButton: {
         paddingHorizontal: 10,
