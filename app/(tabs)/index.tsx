@@ -45,6 +45,7 @@ import icon from "@/assets/images/icon.png";
 import useTruckStore from "@/store/useTruckStore";
 import useFilterStore from "@/store/useFilterStore";
 import useMenuModalStore from "@/store/useMenuModalStore";
+import useMapLayerStore from "@/store/useMapLayerStore";
 
 // Types
 type Coordinates = { latitude: number; longitude: number };
@@ -56,6 +57,7 @@ export default function Index() {
     const { selectedTruck, showTruckPage, setSelectedTruckId, clearSelectedTruck } = useTruckStore();
     const { categoryFilters, showCategoryModal } = useFilterStore();
     const { showMenuModal } = useMenuModalStore();
+    const { mapStyle } = useMapLayerStore();
 
     // State for user location
     const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
@@ -105,7 +107,7 @@ export default function Index() {
         if (selectedTruck) {
             moveCamera(selectedTruck.coordinates.longitude, selectedTruck.coordinates.latitude - 0.0012, 16);
         } else {
-            // Zoom out while keeping the current center
+            // Zoom out while keeping the current location
             cameraRef.current?.zoomTo(14, 500);
         }
     }, [selectedTruck, moveCamera]);
@@ -154,10 +156,10 @@ export default function Index() {
             {showTruckPage && selectedTruck && <TruckPage truck={selectedTruck} />}
 
             {/* Search Bar */}
-            <SearchBar onSearch={handleSearch} />
+            <SearchBar onSearch={handleSearch} userLocation={userLocation} moveCamera={moveCamera}/>
 
             {/* Map */}
-            <MapView style={styles.map} styleURL={Mapbox.StyleURL.Street} onPress={clearSelectedTruck} scaleBarEnabled={false}>
+            <MapView style={styles.map} styleURL={mapStyle} onPress={clearSelectedTruck} scaleBarEnabled={false}>
                 <Camera ref={cameraRef} />
                 <LocationPuck pulsing={locationPuckStyle.pulsing} />
 
