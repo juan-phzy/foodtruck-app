@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         bottom: 0,
         width: "100%",
-        height: 200,
+        height: "28%",
         paddingVertical: 15,
         paddingHorizontal: 10,
         backgroundColor: "rgba(255, 255, 255, 0.85)",
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     expanded: {
-        height: 500,
+        height: "60%",
     },
     titleBar: {
         flexDirection: "row",

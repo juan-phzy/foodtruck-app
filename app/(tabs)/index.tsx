@@ -155,7 +155,7 @@ export default function Index() {
             {/* Map */}
             <MapView style={styles.map} styleURL={Mapbox.StyleURL.Street} onPress={clearSelectedTruck} scaleBarEnabled={false}>
                 <Camera ref={cameraRef} />
-                <LocationPuck />
+                <LocationPuck pulsing={locationPuckStyle.pulsing} />
 
                 <ShapeSource
                     id="foodTrucks"
