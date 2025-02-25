@@ -8,10 +8,7 @@ import React, {
 } from "react";
 
 // React Native Components
-import { StyleSheet, View, Alert } from "react-native";
-
-// Expo Location API
-import * as Location from "expo-location";
+import { StyleSheet, View } from "react-native";
 
 // Custom Components
 import SearchBar from "@/components/SearchBar";
@@ -33,6 +30,7 @@ import Mapbox, {
     ShapeSource,
     SymbolLayer,
     CircleLayer,
+    locationManager,
 } from "@rnmapbox/maps";
 
 // Geospatial Utilities
@@ -90,27 +88,23 @@ export default function Index() {
     useEffect(() => {
         const getUserLocation = async () => {
             try {
-                const { status } =
-                    await Location.requestForegroundPermissionsAsync();
-                if (status !== "granted") {
-                    Alert.alert(
-                        "Location Permission Required",
-                        "Please enable location services for the best experience."
-                    );
-                    return;
+                const location = await locationManager.getLastKnownLocation();
+                if (location) {
+                    const { latitude, longitude } = location.coords;
+                    console.log("User Location:", { latitude, longitude });
+                    setUserLocation({ latitude, longitude });
+                    moveCamera(longitude, latitude);
+                } else {
+                    console.warn("No last known location available");
                 }
-
-                const location = await Location.getCurrentPositionAsync({});
-                const { latitude, longitude } = location.coords;
-                setUserLocation({ latitude, longitude });
-                moveCamera(longitude, latitude);
             } catch (error) {
                 console.error("Error getting user location:", error);
             }
         };
-
+    
         getUserLocation();
     }, [moveCamera]);
+    
 
     /**
      * Moves the camera when a truck is selected.
@@ -197,6 +191,8 @@ export default function Index() {
                 onPress={clearSelectedTruck}
                 scaleBarEnabled={false}
                 logoEnabled={false}
+                onDidFinishLoadingMap={() => {console.log('Map Loaded')}}
+                onDidFinishLoadingStyle={() => {console.log('Style Loaded')}}
             >
                 <Camera ref={cameraRef} />
                 <LocationPuck pulsing={locationPuckStyle.pulsing} />

@@ -31,6 +31,7 @@ import { Ionicons } from "@expo/vector-icons";
 import useMapLayerStore from "@/store/useMapLayerStore";
 
 import Mapbox from "@rnmapbox/maps";
+import useTruckStore from "@/store/useTruckStore";
 
 // Types
 type Coordinates = { latitude: number; longitude: number };
@@ -57,6 +58,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const [showLayerModal, setShowLayerModal] = useState(false);
 
     const { setMapStyle } = useMapLayerStore();
+    const { clearSelectedTruck } = useTruckStore();
 
     const layerOptions = [
         { id: "street", name: "Street", style: Mapbox.StyleURL.Street },
@@ -130,6 +132,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                     style={styles.controlButton}
                     onPress={() => {
                         if (userLocation) {
+                            clearSelectedTruck();
                             moveCamera(
                                 userLocation.longitude,
                                 userLocation.latitude,
