@@ -104,8 +104,12 @@ export default function Index() {
     useEffect(() => {
         if (selectedTruck) {
             moveCamera(selectedTruck.coordinates.longitude, selectedTruck.coordinates.latitude - 0.0012, 16);
+        } else {
+            // Zoom out while keeping the current center
+            cameraRef.current?.zoomTo(14, 500);
         }
     }, [selectedTruck, moveCamera]);
+    
 
     /**
      * Handles Google Places Search and moves the camera.
