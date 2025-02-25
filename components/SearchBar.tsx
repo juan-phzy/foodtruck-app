@@ -64,6 +64,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         { id: "street", name: "Street", style: Mapbox.StyleURL.Street },
         { id: "dark", name: "Dark", style: Mapbox.StyleURL.Dark },
         { id: "satellite", name: "Satellite", style: Mapbox.StyleURL.SatelliteStreet },
+        { id: "light", name: "Light", style: Mapbox.StyleURL.Light },
     ];
 
     return (
