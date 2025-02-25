@@ -54,7 +54,12 @@ Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY ?? "");
 
 export default function Index() {
     // Zustand store for managing selected truck
-    const { selectedTruck, showTruckPage, setSelectedTruckId, clearSelectedTruck } = useTruckStore();
+    const {
+        selectedTruck,
+        showTruckPage,
+        setSelectedTruckId,
+        clearSelectedTruck,
+    } = useTruckStore();
     const { categoryFilters, showCategoryModal } = useFilterStore();
     const { showMenuModal } = useMenuModalStore();
     const { mapStyle } = useMapLayerStore();
@@ -68,13 +73,16 @@ export default function Index() {
     /**
      * Moves the Mapbox camera to a specific location.
      */
-    const moveCamera = useCallback((longitude: number, latitude: number, zoomLevel: number = 14) => {
-        cameraRef.current?.setCamera({
-            centerCoordinate: [longitude, latitude],
-            zoomLevel,
-            animationDuration: 500,
-        });
-    }, []);
+    const moveCamera = useCallback(
+        (longitude: number, latitude: number, zoomLevel: number = 14) => {
+            cameraRef.current?.setCamera({
+                centerCoordinate: [longitude, latitude],
+                zoomLevel,
+                animationDuration: 500,
+            });
+        },
+        []
+    );
 
     /**
      * Fetch User Location on Initial Load.
@@ -82,9 +90,13 @@ export default function Index() {
     useEffect(() => {
         const getUserLocation = async () => {
             try {
-                const { status } = await Location.requestForegroundPermissionsAsync();
+                const { status } =
+                    await Location.requestForegroundPermissionsAsync();
                 if (status !== "granted") {
-                    Alert.alert("Location Permission Required", "Please enable location services for the best experience.");
+                    Alert.alert(
+                        "Location Permission Required",
+                        "Please enable location services for the best experience."
+                    );
                     return;
                 }
 
@@ -105,21 +117,27 @@ export default function Index() {
      */
     useEffect(() => {
         if (selectedTruck) {
-            moveCamera(selectedTruck.coordinates.longitude, selectedTruck.coordinates.latitude - 0.0012, 16);
+            moveCamera(
+                selectedTruck.coordinates.longitude,
+                selectedTruck.coordinates.latitude - 0.0012,
+                16
+            );
         } else {
             // Zoom out while keeping the current location
             cameraRef.current?.zoomTo(14, 500);
         }
     }, [selectedTruck, moveCamera]);
-    
 
     /**
      * Handles Google Places Search and moves the camera.
      */
-    const handleSearch = useCallback(({ latitude, longitude }: Coordinates) => {
-        moveCamera(longitude, latitude);
-        setSelectedTruckId(null);
-    }, [moveCamera, setSelectedTruckId]);
+    const handleSearch = useCallback(
+        ({ latitude, longitude }: Coordinates) => {
+            moveCamera(longitude, latitude);
+            setSelectedTruckId(null);
+        },
+        [moveCamera, setSelectedTruckId]
+    );
 
     /**
      * Filters and computes food truck features only when dependencies change.
@@ -136,9 +154,15 @@ export default function Index() {
             filteredTrucks,
             featureCollection: featureCollection(
                 filteredTrucks.map((truck) =>
-                    point([truck.coordinates.longitude, truck.coordinates.latitude], {
-                        id: truck.id,
-                    })
+                    point(
+                        [
+                            truck.coordinates.longitude,
+                            truck.coordinates.latitude,
+                        ],
+                        {
+                            id: truck.id,
+                        }
+                    )
                 )
             ),
         };
@@ -150,16 +174,30 @@ export default function Index() {
             {showCategoryModal && <CategoryModal />}
 
             {/* Menu Modal */}
-            {showMenuModal && selectedTruck && <MenuModal truck={selectedTruck} />}
+            {showMenuModal && selectedTruck && (
+                <MenuModal truck={selectedTruck} />
+            )}
 
             {/* Truck Page */}
-            {showTruckPage && selectedTruck && <TruckPage truck={selectedTruck} />}
+            {showTruckPage && selectedTruck && (
+                <TruckPage truck={selectedTruck} />
+            )}
 
             {/* Search Bar */}
-            <SearchBar onSearch={handleSearch} userLocation={userLocation} moveCamera={moveCamera}/>
+            <SearchBar
+                onSearch={handleSearch}
+                userLocation={userLocation}
+                moveCamera={moveCamera}
+            />
 
             {/* Map */}
-            <MapView style={styles.map} styleURL={mapStyle} onPress={clearSelectedTruck} scaleBarEnabled={false}>
+            <MapView
+                style={styles.map}
+                styleURL={mapStyle}
+                onPress={clearSelectedTruck}
+                scaleBarEnabled={false}
+                logoEnabled={false}
+            >
                 <Camera ref={cameraRef} />
                 <LocationPuck pulsing={locationPuckStyle.pulsing} />
 
@@ -174,15 +212,27 @@ export default function Index() {
                         }
                     }}
                 >
-                    <CircleLayer id="clusters" filter={["has", "point_count"]} style={circleLayerStyle} />
+                    <CircleLayer
+                        id="clusters"
+                        filter={["has", "point_count"]}
+                        style={circleLayerStyle}
+                    />
                     <SymbolLayer id="clusters-count" style={symbolCountStyle} />
-                    <SymbolLayer id="foodTruckIcons" filter={["!", ["has", "point_count"]]} style={symbolLayerStyle} />
+                    <SymbolLayer
+                        id="foodTruckIcons"
+                        filter={["!", ["has", "point_count"]]}
+                        style={symbolLayerStyle}
+                    />
                     <Images images={{ icon }} />
                 </ShapeSource>
             </MapView>
 
             {/* Conditional Card Rendering */}
-            {selectedTruck ? <SelectedTruckCard truck={selectedTruck} /> : <NearbyTrucksCard trucks={truckFeatures.filteredTrucks} />}
+            {selectedTruck ? (
+                <SelectedTruckCard truck={selectedTruck} />
+            ) : (
+                <NearbyTrucksCard trucks={truckFeatures.filteredTrucks} />
+            )}
         </View>
     );
 }
