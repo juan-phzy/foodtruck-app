@@ -8,7 +8,7 @@ import React, {
 } from "react";
 
 // React Native Components
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 // Custom Components
 import SearchBar from "@/components/SearchBar";
@@ -245,6 +245,8 @@ export default function Index() {
                     <Images images={{ icon }} />
                 </ShapeSource>
             </MapView>
+
+            {/* Loading Indicator */}
             {!showMap && (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator
@@ -266,7 +268,7 @@ export default function Index() {
 
 // Styles
 const styles = StyleSheet.create({
-    container: {  position: "relative", flex: 1 },
+    container: { position: "relative", flex: 1 },
     map: { flex: 1 },
     loadingContainer: {
         position: "absolute",
@@ -278,7 +280,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "rgba(255, 255, 255, 1)", // Light overlay
-    }
+    },
 });
 
 // Mapbox Layer Styles
