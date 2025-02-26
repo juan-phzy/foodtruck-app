@@ -8,7 +8,7 @@ import React, {
 } from "react";
 
 // React Native Components
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 // Custom Components
 import SearchBar from "@/components/SearchBar";
@@ -18,8 +18,9 @@ import CategoryModal from "@/components/CategoryModal";
 import MenuModal from "@/components/MenuModal";
 import TruckPage from "@/components/TruckPage";
 
-// Constants & Types
+// Constants & Types & Themes
 import { FOOD_TRUCKS } from "@/constants";
+import theme from "@/theme/theme";
 
 // Mapbox Imports
 import Mapbox, {
@@ -65,6 +66,10 @@ export default function Index() {
     // State for user location
     const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
 
+    const [mapLoaded, setMapLoaded] = useState(false); // ✅ Tracks if the map is fully loaded
+    const [showMap, setShowMap] = useState(false);
+    const isMounted = useRef(true); // ✅ Tracks if the component is still mounted
+
     // Map Camera Reference
     const cameraRef = useRef<Camera>(null);
 
@@ -86,41 +91,44 @@ export default function Index() {
      * Fetch User Location on Initial Load.
      */
     useEffect(() => {
-        const getUserLocation = async () => {
-            try {
-                const location = await locationManager.getLastKnownLocation();
-                if (location) {
-                    const { latitude, longitude } = location.coords;
-                    console.log("User Location:", { latitude, longitude });
-                    setUserLocation({ latitude, longitude });
-                    moveCamera(longitude, latitude);
-                } else {
-                    console.warn("No last known location available");
+        if (mapLoaded) {
+            const getUserLocation = async () => {
+                try {
+                    const location =
+                        await locationManager.getLastKnownLocation();
+                    if (location && isMounted.current) {
+                        // ✅ Ensures component is mounted
+                        const { latitude, longitude } = location.coords;
+                        console.log("User Location:", { latitude, longitude });
+                        setUserLocation({ latitude, longitude });
+                        moveCamera(longitude, latitude);
+                        setShowMap(true);
+                    } else {
+                        console.warn("No last known location available");
+                    }
+                } catch (error) {
+                    console.error("Error getting user location:", error);
                 }
-            } catch (error) {
-                console.error("Error getting user location:", error);
-            }
-        };
-    
-        getUserLocation();
-    }, [moveCamera]);
-    
+            };
+
+            getUserLocation();
+        }
+    }, [mapLoaded, moveCamera]);
 
     /**
      * Moves the camera when a truck is selected.
      */
     useEffect(() => {
-        if (selectedTruck) {
+        if (selectedTruck && mapLoaded) {
             moveCamera(
                 selectedTruck.coordinates.longitude,
                 selectedTruck.coordinates.latitude - 0.0012,
                 16
             );
         } else {
-            // Zoom out while keeping the current location
             cameraRef.current?.zoomTo(14, 500);
         }
-    }, [selectedTruck, moveCamera]);
+    }, [selectedTruck, moveCamera, mapLoaded]);
 
     /**
      * Handles Google Places Search and moves the camera.
@@ -162,6 +170,16 @@ export default function Index() {
         };
     }, [categoryFilters]);
 
+    /**
+     * Ensures the component is still mounted
+     */
+    useEffect(() => {
+        isMounted.current = true;
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
+
     return (
         <View style={styles.container}>
             {/* Category Modal */}
@@ -191,8 +209,13 @@ export default function Index() {
                 onPress={clearSelectedTruck}
                 scaleBarEnabled={false}
                 logoEnabled={false}
-                onDidFinishLoadingMap={() => {console.log('Map Loaded')}}
-                onDidFinishLoadingStyle={() => {console.log('Style Loaded')}}
+                onDidFinishLoadingMap={() => {
+                    console.log("Map Loaded");
+                    setMapLoaded(true);
+                }} // ✅ Updates state when the map is fully loaded
+                onDidFinishLoadingStyle={() => {
+                    console.log("Style Loaded");
+                }}
             >
                 <Camera ref={cameraRef} />
                 <LocationPuck pulsing={locationPuckStyle.pulsing} />
@@ -222,6 +245,14 @@ export default function Index() {
                     <Images images={{ icon }} />
                 </ShapeSource>
             </MapView>
+            {!showMap && (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator
+                        size="large"
+                        color={theme.colors.primary}
+                    />
+                </View>
+            )}
 
             {/* Conditional Card Rendering */}
             {selectedTruck ? (
@@ -235,8 +266,19 @@ export default function Index() {
 
 // Styles
 const styles = StyleSheet.create({
-    container: { flex: 1 },
+    container: {  position: "relative", flex: 1 },
     map: { flex: 1 },
+    loadingContainer: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(255, 255, 255, 1)", // Light overlay
+    }
 });
 
 // Mapbox Layer Styles

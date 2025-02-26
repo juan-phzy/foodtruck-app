@@ -14,7 +14,7 @@
  */
 
 // React & Hooks
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // React Native Components
 import { Pressable, StyleSheet, Text, View } from "react-native";
@@ -29,6 +29,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import theme from "@/theme/theme";
 import { Ionicons } from "@expo/vector-icons";
 import useMapLayerStore from "@/store/useMapLayerStore";
+import * as Font from "expo-font"; // Import Font from Expo
 
 import Mapbox from "@rnmapbox/maps";
 import useTruckStore from "@/store/useTruckStore";
@@ -56,6 +57,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
     moveCamera,
 }) => {
     const [showLayerModal, setShowLayerModal] = useState(false);
+    const [iconsLoaded, setIconsLoaded] = useState(false);
 
     const { setMapStyle } = useMapLayerStore();
     const { clearSelectedTruck } = useTruckStore();
@@ -63,9 +65,23 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const layerOptions = [
         { id: "street", name: "Street", style: Mapbox.StyleURL.Street },
         { id: "dark", name: "Dark", style: Mapbox.StyleURL.Dark },
-        { id: "satellite", name: "Satellite", style: Mapbox.StyleURL.SatelliteStreet },
+        {
+            id: "satellite",
+            name: "Satellite",
+            style: Mapbox.StyleURL.SatelliteStreet,
+        },
         { id: "light", name: "Light", style: Mapbox.StyleURL.Light },
     ];
+
+    // Load the font for Ionicons
+    useEffect(() => {
+        const loadIcons = async () => {
+            await Font.loadAsync(Ionicons.font);
+            setIconsLoaded(true);
+        };
+
+        loadIcons();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -128,54 +144,58 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 onFail={(error) => console.error("Google Places Error:", error)} // Error handling
             />
 
-            <View style={styles.buttonContainer}>
-                <Pressable
-                    style={styles.controlButton}
-                    onPress={() => {
-                        if (userLocation) {
-                            clearSelectedTruck();
-                            moveCamera(
-                                userLocation.longitude,
-                                userLocation.latitude,
-                                14
-                            );
-                        }
-                    }}
-                >
-                    <Ionicons
-                        name="locate"
-                        size={20}
-                        color={theme.colors.primary}
-                    />
-                </Pressable>
+            {iconsLoaded && (
+                <View style={styles.buttonContainer}>
+                    <Pressable
+                        style={styles.controlButton}
+                        onPress={() => {
+                            if (userLocation) {
+                                clearSelectedTruck();
+                                moveCamera(
+                                    userLocation.longitude,
+                                    userLocation.latitude,
+                                    14
+                                );
+                            }
+                        }}
+                    >
+                        <Ionicons
+                            name="locate"
+                            size={20}
+                            color={theme.colors.primary}
+                        />
+                    </Pressable>
 
-                <Pressable
-                    style={styles.controlButton}
-                    onPress={() => setShowLayerModal(true)}
-                >
-                    <Ionicons
-                        name="layers-outline"
-                        size={20}
-                        color={theme.colors.primary}
-                    />
-                </Pressable>
-            </View>
+                    <Pressable
+                        style={styles.controlButton}
+                        onPress={() => setShowLayerModal(true)}
+                    >
+                        <Ionicons
+                            name="layers-outline"
+                            size={20}
+                            color={theme.colors.primary}
+                        />
+                    </Pressable>
 
-            {/* Layer Selection Modal */}
-            {showLayerModal && (
-                <View style={styles.layerModal}>
-                    {layerOptions.map((option) => (
-                        <Pressable
-                            key={option.id}
-                            style={styles.layerOption}
-                            onPress={() => {
-                                setMapStyle(option.style);
-                                setShowLayerModal(false);
-                            }}
-                        >
-                            <Text style={styles.layerText}>{option.name}</Text>
-                        </Pressable>
-                    ))}
+                    {/* Layer Selection Modal */}
+                    {showLayerModal && (
+                        <View style={styles.layerModal}>
+                            {layerOptions.map((option) => (
+                                <Pressable
+                                    key={option.id}
+                                    style={styles.layerOption}
+                                    onPress={() => {
+                                        setMapStyle(option.style);
+                                        setShowLayerModal(false);
+                                    }}
+                                >
+                                    <Text style={styles.layerText}>
+                                        {option.name}
+                                    </Text>
+                                </Pressable>
+                            ))}
+                        </View>
+                    )}
                 </View>
             )}
         </View>
@@ -231,8 +251,8 @@ const styles = StyleSheet.create({
 
     layerModal: {
         position: "absolute",
-        top: 140,
-        right: 10,
+        top: 50,
+        right: 0,
         backgroundColor: "white",
         borderRadius: 10,
         padding: 10,
