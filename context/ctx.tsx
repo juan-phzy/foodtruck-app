@@ -10,6 +10,8 @@ import {
   setStorageItemAsync,
   removeStorageItemAsync,
 } from "@/storage/useStorageState";
+import useTruckStore from "@/store/useTruckStore";
+import useFilterStore from "@/store/useFilterStore";
 
 /**
  * AuthContextType defines the shape of the authentication context.
@@ -53,6 +55,8 @@ export function useSession() {
 export function SessionProvider({ children }: Readonly<PropsWithChildren<{}>>) {
   const [session, setSession] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { clearSelectedTruck } = useTruckStore();
+  const { clearCategoryFilters } = useFilterStore();
 
   /**
    * Loads the session token from storage when the app starts.
@@ -94,6 +98,8 @@ export function SessionProvider({ children }: Readonly<PropsWithChildren<{}>>) {
    */
   const signOut = async () => {
     console.log("Signing out...");
+    clearSelectedTruck();
+    clearCategoryFilters();
     setSession(null);
     await removeStorageItemAsync("session");
     console.log("Sign-out complete, session cleared.");
