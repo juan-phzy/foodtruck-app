@@ -8,7 +8,7 @@ import React, {
 } from "react";
 
 // React Native Components
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 // Custom Components
 import SearchBar from "@/components/SearchBar";
