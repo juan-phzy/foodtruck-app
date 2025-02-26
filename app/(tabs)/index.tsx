@@ -66,9 +66,10 @@ export default function Index() {
     // State for user location
     const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
 
-    const [mapLoaded, setMapLoaded] = useState(false); // ✅ Tracks if the map is fully loaded
+    // State for map load status and component mount status
+    const [mapLoaded, setMapLoaded] = useState(false);
     const [showMap, setShowMap] = useState(false);
-    const isMounted = useRef(true); // ✅ Tracks if the component is still mounted
+    const isMounted = useRef(true);
 
     // Map Camera Reference
     const cameraRef = useRef<Camera>(null);
@@ -97,7 +98,6 @@ export default function Index() {
                     const location =
                         await locationManager.getLastKnownLocation();
                     if (location && isMounted.current) {
-                        // ✅ Ensures component is mounted
                         const { latitude, longitude } = location.coords;
                         console.log("User Location:", { latitude, longitude });
                         setUserLocation({ latitude, longitude });
@@ -212,7 +212,7 @@ export default function Index() {
                 onDidFinishLoadingMap={() => {
                     console.log("Map Loaded");
                     setMapLoaded(true);
-                }} // ✅ Updates state when the map is fully loaded
+                }}
                 onDidFinishLoadingStyle={() => {
                     console.log("Style Loaded");
                 }}
