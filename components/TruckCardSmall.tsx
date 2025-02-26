@@ -2,85 +2,116 @@
  * @file TruckCardSmall.tsx
  * @description A compact card component displaying essential information about a food truck.
  *
+ * Used In:
+ * - TruckCardList.tsx
+ *
  * Features:
- * - Displays truck name, status (open/closed), distance, estimated travel time, and categories.
+ * - Displays truck name, open/closed status, distance, estimated travel time, and categories.
  * - Shows a star rating and number of reviews.
  * - Includes a favorite (bookmark) button to toggle favorite status.
- * - Optimized for performance and readability.
+ * - Uses `React.memo` to prevent unnecessary re-renders in large lists.
+ * - Optimized with `useMemo` and `useCallback` to improve performance.
  */
 
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import theme from "@/theme/theme";
 import { FoodTruck } from "@/types";
 
 interface TruckCardSmallProps {
-    truck: FoodTruck;
+    truck: FoodTruck; // Data object containing truck information
 }
 
+/**
+ * @component TruckCardSmall
+ * @description A single compact food truck card optimized for performance in large lists.
+ */
 const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
     const [isFavorite, setIsFavorite] = useState(false);
 
-    // Memoized function to handle favorite toggle
+    /**
+     * Toggles the favorite status of the truck.
+     * Memoized with `useCallback` to prevent unnecessary re-creations.
+     */
     const toggleFavorite = useCallback(() => {
         setIsFavorite((prev) => !prev);
-        console.log("Bookmark icon pressed");
     }, []);
 
-    return (
-        <View style={styles.container}>
-            {/* Truck Image */}
-            <Image source={{ uri: truck.imageUrl }} style={styles.image} />
-
-            {/* Truck Info */}
-            <View style={styles.infoContainer}>
-                {/* Name and Status */}
-                <Text style={styles.name}>
-                    {truck.name} ⦁{" "}
-                    <Text style={truck.isOpen ? styles.open : styles.closed}>
-                        {truck.isOpen ? "OPEN" : "CLOSED"}
-                    </Text>
-                </Text>
-
-                {/* Distance and Estimated Travel Time */}
-                <Text style={styles.details}>
-                    {`${truck.distance.toFixed(2)} mi ⦁ `}
-                    {`${Math.round(truck.distance * 3)} min drive ⦁ `}
-                    {`${Math.round(truck.distance * 20)} min walk`}
-                </Text>
-
-                {/* Categories */}
-                <Text style={styles.categories}>{truck.categories.join(", ")}</Text>
-
-                {/* Star Ratings */}
-                <View style={styles.ratingContainer}>
-                    {Array.from({ length: 5 }, (_, index) => (
-                        <Ionicons
-                            key={index}
-                            name={index < Math.floor(truck.rating) ? "star" : "star-outline"}
-                            size={16}
-                            color={theme.colors.primary}
-                        />
-                    ))}
-                    <Text style={styles.ratingText}>{truck.rating}</Text>
-                    <Text style={styles.reviewCount}>({truck.reviewCount})</Text>
-                </View>
-            </View>
-
-            {/* Favorite Icon */}
-            <Pressable style={styles.bookmarkIcon} onPress={toggleFavorite}>
+    /**
+     * Generates the star rating icons.
+     * Memoized with `useMemo` to avoid recalculations on re-renders.
+     */
+    const starIcons = useMemo(
+        () =>
+            Array.from({ length: 5 }, (_, index) => (
                 <Ionicons
-                    name={isFavorite ? "bookmark" : "bookmark-outline"}
-                    size={35}
+                    key={index}
+                    name={index < Math.floor(truck.rating) ? "star" : "star-outline"}
+                    size={16}
                     color={theme.colors.primary}
                 />
-            </Pressable>
+            )),
+        [truck.rating]
+    );
+
+    return (
+        <View style={styles.outerContainer}>
+            <View style={styles.container}>
+                {/* Truck Image */}
+                <Image source={{ uri: truck.imageUrl }} style={styles.image} />
+
+                {/* Truck Info */}
+                <View style={styles.infoContainer}>
+                    {/* Name and Open/Closed Status */}
+                    <Text style={styles.name}>
+                        {truck.name} ⦁{" "}
+                        <Text style={truck.isOpen ? styles.open : styles.closed}>
+                            {truck.isOpen ? "OPEN" : "CLOSED"}
+                        </Text>
+                    </Text>
+
+                    {/* Distance and Estimated Travel Time */}
+                    <Text style={styles.details}>
+                        {`${truck.distance.toFixed(2)} mi ⦁ `}
+                        {`${Math.round(truck.distance * 3)} min drive ⦁ `}
+                        {`${Math.round(truck.distance * 20)} min walk`}
+                    </Text>
+
+                    {/* Categories */}
+                    <Text style={styles.categories}>{truck.categories.join(", ")}</Text>
+
+                    {/* Star Ratings */}
+                    <View style={styles.ratingContainer}>
+                        {starIcons}
+                        <Text style={styles.ratingText}>{truck.rating}</Text>
+                        <Text style={styles.reviewCount}>({truck.reviewCount})</Text>
+                    </View>
+                </View>
+
+                {/* Favorite (Bookmark) Icon */}
+                <Pressable style={styles.bookmarkIcon} onPress={toggleFavorite}>
+                    <Ionicons
+                        name={isFavorite ? "bookmark" : "bookmark-outline"}
+                        size={35}
+                        color={theme.colors.primary}
+                    />
+                </Pressable>
+            </View>
+            <View style={styles.divider} />
         </View>
     );
 };
 
+/**
+ * @constant styles
+ * @description Styles for the TruckCardSmall component.
+ */
 const styles = StyleSheet.create({
+    outerContainer: {
+        gap: 5,
+        marginBottom: 5,
+    },
     container: {
         flexDirection: "row",
         alignItems: "center",
@@ -137,6 +168,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingHorizontal: 10,
     },
+    divider: {
+        height: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.1)",
+        width: "100%",
+        marginVertical: 5,
+    },
 });
 
-export default TruckCardSmall;
+// Prevents unnecessary re-renders when props haven't changed.
+export default React.memo(TruckCardSmall);

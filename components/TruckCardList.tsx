@@ -1,15 +1,5 @@
-/**
- * @file TruckCardList.tsx
- * @description Displays a list of food truck cards in a vertical list format.
- *
- * Features:
- * - Uses React Native's `FlatList` for optimized rendering of food trucks.
- * - Each truck is displayed using the `TruckCardSmall` component.
- * - Includes dividers between list items for better visual separation.
- */
-
-import React from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import React, { useCallback } from "react";
+import { StyleSheet, FlatList } from "react-native";
 import TruckCardSmall from "./TruckCardSmall";
 import { FoodTruck } from "@/types";
 
@@ -18,17 +8,26 @@ interface TruckCardListProps {
 }
 
 const TruckCardList: React.FC<TruckCardListProps> = ({ trucks }) => {
+  // Optimize `renderItem` using useCallback
+  const renderItem = useCallback(
+    ({ item }: { item: FoodTruck }) => <TruckCardSmall truck={item} />,
+    []
+  );
+
   return (
     <FlatList
       data={trucks}
       keyExtractor={(item) => item.id} // Ensures unique keys for each truck
-      renderItem={({ item }) => (
-        <View>
-          <TruckCardSmall truck={item} />
-          <View style={styles.divider} />
-        </View>
-      )}
+      renderItem={renderItem}
       showsVerticalScrollIndicator={false} // Hides vertical scrollbar for cleaner UI
+      initialNumToRender={10} // Reduce initial render time
+      maxToRenderPerBatch={10} // Optimize batch rendering
+      windowSize={5} // Adjusts the number of items kept in memory
+      getItemLayout={(_, index) => ({
+        length: 80, // Approximate height of each row
+        offset: 80 * index,
+        index,
+      })} // Enables smooth scrolling
     />
   );
 };
@@ -42,4 +41,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TruckCardList;
+export default React.memo(TruckCardList); // Prevents unnecessary re-renders
