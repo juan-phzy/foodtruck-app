@@ -58,7 +58,7 @@ FOODTRUCK-APP
 │   ├── _layout.tsx          # Root layout
 │   ├── +not-found.tsx       # Page not found redirect
 │   ├── create-account.tsx   # Create Account screen
-│   └── Sign-in.tsx          # Sign In Screen
+│   └── sign-in.tsx          # Sign In Screen
 │
 ├── assets                   # Static assets
 │   ├── images
