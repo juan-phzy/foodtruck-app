@@ -102,7 +102,7 @@ export default function Index() {
                         console.log("User Location:", { latitude, longitude });
                         setUserLocation({ latitude, longitude });
                         moveCamera(longitude, latitude);
-                        setShowMap(true);
+                        setTimeout(() => setShowMap(true), 500);
                     } else {
                         console.warn("No last known location available");
                     }
