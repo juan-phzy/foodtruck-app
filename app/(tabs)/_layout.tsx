@@ -1,5 +1,5 @@
 // React Native Components
-import { Text } from "react-native";
+import { Text, Alert } from "react-native";
 
 // Expo Router & Navigation
 import { Redirect, Tabs } from "expo-router";
@@ -10,6 +10,14 @@ import { Ionicons } from "@expo/vector-icons";
 
 // Context & State Management
 import { useSession } from "@/context/ctx";
+
+//----------------------------------------------------------------------------
+import { useEffect } from "react";
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "@/amplify/data/resource";
+
+const client = generateClient<Schema>(); // Backend connection
+//----------------------------------------------------------------------------
 
 // Type for icon props
 type TabIconProps = {
@@ -36,10 +44,30 @@ const renderTabIcon = ({ color, name }: TabIconProps) => (
  * - Applies consistent styling to the tab bar.
  */
 export default function TabsLayout() {
+    useEffect(() => {
+        const testBackendConnection = async () => {
+            try {
+                const { data } = await client.models.Trucks.list(); // Test API call
+                console.log("✅ Backend Connected! Retrieved data:", data);
+                Alert.alert("Success", "Backend is connected!");
+            } catch (error) {
+                console.error("❌ Backend Connection Failed:", error);
+                Alert.alert("Error", "Backend connection failed. Check logs.");
+            }
+        };
+
+        testBackendConnection(); // Run connection test
+    }, []);
+
     const { session, isLoading } = useSession(); // Access session state
 
     // Debugging: Log session state
-    console.log("TabsLayout Rendered | Session:", session, " | Loading:", isLoading);
+    console.log(
+        "TabsLayout Rendered | Session:",
+        session,
+        " | Loading:",
+        isLoading
+    );
 
     // Show a loading indicator while authentication is being verified
     if (isLoading) {
@@ -74,7 +102,8 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
-                    tabBarIcon: (props) => renderTabIcon({ ...props, name: "home" }),
+                    tabBarIcon: (props) =>
+                        renderTabIcon({ ...props, name: "home" }),
                 }}
             />
 
@@ -82,7 +111,8 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="search"
                 options={{
-                    tabBarIcon: (props) => renderTabIcon({ ...props, name: "search" }),
+                    tabBarIcon: (props) =>
+                        renderTabIcon({ ...props, name: "search" }),
                 }}
             />
 
@@ -90,7 +120,8 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="profile"
                 options={{
-                    tabBarIcon: (props) => renderTabIcon({ ...props, name: "person" }),
+                    tabBarIcon: (props) =>
+                        renderTabIcon({ ...props, name: "person" }),
                 }}
             />
         </Tabs>
