@@ -11,6 +11,19 @@ import { SessionProvider } from "@/context/ctx";
 // Polyfills and Utilities
 import "react-native-get-random-values";
 
+//----------------------------------------------------------------------------
+import { Alert } from "react-native";
+import { useEffect } from "react";
+import { generateClient } from "aws-amplify/data";
+import type { Schema } from "@/amplify/data/resource";
+import { Amplify } from "aws-amplify";
+import awsExports from "@/amplify_outputs.json";
+
+Amplify.configure(awsExports);
+
+const client = generateClient<Schema>(); // Backend connection
+//----------------------------------------------------------------------------
+
 
 /**
  * RootLayout Component
@@ -25,6 +38,22 @@ import "react-native-get-random-values";
  * - Hides headers for all screens in the stack
  */
 export default function RootLayout() {
+
+  useEffect(() => {
+          const testBackendConnection = async () => {
+              try {
+                  const { data } = await client.models.Trucks.list(); // Test API call
+                  console.log("✅ Backend Connected! Retrieved data:", data);
+                  Alert.alert("Success", "Backend is connected!");
+              } catch (error) {
+                  console.error("❌ Backend Connection Failed:", error);
+                  Alert.alert("Error", "Backend connection failed. Check logs.");
+              }
+          };
+  
+          testBackendConnection(); // Run connection test
+      }, []);
+
   return (
     // SessionProvider ensures authentication state is available throughout the app
     <SessionProvider>

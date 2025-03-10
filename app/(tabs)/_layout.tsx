@@ -11,18 +11,6 @@ import { Ionicons } from "@expo/vector-icons";
 // Context & State Management
 import { useSession } from "@/context/ctx";
 
-//----------------------------------------------------------------------------
-import { useEffect } from "react";
-import { generateClient } from "aws-amplify/data";
-import type { Schema } from "@/amplify/data/resource";
-import { Amplify } from "aws-amplify";
-import awsExports from "@/amplify_outputs.json";
-
-Amplify.configure(awsExports);
-
-const client = generateClient<Schema>(); // Backend connection
-//----------------------------------------------------------------------------
-
 // Type for icon props
 type TabIconProps = {
     color: string;
@@ -48,20 +36,6 @@ const renderTabIcon = ({ color, name }: TabIconProps) => (
  * - Applies consistent styling to the tab bar.
  */
 export default function TabsLayout() {
-    useEffect(() => {
-        const testBackendConnection = async () => {
-            try {
-                const { data } = await client.models.Trucks.list(); // Test API call
-                console.log("✅ Backend Connected! Retrieved data:", data);
-                Alert.alert("Success", "Backend is connected!");
-            } catch (error) {
-                console.error("❌ Backend Connection Failed:", error);
-                Alert.alert("Error", "Backend connection failed. Check logs.");
-            }
-        };
-
-        testBackendConnection(); // Run connection test
-    }, []);
 
     const { session, isLoading } = useSession(); // Access session state
 
