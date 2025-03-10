@@ -6,8 +6,8 @@ import FoodTruckContainer from '../../components/FoodTruckContainer';
 
 const achievements = [
   { id: '1', title: 'The Start of Your Journey!', description: 'Visited your first truck', progress: 90.0 },
-  { id: '2', title: 'Explorer', description: 'Visited 5 food trucks', progress: 55.0 },
-  { id: '3', title: 'Newbie', description: 'Visited 10 food trucks', progress: 70.0 },
+  { id: '1', title: 'The Start of Your Journey!', description: 'Visited your first truck', progress: 55.0 },
+  { id: '1', title: 'The Start of Your Journey!', description: 'Visited your first truck', progress: 0.0 },
 ];
 
 const Profile = () => {
