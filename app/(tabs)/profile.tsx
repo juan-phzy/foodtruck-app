@@ -1,8 +1,19 @@
-import { Text, View, Button } from "react-native";
-import { useSession } from "@/context/ctx";
+import { useAuth } from "@/context/authContext";
+import { Text, View, Button, Alert } from "react-native";
+
 
 export default function Profile() {
-    const { signOut } = useSession();
+    const { signOut } = useAuth();
+
+    // Handles sign-out process
+    const handleSignOut = async () => {
+        try {
+            await signOut(); // Proper sign-out method
+        } catch (error) {
+            console.error("Sign Out Error:", error);
+            Alert.alert("Error", "Failed to sign out. Please try again.");
+        }
+    };
 
     return (
         <View
@@ -21,7 +32,7 @@ export default function Profile() {
                 }}
             >
                 <Text>This is the profile page.</Text>
-                <Button title="Sign Out" onPress={signOut} />
+                <Button title="Sign Out" onPress={handleSignOut} />
             </View>
         </View>
     );
