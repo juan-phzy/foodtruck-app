@@ -1,7 +1,7 @@
 /**
  * @file CustomTextInput.tsx
  * @description A reusable custom text input component with a label and stylized input field.
- * 
+ *
  * Used In:
  * - create-account.tsx
  * - sign-in.tsx
@@ -9,6 +9,8 @@
  * Features:
  * - Displays a label above the input field.
  * - Supports custom placeholder text.
+ * - Accepts `secureTextEntry` for password fields.
+ * - Handles `onChangeText` for dynamic updates.
  * - Styled with a unique left border and bottom border for a modern look.
  * - Uses React Native's `TextInput` for user input handling.
  * - Ensures accessibility and visual clarity with appropriate colors.
@@ -16,29 +18,28 @@
 
 // React & React Native Imports
 import React from "react";
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import { StyleSheet, View, Text, TextInput, TextInputProps } from "react-native";
 
 // Theme & Styles
 import theme from "@/theme/theme";
 
 // Type Definition for Component Props
-interface CustomTextInputProps {
+interface CustomTextInputProps extends TextInputProps {
   readonly label: string; // Label text for the input field
-  readonly placeholder: string; // Placeholder text inside the input
 }
 
 /**
  * CustomTextInput Component
  * A reusable text input field with a label.
  */
-export default function CustomTextInput({ label, placeholder }: CustomTextInputProps) {
+export default function CustomTextInput({ label, ...rest }: CustomTextInputProps) {
   return (
     <View style={styles.inputWrapper}>
       <Text style={styles.label}>{label}</Text>
       <TextInput
         style={styles.textInput}
-        placeholder={placeholder}
         placeholderTextColor={theme.colors.whiteInactive} // Placeholder text color for readability
+        {...rest} // Spread all other TextInput props for flexibility
       />
     </View>
   );

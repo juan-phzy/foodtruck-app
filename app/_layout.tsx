@@ -18,19 +18,19 @@ import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 import { Amplify } from "aws-amplify";
 import awsExports from "@/amplify_outputs.json";
+import { AuthProvider } from "@/context/authContext";
 
 Amplify.configure(awsExports);
 
 const client = generateClient<Schema>(); // Backend connection
 //----------------------------------------------------------------------------
 
-
 /**
  * RootLayout Component
- * 
+ *
  * This is the main entry point for the application layout.
  * It sets up the navigation stack and wraps the app with the required providers.
- * 
+ *
  * Features:
  * - Provides global session management via `SessionProvider`
  * - Wraps the app with `GestureHandlerRootView` for smooth gesture handling
@@ -38,43 +38,45 @@ const client = generateClient<Schema>(); // Backend connection
  * - Hides headers for all screens in the stack
  */
 export default function RootLayout() {
+    useEffect(() => {
+        const testBackendConnection = async () => {
+            try {
+                const { data } = await client.models.Trucks.list(); // Test API call
+                console.log("✅ Backend Connected! Retrieved data:", data);
+                Alert.alert("Success", "Backend is connected!");
+            } catch (error) {
+                console.error("❌ Backend Connection Failed:", error);
+                Alert.alert("Error", "Backend connection failed. Check logs.");
+            }
+        };
 
-  useEffect(() => {
-          const testBackendConnection = async () => {
-              try {
-                  const { data } = await client.models.Trucks.list(); // Test API call
-                  console.log("✅ Backend Connected! Retrieved data:", data);
-                  Alert.alert("Success", "Backend is connected!");
-              } catch (error) {
-                  console.error("❌ Backend Connection Failed:", error);
-                  Alert.alert("Error", "Backend connection failed. Check logs.");
-              }
-          };
-  
-          testBackendConnection(); // Run connection test
-      }, []);
+        testBackendConnection(); // Run connection test
+    }, []);
 
-  return (
-    // SessionProvider ensures authentication state is available throughout the app
-    <SessionProvider>
-      {/* GestureHandlerRootView is required for handling touch gestures in React Native */}
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        {/* Sets the status bar style to light (white text/icons) */}
-        <StatusBar style="light" />
+    return (
+        // SessionProvider ensures authentication state is available throughout the app
+        //<SessionProvider>
 
-        {/* Stack navigation handles the main screen transitions */}
-        <Stack screenOptions={{ headerShown: false }}>
-          {/* Tab-based navigation screen (Main App) */}
-          <Stack.Screen name="(tabs)" />
+        <AuthProvider>
+            {/* GestureHandlerRootView is required for handling touch gestures in React Native */}
+            <GestureHandlerRootView style={{ flex: 1 }}>
+                {/* Sets the status bar style to light (white text/icons) */}
+                <StatusBar style="light" />
 
-          {/* Authentication Screens */}
-          <Stack.Screen name="sign-in" />
-          <Stack.Screen name="create-account" />
+                {/* Stack navigation handles the main screen transitions */}
+                <Stack screenOptions={{ headerShown: false }}>
+                    {/* Tab-based navigation screen (Main App) */}
+                    <Stack.Screen name="(tabs)" />
 
-          {/* Fallback screen for undefined routes */}
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      </GestureHandlerRootView>
-    </SessionProvider>
-  );
+                    {/* Authentication Screens */}
+                    <Stack.Screen name="sign-in" />
+                    <Stack.Screen name="create-account" />
+
+                    {/* Fallback screen for undefined routes */}
+                    <Stack.Screen name="+not-found" />
+                </Stack>
+            </GestureHandlerRootView>
+        </AuthProvider>
+        //</SessionProvider>
+    );
 }

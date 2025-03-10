@@ -12,6 +12,7 @@
  * - Adjustable width (`fill` for full width, `fit` for auto width).
  * - Customizable text size and padding.
  * - Uses a `Pressable` component for better user interactions.
+ * - Supports `disabled` state with visual feedback.
  */
 
 // React & React Native Imports
@@ -30,6 +31,7 @@ type ButtonProps = Readonly<{
   horizontalPadding?: number; // Customizable horizontal padding
   verticalPadding?: number; // Customizable vertical padding
   fontSize?: number; // Customizable font size
+  disabled?: boolean; // If true, disables button interaction
 }>;
 
 /**
@@ -44,13 +46,15 @@ export default function CustomButton({
   horizontalPadding = 10, // Default horizontal padding
   verticalPadding = 5, // Default vertical padding
   fontSize = 12, // Default font size
+  disabled = false, // Default: button is enabled
 }: ButtonProps) {
   return (
     <Pressable
-      onPress={onPress}
+      onPress={!disabled ? onPress : undefined} // Disable interaction if disabled
       style={[
         styles.base,
         styles[style], // Apply the selected style
+        disabled && styles.disabledButton, // Apply disabled styles if necessary
         {
           paddingHorizontal: horizontalPadding,
           paddingVertical: verticalPadding,
@@ -58,7 +62,14 @@ export default function CustomButton({
         },
       ]}
     >
-      <Text style={[styles.text, styles[`${style}Text`], { fontSize }]}>
+      <Text
+        style={[
+          styles.text,
+          styles[`${style}Text`], // Apply correct text color
+          disabled && styles.disabledText, // Apply disabled text color
+          { fontSize },
+        ]}
+      >
         {text}
       </Text>
     </Pressable>
@@ -96,6 +107,12 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.primary,
   },
 
+  // Disabled button styles
+  disabledButton: {
+    backgroundColor: "gray", // Gray out the button
+    borderColor: "gray", // Border also turns gray
+  },
+
   // Text styles for each variant
   text: {
     fontWeight: "medium",
@@ -111,5 +128,10 @@ const styles = StyleSheet.create({
   },
   outlineDarkText: {
     color: theme.colors.primary,
+  },
+
+  // Disabled text color
+  disabledText: {
+    color: "lightgray",
   },
 });
