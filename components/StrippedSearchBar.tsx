@@ -17,7 +17,9 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font"; // Import Font from Expo
 
 
-// Open to intepretation for implementation in future (whatever that may be)
+/*Removed Mapbox functionality because it wouldn't make sense
+to have it on the second search page when it's already on the first, but left in Google
+Places functionality */
 interface StrippedSearchBarProps {
    
 }
@@ -119,7 +121,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         width: "100%",
         alignSelf: "center",
-        zIndex: 10, // Ensures it appears above other components
+        zIndex: 10, 
     },
     gradient: {
         ...StyleSheet.absoluteFillObject, // Applies gradient to entire component

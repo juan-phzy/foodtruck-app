@@ -52,8 +52,7 @@ export default function Search() {
               list={FOOD_TRUCKS}
               keyExtractor={(truck) => truck.name}
               renderItem={renderItem}
-        />
-        
+        /> 
       </ScrollView>
     </View>
   );

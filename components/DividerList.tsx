@@ -3,7 +3,8 @@ import React from 'react';
 import theme from "@/theme/theme";
 
 
-
+/* DividerList allows for any different components to be integrated because of 
+generic type for item list */
 interface DividerListProps<T> {
     text: string;
     list: T[];
