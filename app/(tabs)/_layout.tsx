@@ -15,6 +15,10 @@ import { useSession } from "@/context/ctx";
 import { useEffect } from "react";
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
+import { Amplify } from "aws-amplify";
+import awsExports from "@/amplify_outputs.json";
+
+Amplify.configure(awsExports);
 
 const client = generateClient<Schema>(); // Backend connection
 //----------------------------------------------------------------------------
