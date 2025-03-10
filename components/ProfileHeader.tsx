@@ -1,7 +1,6 @@
 import { View, Text, Pressable, StyleSheet, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useRef } from "react";
-//import { LinearGradient } from 'expo-linear-gradient';
 
 interface ProfileHeaderProps {
     name: string;
