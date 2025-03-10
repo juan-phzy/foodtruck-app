@@ -1,15 +1,105 @@
-import { Text, View } from "react-native";
+import { Text, View, StyleSheet, Image, Pressable, Dimensions,ScrollView} from "react-native";
+import StrippedSearchBar from "@/components/StrippedSearchBar";
+import SearchTruckCard from "@/components/SearchTruckCard"
+import { CATEGORIES, FOOD_TRUCKS} from "@/constants";
+import {useCallback} from 'react'
+import DividerList from "@/components/DividerList";
+import theme from "@/theme/theme"
+import { FoodTruck } from "@/types";
+
+const {width} = Dimensions.get("window");
 
 export default function Search() {
+   const renderItem = useCallback(
+      ({ item }: { item: FoodTruck }) => <SearchTruckCard truck={item} />,
+      []
+    );
+
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>This is the search page.</Text>
+    <View style = {styles.wholeContainer}>
+      <View style={styles.topContainer}>
+        <StrippedSearchBar/>
+      </View>
+      <ScrollView style={styles.middleContainer}>
+        <DividerList
+              text="Search Categories"
+              list={CATEGORIES}
+              keyExtractor={(item) => item.name}
+              renderItem={({ item }) => (
+                  <Pressable
+                      style={styles.categoryButton}
+                      onPress={null}
+                  >
+                      <Image source={{ uri: item.url }} style={styles.image} />
+                      <Text style={styles.btnText}>{item.name}</Text>
+                  </Pressable>
+              )}
+        />
+        <DividerList
+              text="Our Recommendations"
+              list={FOOD_TRUCKS}
+              keyExtractor={(truck) => truck.name}
+              renderItem={renderItem}
+        />
+        <DividerList
+              text="Top Rated"
+              list={FOOD_TRUCKS}
+              keyExtractor={(truck) => truck.name}
+              renderItem={renderItem}
+        />
+        <DividerList
+              text="On The Move"
+              list={FOOD_TRUCKS}
+              keyExtractor={(truck) => truck.name}
+              renderItem={renderItem}
+        />
+
+      </ScrollView>
     </View>
   );
 }
+
+const styles = StyleSheet.create(
+  {
+      wholeContainer:{
+        flex: 1,
+        flexDirection: "column",
+
+      },
+      topContainer:{
+        flex: 0,
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 20,
+      },
+
+      middleContainer:{
+        marginTop:150,
+        gap: 10,
+        padding: 10,
+        flex: 1
+      },
+      categoryButton: {
+        position: "relative",
+        width: width * 0.28,
+        height: width * 0.28,
+        borderRadius: 15,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 10,
+        marginBottom: 10,
+
+        gap: 5,
+        backgroundColor: theme.colors.primarySuperLight,
+    },
+    btnText: {
+      color: theme.colors.black,
+      fontSize: 12,
+    },
+    image: {
+      width: "50%",
+      height: "50%",
+    },
+
+  }
+);
