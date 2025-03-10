@@ -81,14 +81,13 @@ const styles = StyleSheet.create(
       },
       categoryButton: {
         position: "relative",
-        width: width * 0.28,
-        height: width * 0.28,
+        width: width * 0.21,
+        height: width * 0.21,
         borderRadius: 15,
         justifyContent: "center",
         alignItems: "center",
         padding: 10,
         marginBottom: 10,
-        
         gap: 5,
         backgroundColor: theme.colors.primarySuperLight,
     },

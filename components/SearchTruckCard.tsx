@@ -21,7 +21,7 @@ const SearchTruckCard: React.FC<SearchTruckCardProps> = ({ truck }) => {
                 <Ionicons
                     key={index}
                     name={index < Math.floor(truck.rating) ? "star" : "star-outline"}
-                    size={16}
+                    size={12}
                     color={theme.colors.primary}
                 />
             )),
@@ -33,6 +33,7 @@ const SearchTruckCard: React.FC<SearchTruckCardProps> = ({ truck }) => {
             <View style = {styles.imageContainer}>
                 <Image source={{ uri: truck.imageUrl }} style={styles.image} />
             </View>
+            {/*Keep the info flexed row, while the inner info is flexed column */}
             <View style={styles.otherContainer}>
                 {/* Truck Info */}
                 <View style={styles.infoContainer}>
@@ -43,22 +44,15 @@ const SearchTruckCard: React.FC<SearchTruckCardProps> = ({ truck }) => {
                             {truck.isOpen ? "OPEN" : "CLOSED"}
                         </Text>
                     </Text>
-
-                    {/* Distance and Estimated Travel Time */}
-                    <Text style={styles.details}>
-                        {`${truck.distance.toFixed(2)} mi ⦁ `}
-                        {`${Math.round(truck.distance * 3)} min drive ⦁ `}
-                        {`${Math.round(truck.distance * 20)} min walk`}
-                    </Text>
-
-                    {/* Categories */}
+                    {/* Categories list */}
                     <Text style={styles.categories}>{truck.categories.join(", ")}</Text>
-
-                    {/* Star Ratings */}
-                    <View style={styles.ratingContainer}>
-                        {starIcons}
-                        <Text style={styles.ratingText}>{truck.rating}</Text>
-                        <Text style={styles.reviewCount}>({truck.reviewCount})</Text>
+                    
+                    {/* Distance and star icons */}
+                    <View>
+                        <Text style={styles.details}>
+                            {`${truck.distance.toFixed(2)} mi ⦁ `}
+                            {starIcons}
+                        </Text>
                     </View>
                 </View>
             </View>
@@ -67,35 +61,36 @@ const SearchTruckCard: React.FC<SearchTruckCardProps> = ({ truck }) => {
 };
 
 const styles = StyleSheet.create({
-    wholeContainer:{
-        borderWidth: 0.2,
+    wholeContainer: {
+        width: 250,
+        height: 190,
+        borderWidth: 0.1,
         borderColor: "black",
-        borderRadius: 10
+        borderRadius: 10,
+        backgroundColor: theme.colors.primarySuperLight,
     },
-    imageContainer:{
-        flex:1,
-        flexDirection:"row",
-        width:"100%"
+    imageContainer: {
+        width: "100%",
     },
     image: {
-        width: 195,
-        height: 100,
+        width: 250,
+        height: 120,
         borderTopLeftRadius: 8,
-        borderTopRightRadius:8,
+        borderTopRightRadius: 8,
         resizeMode: "cover",
     },
     otherContainer: {
+        flex: 1, 
         flexDirection: "row",
-        alignItems: "flex-start",
-        backgroundColor: "transparent",
-        width: "100%",
     },
-    
     infoContainer: {
+        alignItems: "flex-start",
+        width: "100%",
         flex: 1,
         flexDirection: "column",
         paddingLeft: 10,
-        gap: 2,
+        paddingTop: 2, 
+        gap: 3,
     },
     name: {
         fontSize: 14,
@@ -108,34 +103,15 @@ const styles = StyleSheet.create({
     closed: {
         color: "red",
     },
+    categories: {
+        flexDirection: "row",
+        fontSize: 12,
+        color: theme.colors.black,
+    },
     details: {
         fontSize: 12,
         color: theme.colors.black,
     },
-    categories: {
-        fontSize: 12,
-        color: theme.colors.black,
-    },
-    ratingContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 2,
-    },
-    ratingText: {
-        marginLeft: 5,
-        fontSize: 12,
-        color: theme.colors.black,
-    },
-    reviewCount: {
-        fontSize: 12,
-        color: theme.colors.black,
-    },
-    bookmarkIcon: {
-        justifyContent: "center",
-        alignItems: "center",
-        paddingHorizontal: 10,
-    },
 });
 
-// Prevents unnecessary re-renders when props haven't changed.
 export default SearchTruckCard;

@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     textStyle: {
         color: theme.colors.primary,
-        fontSize: 16,
+        fontSize: 20,
         borderBottomWidth: 1,
         borderBottomColor: theme.colors.primary,
         width: "100%"
