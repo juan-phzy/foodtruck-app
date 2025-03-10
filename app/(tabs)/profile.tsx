@@ -1,3 +1,4 @@
+import ProfileHeader from "@/components/ProfileHeader";
 import { useAuth } from "@/context/authContext";
 import { Text, View, Button, Alert } from "react-native";
 
@@ -21,8 +22,17 @@ export default function Profile() {
                 flex: 1,
                 justifyContent: "center",
                 alignItems: "center",
+                borderColor: "red",
+                borderWidth: 1,
             }}
         >
+            <ProfileHeader
+                name="Juan Hernandez"
+                level={5}
+                phoneNumber="123-456-7890"
+                email="truckprojectdev@gmail.com"
+                progress={80}
+            />
             <View
                 style={{
                     paddingTop: 80,
