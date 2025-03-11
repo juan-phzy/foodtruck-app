@@ -21,7 +21,7 @@ const SearchTruckCard: React.FC<SearchTruckCardProps> = ({ truck }) => {
                 <Ionicons
                     key={index}
                     name={index < Math.floor(truck.rating) ? "star" : "star-outline"}
-                    size={12}
+                    size={11}
                     color={theme.colors.primary}
                 />
             )),
@@ -50,7 +50,7 @@ const SearchTruckCard: React.FC<SearchTruckCardProps> = ({ truck }) => {
                     {/* Distance and star icons */}
                     <View>
                         <Text style={styles.details}>
-                            {`${truck.distance.toFixed(2)} mi ⦁ `}
+                            {`${truck.distance.toFixed(2)} mi away  `}
                             {starIcons}
                         </Text>
                     </View>
@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
         alignItems: "flex-start",
         width: "100%",
         flex: 1,
-        flexDirection: "column",
         paddingLeft: 10,
         paddingTop: 2, 
         gap: 3,
