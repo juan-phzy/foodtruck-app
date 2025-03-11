@@ -90,14 +90,15 @@ const styles = StyleSheet.create(
         gap: 5,
         backgroundColor: theme.colors.primarySuperLight,
     },
-    btnText: {
-      color: theme.colors.black,
-      fontSize: 12,
-    },
     image: {
       width: "50%",
       height: "50%",
     },
+    btnText: {
+      color: theme.colors.black,
+      fontSize: 10,
+    },
+    
     
   }
 );
