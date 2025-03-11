@@ -51,11 +51,13 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         elevation: 5,
 
-        marginBottom:20
+        marginBottom:20,
+        
     },
     titleContainer: {
         flexDirection: "row",
         alignItems: "flex-start",
+        
     },
     textStyle: {
         color: theme.colors.primary,
@@ -66,15 +68,15 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         flexDirection: "row",
-        gap: 10,
-        alignItems: "flex-start",
+        borderColor: "black",
+        borderWidth: 1,
     },
     list:{
         flexGrow: 1,
         flexDirection:"row",   
     },
     separator:{
-        marginRight: 20
+        width: 10,
     }
 });
 

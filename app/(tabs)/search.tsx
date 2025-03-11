@@ -64,6 +64,8 @@ const styles = StyleSheet.create(
       wholeContainer:{
         flex: 1,
         flexDirection: "column",
+        borderColor: "red",
+        borderWidth: 5,
 
       },
       topContainer:{
@@ -71,30 +73,34 @@ const styles = StyleSheet.create(
         justifyContent: "center",
         alignItems: "center",
         gap: 20,
+        borderColor: "green",
+        borderWidth: 5,
       },
 
       middleContainer:{
         marginTop:150,
         gap: 10,
         padding: 10,
-        flex: 1
+        flex: 1,
+        borderColor: "purple",
+        borderWidth: 5,
       },
       categoryButton: {
         position: "relative",
-        width: width * 0.28,
-        height: width * 0.28,
+        width: width * 0.2,
+        height: width * 0.2,
         borderRadius: 15,
         justifyContent: "center",
         alignItems: "center",
         padding: 10,
-        marginBottom: 10,
-
         gap: 5,
         backgroundColor: theme.colors.primarySuperLight,
+
+        
     },
     btnText: {
       color: theme.colors.black,
-      fontSize: 12,
+      fontSize: 10,
     },
     image: {
       width: "50%",
