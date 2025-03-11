@@ -27,8 +27,7 @@ const DividerList = <T,>({ text, list, renderItem, keyExtractor}: DividerListPro
                     renderItem={renderItem}
                     contentContainerStyle={styles.list}
                     horizontal={true}
-                    ItemSeparatorComponent={() => <View style={styles.separator} />}
-                    
+                    ItemSeparatorComponent={() => <View style={styles.separator} />} 
                 />
             </View>
         </View>

@@ -33,8 +33,8 @@ const SearchTruckCard: React.FC<SearchTruckCardProps> = ({ truck }) => {
             <View style = {styles.imageContainer}>
                 <Image source={{ uri: truck.imageUrl }} style={styles.image} />
             </View>
-            {/*Keep the info flexed row, while the inner info is flexed column */}
-            <View style={styles.otherContainer}>
+            {/*Keep the entire layout flexed row, but the inner info is flexed column */}
+            <View style={styles.outerInfoContainer}>
                 {/* Truck Info */}
                 <View style={styles.infoContainer}>
                     {/* Name and Open/Closed Status */}
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 8,
         resizeMode: "cover",
     },
-    otherContainer: {
+    outerInfoContainer: {
         flex: 1, 
         flexDirection: "row",
     },
