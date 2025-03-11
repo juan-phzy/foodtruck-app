@@ -95,7 +95,7 @@ const styles = StyleSheet.create(
       height: "50%",
     },
     btnText: {
-      color: theme.colors.black,
+      color: theme.colors.primary,
       fontSize: 9.8,
       fontWeight: "bold"
     },
