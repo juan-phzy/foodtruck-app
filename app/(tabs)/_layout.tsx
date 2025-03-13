@@ -1,5 +1,5 @@
 // React Native Components
-import { Text } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 
 // Expo Router & Navigation
 import { Redirect, Tabs } from "expo-router";
@@ -9,7 +9,7 @@ import theme from "@/theme/theme";
 import { Ionicons } from "@expo/vector-icons";
 
 // Context & State Management
-import { useSession } from "@/context/ctx";
+import { useAuth } from "@/context/authContext"; // ✅ Use new Auth Context
 
 // Type for icon props
 type TabIconProps = {
@@ -36,18 +36,27 @@ const renderTabIcon = ({ color, name }: TabIconProps) => (
  * - Applies consistent styling to the tab bar.
  */
 export default function TabsLayout() {
-    const { session, isLoading } = useSession(); // Access session state
+    const { user, isLoading } = useAuth(); // ✅ Access updated authentication state
 
     // Debugging: Log session state
-    console.log("TabsLayout Rendered | Session:", session, " | Loading:", isLoading);
+    console.log(
+        "TabsLayout Rendered | User:",
+        user,
+        " | Loading:",
+        isLoading
+    );
 
     // Show a loading indicator while authentication is being verified
     if (isLoading) {
-        return <Text>Loading...</Text>;
+        return (
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <ActivityIndicator size="large" color={theme.colors.primary} />
+            </View>
+        );
     }
 
     // If the user is not authenticated, redirect to Sign-In
-    if (!session) {
+    if (!user) {
         console.log("No active session. Redirecting to Sign-In...");
         return <Redirect href="/sign-in" />;
     }
@@ -74,7 +83,8 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
-                    tabBarIcon: (props) => renderTabIcon({ ...props, name: "home" }),
+                    tabBarIcon: (props) =>
+                        renderTabIcon({ ...props, name: "home" }),
                 }}
             />
 
@@ -82,7 +92,8 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="search"
                 options={{
-                    tabBarIcon: (props) => renderTabIcon({ ...props, name: "search" }),
+                    tabBarIcon: (props) =>
+                        renderTabIcon({ ...props, name: "search" }),
                 }}
             />
 
@@ -90,7 +101,17 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="profile"
                 options={{
-                    tabBarIcon: (props) => renderTabIcon({ ...props, name: "person" }),
+                    tabBarIcon: (props) =>
+                        renderTabIcon({ ...props, name: "person" }),
+                }}
+            />
+
+            {/* Test Tab */}
+            <Tabs.Screen
+                name="test"
+                options={{
+                    tabBarIcon: (props) =>
+                        renderTabIcon({ ...props, name: "build-outline" }),
                 }}
             />
         </Tabs>

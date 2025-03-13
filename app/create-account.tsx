@@ -1,5 +1,5 @@
 // React & Hooks
-import React from "react";
+import React, { useState } from "react";
 
 // React Native Components
 import {
@@ -10,6 +10,7 @@ import {
     Pressable,
     Dimensions,
     ScrollView,
+    Alert,
 } from "react-native";
 
 // Expo Libraries
@@ -22,16 +23,15 @@ import { router } from "expo-router";
 import CustomTextInput from "@/components/CustomTextInput";
 import CustomButton from "@/components/CustomButton";
 
-// Context & State Management
-import { useSession } from "@/context/ctx";
+// Amplify Auth
+import { signUp } from "aws-amplify/auth";
 
-// Constants & Theme
-import { FORM_FIELDS } from "@/constants";
+// Theme & Constants
 import theme from "@/theme/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Get screen dimensions for responsive UI scaling
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 /**
  * CreateAccountScreen Component
@@ -46,7 +46,25 @@ const { width, height } = Dimensions.get("window");
  * - Responsive design for different screen sizes.
  */
 export default function CreateAccountScreen() {
-    const { signIn } = useSession(); // Access authentication function
+    // Form State
+    const [form, setForm] = useState({
+        first_name: "",
+        last_name: "",
+        phone_number: "",
+        email: "",
+        dob: "",
+        primary_city: "",
+        password: "",
+    });
+
+    const [isLoading, setIsLoading] = useState(false); // Loading state
+
+    /**
+     * Updates form state when an input field changes.
+     */
+    const handleInputChange = (field: keyof typeof form, value: string) => {
+        setForm((prev) => ({ ...prev, [field]: value }));
+    };
 
     /**
      * Navigates the user back to the previous screen.
@@ -57,12 +75,34 @@ export default function CreateAccountScreen() {
     };
 
     /**
-     * Handles user sign-up action.
+     * Handles user sign-up action using Amplify Auth.
      */
-    const handleSignUp = () => {
-        console.log("Sign Up Pressed");
-        signIn(); // Simulated sign-in
-        router.replace("/"); // Redirect to home screen
+    const handleSignUp = async () => {
+        setIsLoading(true);
+
+        try {
+            // Perform the sign-up with Amplify
+            await signUp({
+                username: form.email, // Use email as the unique identifier
+                password: form.password,
+                options: {
+                    userAttributes: {
+                        given_name: form.first_name,
+                        family_name: form.last_name,
+                        phone_number: form.phone_number,
+                        birthdate: form.dob,
+                    },
+                },
+            });
+
+            Alert.alert("Success", "Account created! Please check your email for confirmation.");
+            router.replace("/sign-in");
+        } catch (error: any) {
+            console.error("Sign Up Error:", error);
+            Alert.alert("Error", error.message || "Something went wrong. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -130,19 +170,45 @@ export default function CreateAccountScreen() {
                                     Account Information
                                 </Text>
 
-                                {/* User Input Form (Scrollable for small screens) */}
+                                {/* User Input Form */}
                                 <ScrollView
                                     style={styles.scrollFormContainer}
                                     contentContainerStyle={styles.formContainer}
                                     keyboardShouldPersistTaps="handled"
                                 >
-                                    {FORM_FIELDS.map((field, index) => (
-                                        <CustomTextInput
-                                            key={index + field.label}
-                                            label={field.label}
-                                            placeholder={field.placeholder}
-                                        />
-                                    ))}
+                                    <CustomTextInput
+                                        label="First Name"
+                                        placeholder="Enter your first name"
+                                        onChangeText={(value) => handleInputChange("first_name", value)}
+                                    />
+                                    <CustomTextInput
+                                        label="Last Name"
+                                        placeholder="Enter your last name"
+                                        onChangeText={(value) => handleInputChange("last_name", value)}
+                                    />
+                                    <CustomTextInput
+                                        label="Email"
+                                        placeholder="Enter your email"
+                                        onChangeText={(value) => handleInputChange("email", value)}
+                                        keyboardType="email-address"
+                                    />
+                                    <CustomTextInput
+                                        label="Phone Number"
+                                        placeholder="Enter your phone number"
+                                        onChangeText={(value) => handleInputChange("phone_number", value)}
+                                        keyboardType="phone-pad"
+                                    />
+                                    <CustomTextInput
+                                        label="Date of Birth"
+                                        placeholder="YYYY-MM-DD"
+                                        onChangeText={(value) => handleInputChange("dob", value)}
+                                    />
+                                    <CustomTextInput
+                                        label="Password"
+                                        placeholder="Enter a strong password"
+                                        onChangeText={(value) => handleInputChange("password", value)}
+                                        secureTextEntry
+                                    />
                                 </ScrollView>
 
                                 {/* Sign Up Button */}
@@ -150,8 +216,9 @@ export default function CreateAccountScreen() {
                                     style="light"
                                     verticalPadding={10}
                                     fontSize={16}
-                                    text="Sign Up"
+                                    text={isLoading ? "Signing Up..." : "Sign Up"}
                                     onPress={handleSignUp}
+                                    disabled={isLoading} // Disable button when signing up
                                 />
                             </BlurView>
                         </View>

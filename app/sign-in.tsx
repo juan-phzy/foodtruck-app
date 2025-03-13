@@ -22,6 +22,8 @@ import {
     Text,
     ImageBackground,
     Dimensions,
+    Alert,
+    ActivityIndicator,
 } from "react-native";
 
 // Expo Libraries
@@ -36,7 +38,7 @@ import CustomButton from "@/components/CustomButton";
 import IconButton from "@/components/IconButton";
 
 // Context & State Management
-import { useSession } from "@/context/ctx";
+import { useAuth } from "@/context/authContext"; // ✅ Updated to Amplify Gen 2 auth
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Theme & Styles
@@ -48,25 +50,42 @@ const { width, height } = Dimensions.get("window");
 export default function SignIn() {
     // State for toggling between Phone and Email sign-in
     const [signInOption, setSignInOption] = useState<"Phone" | "Email">(
-        "Phone"
+        "Email"
     );
+    const [credentials, setCredentials] = useState({
+        username: "",
+        password: "",
+    });
+    const [loading, setLoading] = useState(false);
 
-    const { signIn } = useSession();
+    const { signIn } = useAuth(); // ✅ Use new Amplify authentication API
 
     /**
      * Handles the sign-in process
      */
-    const handleSignIn = () => {
-        console.log("Sign In Button Pressed");
-        signIn();
-        router.replace("/");
+    const handleSignIn = async () => {
+        if (!credentials.username || !credentials.password) {
+            Alert.alert("Error", "Please enter your credentials.");
+            return;
+        }
+
+        try {
+            setLoading(true);
+            await signIn(credentials.username, credentials.password);
+            Alert.alert("Success", "You have signed in successfully!");
+            router.replace("/"); // Redirect to home
+        } catch (error) {
+            console.error("Sign-in error:", error);
+            Alert.alert("Sign-in Failed, An error occurred.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     /**
      * Handles navigation to the Create Account screen
      */
     const handleCreateAccount = () => {
-        console.log("Create Account Button Pressed");
         router.push("/create-account");
     };
 
@@ -150,23 +169,50 @@ export default function SignIn() {
                                     <CustomTextInput
                                         label={signInOption}
                                         placeholder={
-                                            signInOption !== "Email"
+                                            signInOption === "Phone"
                                                 ? "(123)-456-7890"
                                                 : "muncher@email.com"
+                                        }
+                                        value={credentials.username}
+                                        onChangeText={(text) =>
+                                            setCredentials({
+                                                ...credentials,
+                                                username: text,
+                                            })
                                         }
                                     />
                                     <CustomTextInput
                                         label="Password"
                                         placeholder="Enter your password"
+                                        secureTextEntry
+                                        value={credentials.password}
+                                        onChangeText={(text) =>
+                                            setCredentials({
+                                                ...credentials,
+                                                password: text,
+                                            })
+                                        }
                                     />
                                     <CustomButton
                                         style="light"
                                         verticalPadding={10}
                                         fontSize={16}
-                                        text="Sign In"
+                                        text={
+                                            loading
+                                                ? "Signing In..."
+                                                : "Sign In"
+                                        }
                                         onPress={handleSignIn}
+                                        disabled={loading}
                                     />
                                 </View>
+
+                                {loading && (
+                                    <ActivityIndicator
+                                        size="large"
+                                        color={theme.colors.primary}
+                                    />
+                                )}
 
                                 {/* Divider Line */}
                                 <View style={styles.dividerContainer}>
