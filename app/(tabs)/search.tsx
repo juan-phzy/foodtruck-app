@@ -1,111 +1,141 @@
-import { Text, View, StyleSheet, Image, Pressable, Dimensions,ScrollView} from "react-native";
-import StrippedSearchBar from "@/components/StrippedSearchBar";
-import SearchTruckCard from "@/components/SearchTruckCard"
-import { CATEGORIES, FOOD_TRUCKS} from "@/constants";
-import {useCallback} from 'react'
+import {
+    Text,
+    View,
+    StyleSheet,
+    Image,
+    Pressable,
+    Dimensions,
+    ScrollView,
+} from "react-native";
+import SearchTruckCard from "@/components/SearchTruckCard";
+import { CATEGORIES, FOOD_TRUCKS } from "@/constants";
+import { useCallback } from "react";
 import DividerList from "@/components/DividerList";
-import theme from "@/theme/theme"
+import theme from "@/theme/theme";
 import { FoodTruck } from "@/types";
+import { SafeAreaView } from "react-native-safe-area-context";
+import NormTextInput from "@/components/input/NormTextInput";
+import { LinearGradient } from "expo-linear-gradient";
+import { ScaledSheet } from "react-native-size-matters";
 
-const {width} = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 
 export default function Search() {
-   const renderItem = useCallback(
-      ({ item }: { item: FoodTruck }) => <SearchTruckCard truck={item} />,
-      []
+    const renderItem = useCallback(
+        ({ item }: { item: FoodTruck }) => <SearchTruckCard truck={item} />,
+        []
     );
 
-  return (
-    <View style = {styles.wholeContainer}>
-      <View style={styles.topContainer}>
-        <StrippedSearchBar/>
-      </View>
-      <ScrollView style={styles.middleContainer}>
-        <DividerList
-              text="Search Categories"
-              list={CATEGORIES}
-              keyExtractor={(item) => item.name}
-              renderItem={({ item }) => (
-                  <Pressable
-                      style={styles.categoryButton}
-                      onPress={null}
-                  >
-                      <Image source={{ uri: item.url }} style={styles.image} />
-                      <Text style={styles.btnText}>{item.name}</Text>
-                  </Pressable>
-              )}
-        />
-        <DividerList
-              text="Our Recommendations"
-              list={FOOD_TRUCKS}
-              keyExtractor={(truck) => truck.name}
-              renderItem={renderItem}
-        />
-        <DividerList
-              text="Top Rated"
-              list={FOOD_TRUCKS}
-              keyExtractor={(truck) => truck.name}
-              renderItem={renderItem}
-        />
-        <DividerList
-              text="On The Move"
-              list={FOOD_TRUCKS}
-              keyExtractor={(truck) => truck.name}
-              renderItem={renderItem}
-        />
+    return (
+        <View style={styles.wholeContainer}>
+            <SafeAreaView style={styles.safeAreaViewStyle}>
+                {/* TOP CONTAINER: Includes search bar header and linear gradient */}
+                <View style={styles.topContainer}>
+                    <LinearGradient
+                        colors={[
+                            "rgba(255, 132, 0, 1)",
+                            "rgba(255, 132, 0, 0)",
+                        ]}
+                        locations={[0, .98]}
+                        style={styles.gradient}
+                    />
+                    <NormTextInput radius="full" />
+                </View>
 
-      </ScrollView>
-    </View>
-  );
+                {/* MIDDLE CONTAINER: Includes search categories, recommendations, top rated, and on the move */}
+                <ScrollView style={styles.middleContainer}>
+                    <DividerList
+                        text="Search Categories"
+                        list={CATEGORIES}
+                        keyExtractor={(item) => item.name}
+                        renderItem={({ item }) => (
+                            <Pressable
+                                style={styles.categoryButton}
+                                onPress={null}
+                            >
+                                <Image
+                                    source={{ uri: item.url }}
+                                    style={styles.image}
+                                />
+                                <Text style={styles.btnText}>{item.name}</Text>
+                            </Pressable>
+                        )}
+                    />
+                    <DividerList
+                        text="Our Recommendations"
+                        list={FOOD_TRUCKS}
+                        keyExtractor={(truck) => truck.name}
+                        renderItem={renderItem}
+                    />
+                    <DividerList
+                        text="Top Rated"
+                        list={FOOD_TRUCKS}
+                        keyExtractor={(truck) => truck.name}
+                        renderItem={renderItem}
+                    />
+                    <DividerList
+                        text="On The Move"
+                        list={FOOD_TRUCKS}
+                        keyExtractor={(truck) => truck.name}
+                        renderItem={renderItem}
+                    />
+                </ScrollView>
+            </SafeAreaView>
+        </View>
+    );
 }
 
-const styles = StyleSheet.create(
-  {
-      wholeContainer:{
+const styles = ScaledSheet.create({
+    wholeContainer: {
+        flex: 1,
+        // borderColor: "red",
+        // borderWidth: 4,
+        backgroundColor: theme.colors.primary,
+    },
+    safeAreaViewStyle: {
         flex: 1,
         flexDirection: "column",
-        borderColor: "red",
-        borderWidth: 5,
-
-      },
-      topContainer:{
-        flex: 0,
+        // borderColor: "green",
+        // borderWidth: 4,
+    },
+    topContainer: {
         justifyContent: "center",
         alignItems: "center",
-        gap: 20,
-        borderColor: "green",
-        borderWidth: 5,
-      },
+        paddingHorizontal: "10@ms",
+        paddingVertical: "30@ms",
+        backgroundColor: theme.colors.white,
 
-      middleContainer:{
-        marginTop:150,
+        // borderColor: "blue",
+        // borderWidth: 4,
+    },
+    gradient: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    middleContainer: {
         gap: 10,
-        padding: 10,
+        padding: "10@ms",
         flex: 1,
-        borderColor: "purple",
-        borderWidth: 5,
-      },
-      categoryButton: {
+        backgroundColor: theme.colors.white,
+    },
+    categoryButton: {
         position: "relative",
-        width: width * 0.2,
-        height: width * 0.2,
+        width: width * 0.21,
+        height: width * 0.21,
         borderRadius: 15,
         justifyContent: "center",
         alignItems: "center",
         padding: 10,
+        marginBottom: 10,
         gap: 5,
         backgroundColor: theme.colors.primarySuperLight,
-
-        
-    },
-    btnText: {
-      color: theme.colors.black,
-      fontSize: 10,
     },
     image: {
-      width: "50%",
-      height: "50%",
+        width: "50%",
+        height: "50%",
     },
-
-  }
-);
+    btnText: {
+        color: theme.colors.primary,
+        fontSize: 9.8,
+        fontWeight: "bold",
+    },
+});

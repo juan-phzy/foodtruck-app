@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 // React Native Components
-import {StyleSheet, View } from "react-native";
+import {StyleSheet, View} from "react-native";
 
 // Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
@@ -16,9 +16,9 @@ import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font"; // Import Font from Expo
 
 
-// Types
-
-// Type Definitions
+/*Removed Mapbox functionality because it wouldn't make sense
+to have it on the second search page when it's already on the first, but left in Google
+Places functionality */
 interface StrippedSearchBarProps {
 
 }
@@ -29,7 +29,6 @@ const GOOGLE_PLACES_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAPS_API_KEY;
 const StrippedSearchBar: React.FC<StrippedSearchBarProps> = ({
 
 }) => {
-    const [showLayerModal, setShowLayerModal] = useState(false);
     const [iconsLoaded, setIconsLoaded] = useState(false);
 
 
@@ -121,7 +120,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         width: "100%",
         alignSelf: "center",
-        zIndex: 10, // Ensures it appears above other components
+        zIndex: 10, 
     },
     gradient: {
         ...StyleSheet.absoluteFillObject, // Applies gradient to entire component
@@ -133,50 +132,6 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         fontSize: 14,
         color: theme.colors.black,
-    },
-
-    //----------------
-    buttonContainer: {
-        flexDirection: "row",
-        gap: 10,
-        zIndex: 100,
-    },
-
-    controlButton: {
-        backgroundColor: "white",
-        padding: 10,
-        borderRadius: 30,
-        justifyContent: "center",
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 2 },
-        elevation: 3,
-    },
-
-    layerModal: {
-        position: "absolute",
-        top: 50,
-        right: 0,
-        backgroundColor: "white",
-        borderRadius: 10,
-        padding: 10,
-        zIndex: 101,
-        shadowColor: "#000",
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 2 },
-        elevation: 3,
-    },
-
-    layerOption: {
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-    },
-
-    layerText: {
-        fontSize: 14,
-        fontWeight: "bold",
-        color: theme.colors.primary,
     },
 });
 

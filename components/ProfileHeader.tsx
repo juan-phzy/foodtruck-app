@@ -1,6 +1,7 @@
 import { View, Text, Pressable, StyleSheet, Animated } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useRef } from "react";
+import { ScaledSheet } from "react-native-size-matters";
 
 interface ProfileHeaderProps {
     name: string;
@@ -87,7 +88,7 @@ const ProfileHeader = ({
     );
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
     headerContainer: {
         justifyContent: "flex-start",
         alignItems: "center",
@@ -141,7 +142,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     nameText: {
-        fontSize: 16,
+        fontSize: "16@ms",
         color: "#000000",
         fontWeight: "bold",
     },

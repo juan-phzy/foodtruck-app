@@ -105,6 +105,15 @@ export default function TabsLayout() {
                         renderTabIcon({ ...props, name: "person" }),
                 }}
             />
+
+            {/* Test Tab */}
+            <Tabs.Screen
+                name="test"
+                options={{
+                    tabBarIcon: (props) =>
+                        renderTabIcon({ ...props, name: "build-outline" }),
+                }}
+            />
         </Tabs>
     );
 }

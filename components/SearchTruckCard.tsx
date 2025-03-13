@@ -1,12 +1,15 @@
 import React, { useMemo } from "react";
-import { StyleSheet, View, Text, Image, Pressable } from "react-native";
+import { View, Text, Image, Pressable, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import theme from "@/theme/theme";
 import { FoodTruck } from "@/types";
+import { ScaledSheet } from "react-native-size-matters";
 
 interface SearchTruckCardProps {
     truck: FoodTruck; // Data object containing truck information
 }
+
+const { width, height } = Dimensions.get("window");
 
 const SearchTruckCard: React.FC<SearchTruckCardProps> = ({ truck }) => {
 
@@ -20,7 +23,7 @@ const SearchTruckCard: React.FC<SearchTruckCardProps> = ({ truck }) => {
                 <Ionicons
                     key={index}
                     name={index < Math.floor(truck.rating) ? "star" : "star-outline"}
-                    size={16}
+                    size={11}
                     color={theme.colors.primary}
                 />
             )),
@@ -32,7 +35,7 @@ const SearchTruckCard: React.FC<SearchTruckCardProps> = ({ truck }) => {
             <View style = {styles.imageContainer}>
                 <Image source={{ uri: truck.imageUrl }} style={styles.image} />
             </View>
-            <View style={styles.otherContainer}>
+           
                 {/* Truck Info */}
                 <View style={styles.infoContainer}>
                     {/* Name and Open/Closed Status */}
@@ -42,59 +45,48 @@ const SearchTruckCard: React.FC<SearchTruckCardProps> = ({ truck }) => {
                             {truck.isOpen ? "OPEN" : "CLOSED"}
                         </Text>
                     </Text>
-
-                    {/* Distance and Estimated Travel Time */}
-                    <Text style={styles.details}>
-                        {`${truck.distance.toFixed(2)} mi ⦁ `}
-                        {`${Math.round(truck.distance * 3)} min drive ⦁ `}
-                        {`${Math.round(truck.distance * 20)} min walk`}
-                    </Text>
-
-                    {/* Categories */}
+                    {/* Categories list */}
                     <Text style={styles.categories}>{truck.categories.join(", ")}</Text>
 
-                    {/* Star Ratings */}
-                    <View style={styles.ratingContainer}>
-                        {starIcons}
-                        <Text style={styles.ratingText}>{truck.rating}</Text>
-                        <Text style={styles.reviewCount}>({truck.reviewCount})</Text>
+                    {/* Distance and star icons */}
+                    <View>
+                        <Text style={styles.details}>
+                            {`${truck.distance.toFixed(2)} mi away  `}
+                            {starIcons}
+                        </Text>
                     </View>
                 </View>
-            </View>
         </Pressable>
     );
 };
 
-const styles = StyleSheet.create({
-    wholeContainer:{
-        borderWidth: 0.2,
+const styles = ScaledSheet.create({
+    wholeContainer: {
+        width: width * .5,
+        borderWidth: 0.1,
         borderColor: "black",
-        borderRadius: 10
+        borderRadius: 20,
+        backgroundColor: theme.colors.primarySuperLight,
     },
-    imageContainer:{
-        flex:1,
-        flexDirection:"row",
-        width:"100%"
-    },
-    image: {
-        width: 195,
-        height: 100,
-        borderTopLeftRadius: 8,
-        borderTopRightRadius:8,
-        resizeMode: "cover",
-    },
-    otherContainer: {
-        flexDirection: "row",
-        alignItems: "flex-start",
-        backgroundColor: "transparent",
+    imageContainer: {
         width: "100%",
     },
-
+    image: {
+        width: "100%",
+        height: height * 0.17,
+        borderTopLeftRadius: 8,
+        borderTopRightRadius: 8,
+        resizeMode: "cover",
+    },
     infoContainer: {
+        alignItems: "flex-start",
+        width: "100%",
         flex: 1,
-        flexDirection: "column",
-        paddingLeft: 10,
-        gap: 2,
+        paddingHorizontal: "5@ms",
+        paddingVertical: "10@ms",
+        gap: 3,
+        borderColor: "black",
+        borderWidth: 4,
     },
     name: {
         fontSize: 14,
@@ -107,34 +99,15 @@ const styles = StyleSheet.create({
     closed: {
         color: "red",
     },
+    categories: {
+        flexDirection: "row",
+        fontSize: 12,
+        color: theme.colors.black,
+    },
     details: {
         fontSize: 12,
         color: theme.colors.black,
     },
-    categories: {
-        fontSize: 12,
-        color: theme.colors.black,
-    },
-    ratingContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 2,
-    },
-    ratingText: {
-        marginLeft: 5,
-        fontSize: 12,
-        color: theme.colors.black,
-    },
-    reviewCount: {
-        fontSize: 12,
-        color: theme.colors.black,
-    },
-    bookmarkIcon: {
-        justifyContent: "center",
-        alignItems: "center",
-        paddingHorizontal: 10,
-    },
 });
 
-// Prevents unnecessary re-renders when props haven't changed.
 export default SearchTruckCard;

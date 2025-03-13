@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import CategoryListContainer from '@/components/CategoryListContainer';
 import FoodTruckContainer from '@/components/FoodTruckContainer';
+import ProfileHeader from '@/components/ProfileHeader';
 
 
 // DO NOT USE RELATIVE IMPORTS ALWAYS USE @
@@ -17,8 +18,17 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       {/*<Text style={styles.title}>Profile Page</Text>*/}
+      <View style={{height:50}}></View>
 
-      <View style={styles.krinalcontainer}>
+      <ProfileHeader 
+        name='Juan'
+        level={1}
+        phoneNumber='123-456-7890'
+        email='juan@gmail.com'
+        progress={0.75}
+      />
+
+      {/* <View style={styles.krinalcontainer}>
         <View style={styles.categoryContainer}>
           <View style={styles.rowContainer}>
             <CategoryListContainer
@@ -59,7 +69,7 @@ const Profile = () => {
             )}
           />
         </View> 
-      </View>
+      </View> */}
     </View>
   );
 };

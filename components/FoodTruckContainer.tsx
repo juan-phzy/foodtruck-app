@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet, Image } from "react-native";
-import { useTheme } from "@react-navigation/native";
 
 interface FoodTruckContainerProps {
   title: string;
@@ -8,7 +7,6 @@ interface FoodTruckContainerProps {
 }
 
 const FoodTruckContainer = ({ title, description, progress }: FoodTruckContainerProps) => {
-  const theme = useTheme();
 
   return (
     <View style={styles.container}>

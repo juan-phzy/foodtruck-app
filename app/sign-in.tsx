@@ -49,8 +49,13 @@ const { width, height } = Dimensions.get("window");
 
 export default function SignIn() {
     // State for toggling between Phone and Email sign-in
-    const [signInOption, setSignInOption] = useState<"Phone" | "Email">("Phone");
-    const [credentials, setCredentials] = useState({ username: "", password: "" });
+    const [signInOption, setSignInOption] = useState<"Phone" | "Email">(
+        "Email"
+    );
+    const [credentials, setCredentials] = useState({
+        username: "",
+        password: "",
+    });
     const [loading, setLoading] = useState(false);
 
     const { signIn } = useAuth(); // ✅ Use new Amplify authentication API
@@ -97,7 +102,13 @@ export default function SignIn() {
             />
         ) : (
             <IconButton
-                icon={<MaterialCommunityIcons name="phone" size={25} color="white" />}
+                icon={
+                    <MaterialCommunityIcons
+                        name="phone"
+                        size={25}
+                        color="white"
+                    />
+                }
                 label="Phone"
                 iconBackground={theme.colors.primary}
                 onPress={() => setSignInOption("Phone")}
@@ -131,13 +142,18 @@ export default function SignIn() {
                         {/* Logo Section */}
                         <View style={styles.logoContainer}>
                             <Text style={styles.title}>MunchMap</Text>
-                            <Text style={styles.subtitle}>Find Nearby Food Trucks</Text>
+                            <Text style={styles.subtitle}>
+                                Find Nearby Food Trucks
+                            </Text>
                         </View>
 
                         {/* Form Container with Shadow Effect */}
                         <View style={styles.shadowContainer}>
                             {/* Blurred Background for Form */}
-                            <BlurView intensity={8} style={styles.bodyContainer}>
+                            <BlurView
+                                intensity={8}
+                                style={styles.bodyContainer}
+                            >
                                 {/* Form Gradient Overlay */}
                                 <LinearGradient
                                     colors={[
@@ -153,29 +169,50 @@ export default function SignIn() {
                                     <CustomTextInput
                                         label={signInOption}
                                         placeholder={
-                                            signInOption === "Phone" ? "(123)-456-7890" : "muncher@email.com"
+                                            signInOption === "Phone"
+                                                ? "(123)-456-7890"
+                                                : "muncher@email.com"
                                         }
                                         value={credentials.username}
-                                        onChangeText={(text) => setCredentials({ ...credentials, username: text })}
+                                        onChangeText={(text) =>
+                                            setCredentials({
+                                                ...credentials,
+                                                username: text,
+                                            })
+                                        }
                                     />
                                     <CustomTextInput
                                         label="Password"
                                         placeholder="Enter your password"
                                         secureTextEntry
                                         value={credentials.password}
-                                        onChangeText={(text) => setCredentials({ ...credentials, password: text })}
+                                        onChangeText={(text) =>
+                                            setCredentials({
+                                                ...credentials,
+                                                password: text,
+                                            })
+                                        }
                                     />
                                     <CustomButton
                                         style="light"
                                         verticalPadding={10}
                                         fontSize={16}
-                                        text={loading ? "Signing In..." : "Sign In"}
+                                        text={
+                                            loading
+                                                ? "Signing In..."
+                                                : "Sign In"
+                                        }
                                         onPress={handleSignIn}
                                         disabled={loading}
                                     />
                                 </View>
 
-                                {loading && <ActivityIndicator size="large" color={theme.colors.primary} />}
+                                {loading && (
+                                    <ActivityIndicator
+                                        size="large"
+                                        color={theme.colors.primary}
+                                    />
+                                )}
 
                                 {/* Divider Line */}
                                 <View style={styles.dividerContainer}>
@@ -188,16 +225,26 @@ export default function SignIn() {
                                 <View style={styles.otherOptionsContainer}>
                                     {renderSignInToggle()}
                                     <IconButton
-                                        icon={<MaterialCommunityIcons name="gmail" size={25} color="white" />}
+                                        icon={
+                                            <MaterialCommunityIcons
+                                                name="gmail"
+                                                size={25}
+                                                color="white"
+                                            />
+                                        }
                                         label="Gmail"
                                         iconBackground={theme.colors.primary}
-                                        onPress={() => console.log("Gmail Button Pressed")}
+                                        onPress={() =>
+                                            console.log("Gmail Button Pressed")
+                                        }
                                     />
                                 </View>
 
                                 {/* New User Section */}
                                 <View style={styles.newUserContainer}>
-                                    <Text style={styles.newUserLabel}>New User?</Text>
+                                    <Text style={styles.newUserLabel}>
+                                        New User?
+                                    </Text>
                                     <CustomButton
                                         style="outlineLight"
                                         verticalPadding={10}
@@ -209,7 +256,9 @@ export default function SignIn() {
 
                                 {/* Switch to Vendor Login */}
                                 <View style={styles.switchVendorContainer}>
-                                    <Text style={styles.switchVendorText}>Switch to Vendor Login</Text>
+                                    <Text style={styles.switchVendorText}>
+                                        Switch to Vendor Login
+                                    </Text>
                                 </View>
                             </BlurView>
                         </View>
@@ -219,7 +268,6 @@ export default function SignIn() {
         </View>
     );
 }
-
 
 /**
  * Styles for SignIn Screen
