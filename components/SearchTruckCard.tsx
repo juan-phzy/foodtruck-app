@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { View, Text, Image, Pressable, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import theme from "@/theme/theme";
+import theme from '@/assets/theme';
 import { FoodTruck } from "@/types";
 import { ScaledSheet } from "react-native-size-matters";
 

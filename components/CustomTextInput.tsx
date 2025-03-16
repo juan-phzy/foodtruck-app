@@ -21,7 +21,7 @@ import React from "react";
 import { StyleSheet, View, Text, TextInput, TextInputProps } from "react-native";
 
 // Theme & Styles
-import theme from "@/theme/theme";
+import theme from '@/assets/theme';
 
 // Type Definition for Component Props
 interface CustomTextInputProps extends TextInputProps {

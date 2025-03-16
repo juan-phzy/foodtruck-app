@@ -20,8 +20,7 @@ import TruckPage from "@/components/TruckPage";
 
 // Constants & Types & Themes
 import { FOOD_TRUCKS } from "@/constants";
-import theme from "@/theme/theme";
-
+import theme from "@/assets/theme";
 // Mapbox Imports
 import Mapbox, {
     Camera,

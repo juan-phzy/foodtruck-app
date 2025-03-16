@@ -1,4 +1,4 @@
-import theme from "@/theme/theme";
+import theme from "@/assets/theme";
 import { TextInput } from "react-native";
 
 import { ScaledSheet } from "react-native-size-matters";

@@ -1,8 +1,6 @@
 // app/(tabs)/profile.tsx
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import CategoryListContainer from '@/components/CategoryListContainer';
-import FoodTruckContainer from '@/components/FoodTruckContainer';
+import { View, StyleSheet } from 'react-native';
 import ProfileHeader from '@/components/ProfileHeader';
 
 

@@ -10,7 +10,6 @@ import {
     Pressable,
     Dimensions,
     ScrollView,
-    Alert,
 } from "react-native";
 
 // Expo Libraries
@@ -23,12 +22,10 @@ import { router } from "expo-router";
 import CustomTextInput from "@/components/CustomTextInput";
 import CustomButton from "@/components/CustomButton";
 
-// Amplify Auth
-import { signUp } from "aws-amplify/auth";
-
 // Theme & Constants
-import theme from "@/theme/theme";
+import theme from "@/assets/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useSession } from "@/context/ctx";
 
 // Get screen dimensions for responsive UI scaling
 const { width } = Dimensions.get("window");
@@ -57,6 +54,7 @@ export default function CreateAccountScreen() {
         password: "",
     });
 
+    const { signIn } = useSession();
     const [isLoading, setIsLoading] = useState(false); // Loading state
 
     /**
@@ -78,31 +76,13 @@ export default function CreateAccountScreen() {
      * Handles user sign-up action using Amplify Auth.
      */
     const handleSignUp = async () => {
-        setIsLoading(true);
-
-        try {
-            // Perform the sign-up with Amplify
-            await signUp({
-                username: form.email, // Use email as the unique identifier
-                password: form.password,
-                options: {
-                    userAttributes: {
-                        given_name: form.first_name,
-                        family_name: form.last_name,
-                        phone_number: form.phone_number,
-                        birthdate: form.dob,
-                    },
-                },
-            });
-
-            Alert.alert("Success", "Account created! Please check your email for confirmation.");
-            router.replace("/sign-in");
-        } catch (error: any) {
-            console.error("Sign Up Error:", error);
-            Alert.alert("Error", error.message || "Something went wrong. Please try again.");
-        } finally {
+        console.log("Sign Up Pressed");
+        setIsLoading(true); // Set loading state
+        setTimeout(() => {
             setIsLoading(false);
-        }
+            signIn(); // Simulated sign-in
+            router.replace("/"); // Redirect to home screen
+        }, 2000); // Simulated loading
     };
 
     return (
@@ -125,7 +105,7 @@ export default function CreateAccountScreen() {
                         locations={[0, 0.3, 0.95]}
                         style={styles.gradient}
                     />
-                    
+
                     {/* Main Content */}
                     <View style={styles.content}>
                         {/* App Title Section */}
@@ -139,7 +119,10 @@ export default function CreateAccountScreen() {
                         {/* Form Container with Shadow Effect */}
                         <View style={styles.shadowContainer}>
                             {/* Blurred Background for Form */}
-                            <BlurView intensity={8} style={styles.bodyContainer}>
+                            <BlurView
+                                intensity={8}
+                                style={styles.bodyContainer}
+                            >
                                 {/* Gradient Overlay on Form */}
                                 <LinearGradient
                                     colors={[
@@ -179,34 +162,55 @@ export default function CreateAccountScreen() {
                                     <CustomTextInput
                                         label="First Name"
                                         placeholder="Enter your first name"
-                                        onChangeText={(value) => handleInputChange("first_name", value)}
+                                        onChangeText={(value) =>
+                                            handleInputChange(
+                                                "first_name",
+                                                value
+                                            )
+                                        }
                                     />
                                     <CustomTextInput
                                         label="Last Name"
                                         placeholder="Enter your last name"
-                                        onChangeText={(value) => handleInputChange("last_name", value)}
+                                        onChangeText={(value) =>
+                                            handleInputChange(
+                                                "last_name",
+                                                value
+                                            )
+                                        }
                                     />
                                     <CustomTextInput
                                         label="Email"
                                         placeholder="Enter your email"
-                                        onChangeText={(value) => handleInputChange("email", value)}
+                                        onChangeText={(value) =>
+                                            handleInputChange("email", value)
+                                        }
                                         keyboardType="email-address"
                                     />
                                     <CustomTextInput
                                         label="Phone Number"
                                         placeholder="Enter your phone number"
-                                        onChangeText={(value) => handleInputChange("phone_number", value)}
+                                        onChangeText={(value) =>
+                                            handleInputChange(
+                                                "phone_number",
+                                                value
+                                            )
+                                        }
                                         keyboardType="phone-pad"
                                     />
                                     <CustomTextInput
                                         label="Date of Birth"
                                         placeholder="YYYY-MM-DD"
-                                        onChangeText={(value) => handleInputChange("dob", value)}
+                                        onChangeText={(value) =>
+                                            handleInputChange("dob", value)
+                                        }
                                     />
                                     <CustomTextInput
                                         label="Password"
                                         placeholder="Enter a strong password"
-                                        onChangeText={(value) => handleInputChange("password", value)}
+                                        onChangeText={(value) =>
+                                            handleInputChange("password", value)
+                                        }
                                         secureTextEntry
                                     />
                                 </ScrollView>
@@ -216,7 +220,9 @@ export default function CreateAccountScreen() {
                                     style="light"
                                     verticalPadding={10}
                                     fontSize={16}
-                                    text={isLoading ? "Signing Up..." : "Sign Up"}
+                                    text={
+                                        isLoading ? "Signing Up..." : "Sign Up"
+                                    }
                                     onPress={handleSignUp}
                                     disabled={isLoading} // Disable button when signing up
                                 />

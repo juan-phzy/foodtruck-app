@@ -38,7 +38,7 @@ import useFilterStore from "@/store/useFilterStore";
 
 // Constants & Theme
 import { CATEGORIES } from "@/constants";
-import theme from "@/theme/theme";
+import theme from '@/assets/theme';
 
 // Get screen dimensions for responsive UI scaling
 const { width, height } = Dimensions.get("window");

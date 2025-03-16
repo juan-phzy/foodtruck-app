@@ -11,7 +11,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
 // Constants & Theme
-import theme from "@/theme/theme";
+import theme from '@/assets/theme';
 import { Ionicons } from "@expo/vector-icons";
 import * as Font from "expo-font"; // Import Font from Expo
 

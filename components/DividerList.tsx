@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, FlatList } from "react-native";
 import React from "react";
-import theme from "@/theme/theme";
+import theme from '@/assets/theme';
 
 /* DividerList allows for any different components to be integrated because of 
 generic type for item list */

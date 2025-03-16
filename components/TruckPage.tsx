@@ -30,7 +30,7 @@ import {
 } from "react-native";
 
 // Constants & Theme
-import theme from "@/theme/theme";
+import theme from '@/assets/theme';
 
 // Types
 import { FoodTruck, Hours } from "@/types";

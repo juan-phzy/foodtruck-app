@@ -23,7 +23,7 @@ import { BlurView } from "expo-blur";
 import { Ionicons } from "@expo/vector-icons";
 
 // Theme & Types
-import theme from "@/theme/theme";
+import theme from '@/assets/theme';
 import { FoodTruck } from "@/types";
 
 // State Management (Zustand)

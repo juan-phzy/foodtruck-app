@@ -38,11 +38,11 @@ import CustomButton from "@/components/CustomButton";
 import IconButton from "@/components/IconButton";
 
 // Context & State Management
-import { useAuth } from "@/context/authContext"; // ✅ Updated to Amplify Gen 2 auth
+import { useSession } from "@/context/ctx";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Theme & Styles
-import theme from "@/theme/theme";
+import theme from "@/assets/theme";
 
 // Get screen dimensions for responsive UI scaling
 const { width, height } = Dimensions.get("window");
@@ -58,28 +58,19 @@ export default function SignIn() {
     });
     const [loading, setLoading] = useState(false);
 
-    const { signIn } = useAuth(); // ✅ Use new Amplify authentication API
+    const { signIn } = useSession();
 
     /**
      * Handles the sign-in process
      */
     const handleSignIn = async () => {
-        if (!credentials.username || !credentials.password) {
-            Alert.alert("Error", "Please enter your credentials.");
-            return;
-        }
-
-        try {
-            setLoading(true);
-            await signIn(credentials.username, credentials.password);
-            Alert.alert("Success", "You have signed in successfully!");
-            router.replace("/"); // Redirect to home
-        } catch (error) {
-            console.error("Sign-in error:", error);
-            Alert.alert("Sign-in Failed, An error occurred.");
-        } finally {
-            setLoading(false);
-        }
+         console.log("Sign In Pressed");
+                setLoading(true); // Set loading state
+                setTimeout(() => {
+                    setLoading(false);
+                    signIn(); // Simulated sign-in
+                    router.replace("/"); // Redirect to home screen
+                }, 2000); // Simulated loading
     };
 
     /**

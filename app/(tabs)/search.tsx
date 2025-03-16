@@ -11,7 +11,7 @@ import SearchTruckCard from "@/components/SearchTruckCard";
 import { CATEGORIES, FOOD_TRUCKS } from "@/constants";
 import { useCallback } from "react";
 import DividerList from "@/components/DividerList";
-import theme from "@/theme/theme";
+import theme from "@/assets/theme";
 import { FoodTruck } from "@/types";
 import { SafeAreaView } from "react-native-safe-area-context";
 import NormTextInput from "@/components/input/NormTextInput";

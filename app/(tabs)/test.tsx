@@ -1,61 +1,111 @@
+import React from "react";
+import { View, Text, Dimensions, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ScaledSheet } from "react-native-size-matters";
-import { Text, TouchableOpacity, View } from "react-native";
-import { useState } from "react";
-import theme from "@/theme/theme";
 
-export default function Test() {
+const { width, height } = Dimensions.get("window");
 
-    const [direction, setDirection] = useState<boolean>(true);
-
+export default function HeightExamples() {
     return (
-        <View style={[styles.mainContainer, { flexDirection: direction ? "column" : "row" }]}>
-            <View style={styles.topSection}></View>
-            <View style={styles.middleSection}>
-                <Text style={styles.textStyle}>
-                    This is flexDirection: {direction ? "column" : "row"}
+        <View style={styles.mainContainer}>
+            <SafeAreaView style={styles.safeAreaContainer}>
+                <View style={styles.topSection}>
+                    {[...Array(15).keys()].map((i) => (
+                        <Text style={styles.box} key={i}>
+                            {i}
+                        </Text>
+                    ))}
+                </View>
+                <Text>
+                    The top section will adjust its height to fit the squares
+                    within it. The squares themselves have a fixed width using
+                    the screen's width from dimensions which will ultimately add
+                    up and set the height for the entire top container.
                 </Text>
-            </View>
-            <View style={styles.bottomSection}>
-                <TouchableOpacity onPress={() => setDirection(!direction)}>
-                    <Text style={styles.textStyle}>Click To Change Direction</Text>
-                </TouchableOpacity>
-            </View>
+                <ScrollView
+                    style={styles.bottomSection}
+                    contentContainerStyle={styles.scrollViewContentStyle}
+                >
+                    {[...Array(30).keys()].map((i) => (
+                        <Text style={styles.text} key={i}>
+                            This scrollable bottom section uses Dimension to
+                            take up 30% of the screen's height
+                        </Text>
+                    ))}
+                </ScrollView>
+            </SafeAreaView>
         </View>
     );
 }
 
 const styles = ScaledSheet.create({
-    // Also goes from firstStyle to thirdStyle top-down
     mainContainer: {
+        /*
+            Since this is automatically flex-column,
+            the primary axis is vertical. So if we 
+            set flex: 1, it will take up the entire
+            height of the screen which is all of the 
+            available space left in the primary axis.
+         */
         flex: 1,
         borderColor: "red",
         borderWidth: 10,
     },
-    topSection: {
+    safeAreaContainer: {
         flex: 1,
-        backgroundColor: "orange",
-        borderColor: "yellow",
-        borderWidth: 5,
-    },
-    middleSection: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "green",
+        justifyContent: "space-between",
         borderColor: "blue",
-        borderWidth: 5,
+        borderWidth: 10,
     },
-    textStyle: {
-        fontSize: "15@s",
-        color: theme.colors.white,
-        fontWeight: "bold",
+    topSection: {
+        /* 
+            height doesn't need to be set, 
+            it will be determined by its children
+        */
+        borderColor: "green",
+        borderWidth: 10,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-between",
     },
-    bottomSection: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "purple",
+    box: {
+        /*
+            Uses the width variable from 
+            Dimensions to create a square
+        */
+        width: width * 0.13,
+        height: width * 0.13,
+        backgroundColor: "red",
+        textAlign: "center",
+        textAlignVertical: "center",
+        fontSize: "20@s",
+        color: "white",
         borderColor: "black",
         borderWidth: 5,
+    },
+    bottomSection: {
+        // This will take up 30% of the height of the screen
+        maxHeight: height * 0.3,
+        height: height * 0.3,
+    },
+    scrollViewContentStyle: {
+        /*
+            This will take up 100% of the height of the 
+            ScrollView. Since the ScrollView is 30% of the 
+            height of the screen, this will take up 100% of 
+            that 30%.
+        */
+        justifyContent: "flex-start",
+        gap: "10@s",
+        backgroundColor: "yellow",
+        borderColor: "purple",
+        borderWidth: 10,
+    },
+    text: {
+        paddingVertical: "5@s",
+        textAlign: "center",
+        backgroundColor: "gray",
+        color: "white",
+        fontSize: "12@s",
     },
 });

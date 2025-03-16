@@ -16,7 +16,7 @@
 import React, { useState, useCallback, useMemo } from "react";
 import { StyleSheet, View, Text, Image, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import theme from "@/theme/theme";
+import theme from '@/assets/theme';
 import { FoodTruck } from "@/types";
 
 interface TruckCardSmallProps {

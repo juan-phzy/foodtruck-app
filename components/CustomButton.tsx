@@ -20,7 +20,7 @@ import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
 
 // Theme & Styles
-import theme from "@/theme/theme";
+import theme from '@/assets/theme';
 
 // Type Definition for Component Props
 type ButtonProps = Readonly<{

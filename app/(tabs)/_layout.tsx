@@ -5,11 +5,11 @@ import { View, ActivityIndicator } from "react-native";
 import { Redirect, Tabs } from "expo-router";
 
 // Theme & Icons
-import theme from "@/theme/theme";
+import theme from "@/assets/theme";
 import { Ionicons } from "@expo/vector-icons";
 
 // Context & State Management
-import { useAuth } from "@/context/authContext"; // ✅ Use new Auth Context
+import { useSession } from "@/context/ctx";
 
 // Type for icon props
 type TabIconProps = {
@@ -36,12 +36,12 @@ const renderTabIcon = ({ color, name }: TabIconProps) => (
  * - Applies consistent styling to the tab bar.
  */
 export default function TabsLayout() {
-    const { user, isLoading } = useAuth(); // ✅ Access updated authentication state
+    const { session, isLoading } = useSession(); 
 
     // Debugging: Log session state
     console.log(
-        "TabsLayout Rendered | User:",
-        user,
+        "TabsLayout Rendered | Session:",
+        session,
         " | Loading:",
         isLoading
     );
@@ -56,7 +56,7 @@ export default function TabsLayout() {
     }
 
     // If the user is not authenticated, redirect to Sign-In
-    if (!user) {
+    if (!session) {
         console.log("No active session. Redirecting to Sign-In...");
         return <Redirect href="/sign-in" />;
     }

@@ -36,7 +36,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 
 // Constants & Theme
-import theme from "@/theme/theme";
+import theme from '@/assets/theme';
 
 // Zustand Store
 import useMenuModalStore from "@/store/useMenuModalStore";

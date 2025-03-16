@@ -2,9 +2,7 @@
 import React from 'react';
 import { Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import theme from '@/theme/theme';
-
-// remove unused imports
+import theme from '@/assets/theme';
 
 interface CategoryListContainerProps {
   title: string;
