@@ -21,7 +21,6 @@ import {
     View,
     Text,
     ImageBackground,
-    Dimensions,
     ActivityIndicator,
 } from "react-native";
 
