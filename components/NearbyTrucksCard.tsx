@@ -30,7 +30,7 @@ import { FoodTruck } from "@/types";
 import useFilterStore from "@/store/useFilterStore";
 
 // Custom Components
-import CustomButton from "./CustomButton";
+import ButtonStandard from "./buttons/ButtonStandard";
 import TruckCardList from "./TruckCardList";
 
 
@@ -76,7 +76,7 @@ const NearbyTrucksCard: React.FC<NearbyTrucksCardProps> = ({
             <View style={styles.filterBar}>
                 <Text style={{ fontSize: 18, fontWeight: "bold", flex: 1 }}>Filters:</Text>
                 
-                <CustomButton
+                <ButtonStandard
                     style={categoryFilters.length > 0 ? "dark" : "outlineDark"}
                     verticalPadding={5}
                     fontSize={12}
@@ -85,7 +85,7 @@ const NearbyTrucksCard: React.FC<NearbyTrucksCardProps> = ({
                     onPress={toggleCategoryModal}
                 />
                 
-                <CustomButton
+                <ButtonStandard
                     style={sortBy === "distance" ? "dark" : "outlineDark"}
                     verticalPadding={5}
                     fontSize={12}
@@ -94,7 +94,7 @@ const NearbyTrucksCard: React.FC<NearbyTrucksCardProps> = ({
                     onPress={() => setSortBy(sortBy === "distance" ? null : "distance")}
                 />
                 
-                <CustomButton
+                <ButtonStandard
                     style={sortBy === "rating" ? "dark" : "outlineDark"}
                     verticalPadding={5}
                     fontSize={12}

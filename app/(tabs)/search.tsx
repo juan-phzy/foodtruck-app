@@ -14,7 +14,7 @@ import DividerList from "@/components/DividerList";
 import theme from "@/assets/theme";
 import { FoodTruck } from "@/types";
 import { SafeAreaView } from "react-native-safe-area-context";
-import NormTextInput from "@/components/input/NormTextInput";
+import TextInputStandard from "@/components/inputs/TextInputStandard";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScaledSheet } from "react-native-size-matters";
 
@@ -39,7 +39,7 @@ export default function Search() {
                         locations={[0, .98]}
                         style={styles.gradient}
                     />
-                    <NormTextInput radius="full" />
+                    <TextInputStandard radius="full" />
                 </View>
 
                 {/* MIDDLE CONTAINER: Includes search categories, recommendations, top rated, and on the move */}
@@ -127,7 +127,7 @@ const styles = ScaledSheet.create({
         padding: 10,
         marginBottom: 10,
         gap: 5,
-        backgroundColor: theme.colors.primarySuperLight,
+        backgroundColor: theme.colors.primaryLight,
     },
     image: {
         width: "50%",

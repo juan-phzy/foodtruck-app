@@ -19,8 +19,8 @@ import { Ionicons } from "@expo/vector-icons"; // For "Go Back" icon
 import { router } from "expo-router";
 
 // Custom Components
-import CustomTextInput from "@/components/CustomTextInput";
-import CustomButton from "@/components/CustomButton";
+import CustomTextInput from "@/components/inputs/TextInputFancy";
+import ButtonStandard from "@/components/buttons/ButtonStandard";
 
 // Theme & Constants
 import theme from "@/assets/theme";
@@ -216,7 +216,7 @@ export default function CreateAccountScreen() {
                                 </ScrollView>
 
                                 {/* Sign Up Button */}
-                                <CustomButton
+                                <ButtonStandard
                                     style="light"
                                     verticalPadding={10}
                                     fontSize={16}

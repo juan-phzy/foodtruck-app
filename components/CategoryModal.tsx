@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 10,
         gap: 5,
-        backgroundColor: theme.colors.primarySuperLight,
+        backgroundColor: theme.colors.primaryLight,
     },
     btnText: {
         color: theme.colors.black,

@@ -93,7 +93,7 @@ const TruckPage: React.FC<TruckPageProps> = ({ truck }) => {
                     }}
                     imageStyle={{ resizeMode: "cover" }}
                 >
-                    <LinearGradient colors={[theme.colors.primarySuperLight, theme.colors.primary]} style={styles.gradient} />
+                    <LinearGradient colors={[theme.colors.primaryLight, theme.colors.primary]} style={styles.gradient} />
                     
                     {/* Header Content */}
                     <View style={styles.headerContent}>

@@ -1,7 +1,8 @@
 // app/(tabs)/profile.tsx
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import ProfileHeader from '@/components/ProfileHeader';
+import { useSession } from '@/context/ctx';
 
 
 // DO NOT USE RELATIVE IMPORTS ALWAYS USE @
@@ -13,6 +14,8 @@ const achievements = [
 ];
 
 const Profile = () => {
+
+  const {signOut} = useSession();
   return (
     <View style={styles.container}>
       {/*<Text style={styles.title}>Profile Page</Text>*/}
@@ -25,6 +28,12 @@ const Profile = () => {
         email='juan@gmail.com'
         progress={0.75}
       />
+
+      <TouchableOpacity onPress={signOut}>
+        <Text>Sign Out</Text>
+      </TouchableOpacity>
+
+
 
       {/* <View style={styles.krinalcontainer}>
         <View style={styles.categoryContainer}>

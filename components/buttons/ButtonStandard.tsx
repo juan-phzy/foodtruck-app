@@ -1,5 +1,5 @@
 /**
- * @file CustomButton.tsx
+ * @file ButtonStandard.tsx
  * @description A customizable button component that supports different styles, padding, font sizes, and widths.
  * 
  * Used In:
@@ -17,10 +17,11 @@
 
 // React & React Native Imports
 import React from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, Text } from "react-native";
 
 // Theme & Styles
 import theme from '@/assets/theme';
+import { ScaledSheet } from "react-native-size-matters";
 
 // Type Definition for Component Props
 type ButtonProps = Readonly<{
@@ -35,17 +36,17 @@ type ButtonProps = Readonly<{
 }>;
 
 /**
- * CustomButton Component
+ * ButtonStandard Component
  * A reusable and customizable button with various styles and configurations.
  */
-export default function CustomButton({
+export default function ButtonStandard({
   style = "dark", // Default button style
   text,
   onPress,
   width = "fill", // Default to full width
-  horizontalPadding = 10, // Default horizontal padding
-  verticalPadding = 5, // Default vertical padding
-  fontSize = 12, // Default font size
+  horizontalPadding = theme.padding.sm, // Default horizontal padding
+  verticalPadding = theme.padding.xxs, // Default vertical padding
+  fontSize = theme.fontSize.xs, // Default font size
   disabled = false, // Default: button is enabled
 }: ButtonProps) {
   return (
@@ -76,11 +77,11 @@ export default function CustomButton({
   );
 }
 
-// Styles for the CustomButton Component
-const styles = StyleSheet.create({
+// Styles for the ButtonStandard Component
+const styles = ScaledSheet.create({
   // Base button style
   base: {
-    borderRadius: 20, // Rounded corners
+    borderRadius: "20@ms", // Rounded corners
     justifyContent: "center",
     alignItems: "center",
   },
@@ -88,29 +89,29 @@ const styles = StyleSheet.create({
   // Button style variants
   dark: {
     backgroundColor: theme.colors.primary,
-    borderWidth: 2,
+    borderWidth: "2@ms",
     borderColor: theme.colors.primary,
   },
   light: {
     backgroundColor: theme.colors.white,
-    borderWidth: 2,
+    borderWidth: "2@ms",
     borderColor: theme.colors.white,
   },
   outlineLight: {
     backgroundColor: "transparent",
-    borderWidth: 2,
+    borderWidth: "2@ms",
     borderColor: theme.colors.primary,
   },
   outlineDark: {
     backgroundColor: "transparent",
-    borderWidth: 2,
+    borderWidth: "2@ms",
     borderColor: theme.colors.primary,
   },
 
   // Disabled button styles
   disabledButton: {
-    backgroundColor: "gray", // Gray out the button
-    borderColor: "gray", // Border also turns gray
+    backgroundColor: theme.colors.grayDark, // Gray out the button
+    borderColor: theme.colors.grayDark, // Border also turns gray
   },
 
   // Text styles for each variant
@@ -129,9 +130,7 @@ const styles = StyleSheet.create({
   outlineDarkText: {
     color: theme.colors.primary,
   },
-
-  // Disabled text color
   disabledText: {
-    color: "lightgray",
+    color: theme.colors.grayInactive,
   },
 });

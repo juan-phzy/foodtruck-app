@@ -13,7 +13,7 @@ MunchMap is a mobile-first application designed to help users discover nearby fo
 - **Custom Components**:  
   - `CategoryModal`: Full screen modal that shows categories to select which will affect truck filtering.
   - `CircleButton`: Custom circle button ui.
-  - `CustomButton`: Fully customizable button styles.  
+  - `ButtonStandard`: Fully customizable button styles.  
   - `CustomTextInput`: Reusable input fields with labels and borders.  
   - `IconButton`: Icon-based buttons with labels for alternate sign-in methods.  
   - `MenuModal`: Full screen modal that shows a truck's menu items.
@@ -71,7 +71,7 @@ FOODTRUCK-APP
 ├── components               # Reusable UI components
 │   ├── CategoryModal.tsx
 │   ├── CircleButton.tsx
-│   ├── CustomButton.tsx
+│   ├── ButtonStandard.tsx
 │   ├── CustomTextInput.tsx
 │   ├── IconButton.tsx
 │   ├── MenuModal.tsx

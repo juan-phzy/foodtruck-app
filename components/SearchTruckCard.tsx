@@ -66,7 +66,7 @@ const styles = ScaledSheet.create({
         borderWidth: 0.1,
         borderColor: "black",
         borderRadius: 20,
-        backgroundColor: theme.colors.primarySuperLight,
+        backgroundColor: theme.colors.primaryLight,
     },
     imageContainer: {
         width: "100%",

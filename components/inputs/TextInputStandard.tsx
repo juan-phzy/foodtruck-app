@@ -5,11 +5,11 @@ import { ScaledSheet } from "react-native-size-matters";
 
 // GENERAL COMPONENT
 
-interface NormTextInputProps {
+interface TextInputStandardProps {
     readonly radius?: "sm" | "md" | "lg" | "full";
 }
 
-export default function NormTextInput({ radius }: NormTextInputProps) {
+export default function TextInputStandard({ radius }: TextInputStandardProps) {
     return (
         <TextInput
             style={[
