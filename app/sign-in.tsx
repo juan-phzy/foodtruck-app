@@ -7,7 +7,6 @@
  * - Background image with gradient overlay.
  * - Toggle between Email and Phone sign-in.
  * - Input fields for credentials.
- * - Alternative sign-in options (Email, Gmail, Phone).
  * - Navigation to Create Account screen.
  * - Fully responsive layout for different screen sizes.
  */
@@ -228,6 +227,7 @@ const styles = ScaledSheet.create({
     signInForm: {
         gap: "15@ms",
     },
+    // DO NOT DELETE: SAVE FOR FUTURE USE
     // dividerContainer: {
     //     flexDirection: "row",
     //     alignItems: "center",

@@ -1,5 +1,5 @@
 // theme/theme.ts
-import { s, ms } from "react-native-size-matters";
+import { ms } from "react-native-size-matters";
 
 const theme = {
     colors: {
