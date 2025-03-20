@@ -60,7 +60,7 @@ export default function SignIn() {
             setLoading(false);
             signIn(); // Simulated sign-in
             router.replace("/"); // Redirect to home screen
-        }, 2000); // Simulated loading
+        }, 750); // Simulated loading
     };
 
     /**
