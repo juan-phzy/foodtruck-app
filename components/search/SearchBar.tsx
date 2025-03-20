@@ -14,16 +14,26 @@
  */
 
 // React & Hooks
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 // React Native Components
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+    Pressable,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
 
 // Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
 
 // External Libraries
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import {
+    GooglePlacesAutocomplete,
+    GooglePlacesAutocompleteRef,
+} from "react-native-google-places-autocomplete";
 
 // Constants & Theme
 import theme from "@/assets/theme";
@@ -61,6 +71,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
     const [showLayerModal, setShowLayerModal] = useState(false);
     const [iconsLoaded, setIconsLoaded] = useState(false);
+    const [showClearButton, setShowClearButton] = useState(false);
+    const [showBackButton, setShowBackButton] = useState(false);
+    const [text, setText] = useState("");
 
     const { setMapStyle } = useMapLayerStore();
     const { clearSelectedTruck } = useTruckStore();
@@ -76,6 +89,22 @@ const SearchBar: React.FC<SearchBarProps> = ({
         { id: "light", name: "Light", style: Mapbox.StyleURL.Light },
     ];
 
+    const googlePlacesRef = useRef<GooglePlacesAutocompleteRef>(null);
+
+    const handleClear = () => {
+        if (googlePlacesRef.current) {
+            googlePlacesRef.current.clear();
+            setShowClearButton(false);
+        }
+    };
+
+    const handleBack = () => {
+        if (googlePlacesRef.current) {
+            googlePlacesRef.current.blur();
+            setShowBackButton(false);
+        }
+    }
+
     // Load the font for Ionicons
     useEffect(() => {
         const loadIcons = async () => {
@@ -85,6 +114,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
         loadIcons();
     }, []);
+
+    useEffect(() => {
+        setShowClearButton(text.length > 0);
+    }, [text]);
 
     return (
         <View style={styles.rootContainer}>
@@ -97,9 +130,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
             <SafeAreaView style={styles.safeAreaView}>
                 {/* Google Places Autocomplete Search Bar */}
                 <GooglePlacesAutocomplete
+                    ref={googlePlacesRef}
                     placeholder="Search other places"
                     minLength={2} // Minimum characters before search triggers
-                    fetchDetails={true} // Fetches full place details
                     query={{
                         key: GOOGLE_PLACES_API_KEY,
                         language: "en",
@@ -114,45 +147,103 @@ const SearchBar: React.FC<SearchBarProps> = ({
                     styles={{
                         container: {
                             width: "100%",
-                            shadowColor: theme.colors.black,
-                            shadowOpacity: 0.3,
-                            shadowRadius: 3,
-                            shadowOffset: { width: 0, height: 2 },
-                            elevation: 3, // Android shadow effect
                         },
                         textInput: {
-                            flex: 1,
+                            backgroundColor: theme.colors.white,
                             height: ms(40),
-                            paddingHorizontal: ms(15),
-                            borderRadius: ms(20),
-                            fontSize: ms(14),
-                            color: theme.colors.black,
+                            borderRadius: ms(25),
+                            paddingHorizontal: ms(10),
+                            marginBottom: ms(10),
+                            fontSize: theme.fontSize.xs,
+                            shadowColor: theme.colors.black,
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.1,
+                            shadowRadius: 3,
+                            elevation: 3,
                         },
                         listView: {
-                            backgroundColor: "#f8f8f8",
-                            borderRadius: 10,
+                            backgroundColor: theme.colors.white,
+                            borderRadius: ms(10),
+                            shadowColor: theme.colors.black,
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.1,
+                            shadowRadius: 3,
+                            elevation: 3,
                         },
                         row: {
-                            flexDirection: "row",
-                            justifyContent: "flex-start",
-                            alignItems: "center",
-                            padding: ms(10),
                             backgroundColor: theme.colors.white,
-                            borderBottomWidth: 0.5,
-                            borderBottomColor: "rgba(0,0,0,.1)",
+                            padding: ms(10),
+                            alignItems: "center",
+                            borderBottomWidth: ms(1),
+                            borderBottomColor: theme.colors.gray,
+                        },
+                        separator: {
+                            height: 0,
+                            backgroundColor: theme.colors.gray,
                         },
                     }}
                     textInputProps={{
                         placeholderTextColor: theme.colors.primaryInactive,
+                        onPointerCancel: () => {
+                            setShowBackButton(false);
+                        },
+                        onChangeText: (text) => setText(text),
+                        onFocus: () => {
+                            setShowBackButton(true);
+                        },
                     }}
                     enablePoweredByContainer={false}
                     onFail={(error) =>
                         console.error("Google Places Error:", error)
-                    } 
+                    }
+                    renderLeftButton={() => (
+                        <TouchableOpacity
+                            onPress={handleBack}
+                            style={{
+                                display: showBackButton ? "flex" : "none",
+                                width: ms(40),
+                                height: ms(40),
+                                justifyContent: "center",
+                                alignItems: "center",
+                                alignSelf: "flex-start",
+                                borderRadius: ms(25),
+                                backgroundColor: theme.colors.white,
+                                marginRight: ms(5),
+                            }}
+                        >
+                            <Ionicons
+                                name="arrow-back"
+                                size={ms(25)}
+                                color={theme.colors.primary}
+                            />
+                        </TouchableOpacity>
+                    )}
+                    renderRightButton={() => (
+                        <TouchableOpacity
+                            onPress={handleClear}
+                            style={{
+                                display: showClearButton ? "flex" : "none",
+                                width: ms(40),
+                                height: ms(40),
+                                justifyContent: "center",
+                                alignItems: "center",
+                                alignSelf: "flex-start",
+                                borderRadius: ms(25),
+                                backgroundColor: theme.colors.white,
+                                marginLeft: ms(5),
+                            }}
+                        >
+                            <Ionicons
+                                name="close"
+                                size={ms(25)}
+                                color={theme.colors.primary}
+                            />
+                        </TouchableOpacity>
+                    )}
                 />
                 {iconsLoaded && (
                     <View style={styles.buttonContainer}>
-                        <Pressable
+                        <TouchableOpacity
                             style={styles.controlButton}
                             onPress={() => {
                                 if (userLocation) {
@@ -170,9 +261,9 @@ const SearchBar: React.FC<SearchBarProps> = ({
                                 size={ms(20)}
                                 color={theme.colors.primary}
                             />
-                        </Pressable>
+                        </TouchableOpacity>
 
-                        <Pressable
+                        <TouchableOpacity
                             style={styles.controlButton}
                             onPress={() => setShowLayerModal(!showLayerModal)}
                         >
@@ -181,7 +272,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                                 size={ms(20)}
                                 color={theme.colors.primary}
                             />
-                        </Pressable>
+                        </TouchableOpacity>
 
                         {/* Layer Selection Modal */}
                         {showLayerModal && (
@@ -230,7 +321,7 @@ const styles = ScaledSheet.create({
     buttonContainer: {
         flexDirection: "row",
         justifyContent: "flex-end",
-        gap: "10@ms",
+        gap: "5@ms",
     },
     controlButton: {
         backgroundColor: "white",
@@ -238,10 +329,7 @@ const styles = ScaledSheet.create({
         borderRadius: "30@ms",
         justifyContent: "center",
         alignItems: "center",
-        shadowColor: theme.colors.black,
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 2 },
-        elevation: 3,
+        boxShadow: "0px 2px 12px 1px rgba(0, 0, 0, .2)",
     },
     layerModal: {
         position: "absolute",
