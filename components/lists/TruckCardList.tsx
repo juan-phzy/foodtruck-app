@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
-import { StyleSheet, FlatList } from "react-native";
-import TruckCardSmall from "./TruckCardSmall";
+import { FlatList } from "react-native";
+import TruckCardSmall from "@/components/TruckCardSmall";
 import { FoodTruck } from "@/types";
 
 interface TruckCardListProps {
@@ -31,14 +31,5 @@ const TruckCardList: React.FC<TruckCardListProps> = ({ trucks }) => {
     />
   );
 };
-
-const styles = StyleSheet.create({
-  divider: {
-    height: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-    width: "100%",
-    marginVertical: 5,
-  },
-});
 
 export default React.memo(TruckCardList); // Prevents unnecessary re-renders

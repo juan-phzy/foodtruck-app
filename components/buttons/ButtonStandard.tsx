@@ -5,7 +5,7 @@
  * Used In:
  * - create-account.tsx
  * - sign-in.tsx
- * - NearbyTrucksCard.tsx
+ * - NearbyTrucks.tsx
  *
  * Features:
  * - Four style variations: `dark`, `light`, `outlineDark`, and `outlineLight`.

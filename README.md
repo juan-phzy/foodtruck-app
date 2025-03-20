@@ -17,7 +17,7 @@ MunchMap is a mobile-first application designed to help users discover nearby fo
   - `CustomTextInput`: Reusable input fields with labels and borders.  
   - `IconButton`: Icon-based buttons with labels for alternate sign-in methods.  
   - `MenuModal`: Full screen modal that shows a truck's menu items.
-  - `NearbyTrucksCard`: Card that lists the visible trucks on the map.
+  - `NearbyTrucks`: Card that lists the visible trucks on the map.
   - `SearchBar`: Google API address search UI on top of the map.
   - `SelectedTruckCard`: Modal that shows the selected truck's information.
   - `TruckCardList`: Returns a list of small truck cards.
@@ -75,7 +75,7 @@ FOODTRUCK-APP
 │   ├── CustomTextInput.tsx
 │   ├── IconButton.tsx
 │   ├── MenuModal.tsx
-│   ├── NearbyTrucksCard.tsx
+│   ├── NearbyTrucks.tsx
 │   ├── SearchBar.tsx
 │   ├── SelectedTruckCard.tsx
 │   ├── TruckCardList.tsx

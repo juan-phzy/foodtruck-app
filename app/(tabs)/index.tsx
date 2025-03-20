@@ -12,7 +12,7 @@ import { ActivityIndicator, View } from "react-native";
 
 // Custom Components
 import SearchBar from "@/components/search/SearchBar";
-import NearbyTrucksCard from "@/components/NearbyTrucksCard";
+import NearbyTrucks from "@/components/indexPage/NearbyTrucks";
 import SelectedTruckCard from "@/components/SelectedTruckCard";
 import CategoryModal from "@/components/CategoryModal";
 import MenuModal from "@/components/MenuModal";
@@ -248,7 +248,7 @@ export default function Index() {
             {selectedTruck ? (
                 <SelectedTruckCard truck={selectedTruck} />
             ) : (
-                <NearbyTrucksCard trucks={truckFeatures.filteredTrucks} />
+                <NearbyTrucks trucks={truckFeatures.filteredTrucks} />
             )}
 
             {/* Category Modal */}
