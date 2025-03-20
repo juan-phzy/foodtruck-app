@@ -11,7 +11,7 @@ import React, {
 import { ActivityIndicator, View } from "react-native";
 
 // Custom Components
-import SearchBar from "@/components/SearchBar";
+import SearchBar from "@/components/search/SearchBar";
 import NearbyTrucksCard from "@/components/NearbyTrucksCard";
 import SelectedTruckCard from "@/components/SelectedTruckCard";
 import CategoryModal from "@/components/CategoryModal";
@@ -182,18 +182,6 @@ export default function Index() {
 
     return (
         <View style={styles.rootContainer}>
-            {/* Category Modal */}
-            {showCategoryModal && <CategoryModal />}
-
-            {/* Menu Modal */}
-            {showMenuModal && selectedTruck && (
-                <MenuModal truck={selectedTruck} />
-            )}
-
-            {/* Truck Page */}
-            {showTruckPage && selectedTruck && (
-                <TruckPage truck={selectedTruck} />
-            )}
 
             {/* Search Bar */}
             <SearchBar
@@ -261,6 +249,19 @@ export default function Index() {
                 <SelectedTruckCard truck={selectedTruck} />
             ) : (
                 <NearbyTrucksCard trucks={truckFeatures.filteredTrucks} />
+            )}
+
+            {/* Category Modal */}
+            {showCategoryModal && <CategoryModal />}
+
+            {/* Menu Modal */}
+            {showMenuModal && selectedTruck && (
+                <MenuModal truck={selectedTruck} />
+            )}
+
+            {/* Truck Page */}
+            {showTruckPage && selectedTruck && (
+                <TruckPage truck={selectedTruck} />
             )}
         </View>
     );
