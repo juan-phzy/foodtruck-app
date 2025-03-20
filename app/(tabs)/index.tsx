@@ -8,7 +8,7 @@ import React, {
 } from "react";
 
 // React Native Components
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 
 // Custom Components
 import SearchBar from "@/components/SearchBar";
@@ -19,6 +19,7 @@ import MenuModal from "@/components/MenuModal";
 import TruckPage from "@/components/TruckPage";
 
 // Constants & Types & Themes
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { FOOD_TRUCKS } from "@/constants";
 import theme from "@/assets/theme";
 // Mapbox Imports
@@ -180,7 +181,7 @@ export default function Index() {
     }, []);
 
     return (
-        <View style={styles.container}>
+        <View style={styles.rootContainer}>
             {/* Category Modal */}
             {showCategoryModal && <CategoryModal />}
 
@@ -265,9 +266,8 @@ export default function Index() {
     );
 }
 
-// Styles
-const styles = StyleSheet.create({
-    container: { position: "relative", flex: 1 },
+const styles = ScaledSheet.create({
+    rootContainer: { flex: 1 },
     map: { flex: 1 },
     loadingContainer: {
         position: "absolute",
@@ -278,31 +278,29 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "rgba(255, 255, 255, 1)", // Light overlay
+        backgroundColor: theme.colors.white,
     },
 });
-
-// Mapbox Layer Styles
 const circleLayerStyle = {
     circlePitchAlignment: "map",
-    circleColor: "orange",
-    circleRadius: 30,
-    circleOpacity: 0.4,
-    circleStrokeWidth: 2,
-    circleStrokeColor: "orange",
+    circleColor: theme.colors.primary,
+    circleRadius: ms(30),
+    circleOpacity: 0.65,
+    circleStrokeWidth: ms(3),
+    circleStrokeColor: theme.colors.primary,
 };
 
 const symbolCountStyle = {
     textField: ["get", "point_count"],
-    textColor: "white",
-    textSize: 25,
+    textColor: theme.colors.white,
+    textSize: ms(25),
 };
 
 const symbolLayerStyle = {
     iconImage: "icon",
-    iconSize: 0.05,
+    iconSize: ms(.05),
 };
 
 const locationPuckStyle = {
-    pulsing: { isEnabled: true, color: "orange" },
+    pulsing: { isEnabled: true, color: theme.colors.primary },
 };

@@ -7,6 +7,7 @@ import { Redirect, Tabs } from "expo-router";
 // Theme & Icons
 import theme from "@/assets/theme";
 import { Ionicons } from "@expo/vector-icons";
+import { ms } from "react-native-size-matters";
 
 // Context & State Management
 import { useSession } from "@/context/ctx";
@@ -24,7 +25,7 @@ type TabIconProps = {
  * on every render, which improves performance.
  */
 const renderTabIcon = ({ color, name }: TabIconProps) => (
-    <Ionicons name={name} size={30} color={color} />
+    <Ionicons name={name} size={ms(25)} color={color} />
 );
 
 /**
@@ -67,7 +68,7 @@ export default function TabsLayout() {
                 headerShown: false, // Hide the header
                 tabBarStyle: {
                     backgroundColor: theme.colors.primary, // Tab bar background color
-                    height: 80, // Adjust height for proper spacing
+                    height: ms(65), // Adjust height for proper spacing
                 },
                 tabBarItemStyle: {
                     flexDirection: "row",
