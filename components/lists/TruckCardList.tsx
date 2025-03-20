@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { FlatList, ListRenderItem } from "react-native";
-import TruckCardSmall from "@/components/TruckCardSmall";
+import TruckCardSmall from "@/components/cards/TruckCardSmall";
 import { FoodTruck } from "@/types";
 
 interface TruckCardListProps {
