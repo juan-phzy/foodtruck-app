@@ -19,16 +19,17 @@ import { Ionicons } from "@expo/vector-icons"; // For "Go Back" icon
 import { router } from "expo-router";
 
 // Custom Components
-import CustomTextInput from "@/components/inputs/TextInputFancy";
+import TextInputFancy from "@/components/inputs/TextInputFancy";
 import ButtonStandard from "@/components/buttons/ButtonStandard";
 
 // Theme & Constants
 import theme from "@/assets/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSession } from "@/context/ctx";
+import { ms, ScaledSheet } from "react-native-size-matters";
 
 // Get screen dimensions for responsive UI scaling
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 /**
  * CreateAccountScreen Component
@@ -87,7 +88,7 @@ export default function CreateAccountScreen() {
 
     return (
         // Main Container
-        <View style={styles.container}>
+        <View style={styles.rootContainer}>
             {/* Background Image with Overlay */}
             <ImageBackground
                 source={require("@/assets/images/sign-in-bg.jpg")}
@@ -97,138 +98,116 @@ export default function CreateAccountScreen() {
                 <SafeAreaView style={styles.safeArea}>
                     {/* Gradient Overlay for Background */}
                     <LinearGradient
+                        style={styles.gradient}
                         colors={[
                             "rgba(255, 132, 0, 1)", // Orange (Primary Theme Color)
-                            "rgba(122, 63, 0, 0.85)", // Dark Orange
+                            "rgba(91, 47, 0, 0.90)", // Dark Orange
                             "rgba(0, 0, 0, 1)", // Black
                         ]}
-                        locations={[0, 0.3, 0.95]}
-                        style={styles.gradient}
+                        locations={[0, 0.5, 0.9]}
                     />
 
-                    {/* Main Content */}
-                    <View style={styles.content}>
-                        {/* App Title Section */}
-                        <View style={styles.logoContainer}>
-                            <Text style={styles.title}>MunchMap</Text>
-                            <Text style={styles.subtitle}>
-                                Find Nearby Food Trucks
-                            </Text>
-                        </View>
+                    {/* Logo Section */}
+                    <View style={styles.logoContainer}>
+                        <Text style={styles.title}>MunchMap</Text>
+                        <Text style={styles.subtitle}>
+                            Find Nearby Food Trucks
+                        </Text>
+                    </View>
 
-                        {/* Form Container with Shadow Effect */}
-                        <View style={styles.shadowContainer}>
-                            {/* Blurred Background for Form */}
-                            <BlurView
-                                intensity={8}
-                                style={styles.bodyContainer}
-                            >
-                                {/* Gradient Overlay on Form */}
-                                <LinearGradient
+                    {/* Blurred Background for Form */}
+                    <BlurView intensity={8} style={styles.bodyContainer}>
+                        {/* Gradient Overlay on Form */}
+                        {/* <LinearGradient
                                     colors={[
                                         "rgba(210, 210, 210, 0.2)",
                                         "rgba(0, 0, 0, 0)",
                                     ]}
                                     locations={[0.5, 1]}
                                     style={styles.gradient}
-                                />
+                                /> */}
 
-                                {/* Go Back Button */}
-                                <Pressable
-                                    style={styles.goBackContainer}
-                                    onPress={handleGoBack}
-                                >
-                                    <Ionicons
-                                        name="arrow-back"
-                                        size={24}
-                                        color="white"
-                                    />
-                                    <Text style={styles.goBackText}>
-                                        Go Back
-                                    </Text>
-                                </Pressable>
+                        {/* Go Back Button */}
+                        <Pressable
+                            style={styles.goBackContainer}
+                            onPress={handleGoBack}
+                        >
+                            <Ionicons
+                                name="arrow-back"
+                                size={ms(24)}
+                                color={theme.colors.white}
+                            />
+                            <Text style={styles.goBackText}>Go Back</Text>
+                        </Pressable>
 
-                                {/* Form Header */}
-                                <Text style={styles.formHeader}>
-                                    Account Information
-                                </Text>
+                        {/* Form Header */}
+                        <Text style={styles.formHeader}>
+                            Account Information
+                        </Text>
 
-                                {/* User Input Form */}
-                                <ScrollView
-                                    style={styles.scrollFormContainer}
-                                    contentContainerStyle={styles.formContainer}
-                                    keyboardShouldPersistTaps="handled"
-                                >
-                                    <CustomTextInput
-                                        label="First Name"
-                                        placeholder="Enter your first name"
-                                        onChangeText={(value) =>
-                                            handleInputChange(
-                                                "first_name",
-                                                value
-                                            )
-                                        }
-                                    />
-                                    <CustomTextInput
-                                        label="Last Name"
-                                        placeholder="Enter your last name"
-                                        onChangeText={(value) =>
-                                            handleInputChange(
-                                                "last_name",
-                                                value
-                                            )
-                                        }
-                                    />
-                                    <CustomTextInput
-                                        label="Email"
-                                        placeholder="Enter your email"
-                                        onChangeText={(value) =>
-                                            handleInputChange("email", value)
-                                        }
-                                        keyboardType="email-address"
-                                    />
-                                    <CustomTextInput
-                                        label="Phone Number"
-                                        placeholder="Enter your phone number"
-                                        onChangeText={(value) =>
-                                            handleInputChange(
-                                                "phone_number",
-                                                value
-                                            )
-                                        }
-                                        keyboardType="phone-pad"
-                                    />
-                                    <CustomTextInput
-                                        label="Date of Birth"
-                                        placeholder="YYYY-MM-DD"
-                                        onChangeText={(value) =>
-                                            handleInputChange("dob", value)
-                                        }
-                                    />
-                                    <CustomTextInput
-                                        label="Password"
-                                        placeholder="Enter a strong password"
-                                        onChangeText={(value) =>
-                                            handleInputChange("password", value)
-                                        }
-                                        secureTextEntry
-                                    />
-                                </ScrollView>
+                        {/* User Input Form */}
+                        <ScrollView
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={styles.formContainer}
+                            keyboardShouldPersistTaps="handled"
+                        >
+                            <TextInputFancy
+                                label="First Name"
+                                placeholder="Enter your first name"
+                                onChangeText={(value) =>
+                                    handleInputChange("first_name", value)
+                                }
+                            />
+                            <TextInputFancy
+                                label="Last Name"
+                                placeholder="Enter your last name"
+                                onChangeText={(value) =>
+                                    handleInputChange("last_name", value)
+                                }
+                            />
+                            <TextInputFancy
+                                label="Email"
+                                placeholder="Enter your email"
+                                onChangeText={(value) =>
+                                    handleInputChange("email", value)
+                                }
+                                keyboardType="email-address"
+                            />
+                            <TextInputFancy
+                                label="Phone Number"
+                                placeholder="Enter your phone number"
+                                onChangeText={(value) =>
+                                    handleInputChange("phone_number", value)
+                                }
+                                keyboardType="phone-pad"
+                            />
+                            <TextInputFancy
+                                label="Date of Birth"
+                                placeholder="YYYY-MM-DD"
+                                onChangeText={(value) =>
+                                    handleInputChange("dob", value)
+                                }
+                            />
+                            <TextInputFancy
+                                label="Password"
+                                placeholder="Enter a strong password"
+                                onChangeText={(value) =>
+                                    handleInputChange("password", value)
+                                }
+                                secureTextEntry
+                            />
+                        </ScrollView>
 
-                                {/* Sign Up Button */}
-                                <ButtonStandard
-                                    style="light"
-                                    verticalPadding={10}
-                                    fontSize={16}
-                                    text={
-                                        isLoading ? "Signing Up..." : "Sign Up"
-                                    }
-                                    onPress={handleSignUp}
-                                    disabled={isLoading} // Disable button when signing up
-                                />
-                            </BlurView>
-                        </View>
-                    </View>
+                        {/* Sign Up Button */}
+                        <ButtonStandard
+                            style="light"
+                            verticalPadding={theme.padding.sm}
+                            fontSize={theme.fontSize.md}
+                            text={isLoading ? "Signing Up..." : "Sign Up"}
+                            onPress={handleSignUp}
+                            disabled={isLoading} // Disable button when signing up
+                        />
+                    </BlurView>
                 </SafeAreaView>
             </ImageBackground>
         </View>
@@ -238,109 +217,64 @@ export default function CreateAccountScreen() {
 /**
  * Styles for CreateAccountScreen
  */
-const styles = StyleSheet.create({
-    /** Main Container */
-    container: {
+const styles = ScaledSheet.create({
+    rootContainer: {
         flex: 1,
-        justifyContent: "center",
     },
-
-    /** Background Image */
     background: {
         flex: 1,
-        justifyContent: "center",
     },
-
-    /** Overlay Gradient */
     gradient: {
         ...StyleSheet.absoluteFillObject,
     },
-
-    /** Safe Area View to avoid UI overlapping with system UI */
     safeArea: {
         flex: 1,
-        justifyContent: "center",
-        // borderColor: "red",
-        // borderWidth: 4,
+        justifyContent: "flex-start",
     },
-
-    /** Main Content Container */
-    content: {
-        flex: 1,
-        justifyContent: "flex-end",
-        alignItems: "center",
-    },
-
-    /** Logo Container */
     logoContainer: {
+        flex: 1,
         width: "100%",
-        alignItems: "center",
         justifyContent: "center",
-        paddingVertical: 30,
+        alignItems: "center",
     },
     title: {
-        fontSize: width * 0.12, // Dynamically adjusts based on screen width
-        color: "white",
+        fontSize: theme.fontSize.xxxxl,
+        color: theme.colors.white,
     },
     subtitle: {
-        fontSize: width * 0.05, // Dynamically adjusts based on screen width
-        color: "white",
+        fontSize: theme.fontSize.lg,
+        color: theme.colors.white,
     },
-
-    /** Shadow Container (Under Form) */
-    shadowContainer: {
-        flex: 1,
-        justifyContent: "flex-end",
-        width: "100%",
-        shadowColor: theme.colors.primary,
-        shadowOffset: { width: 0, height: -10 },
-        shadowOpacity: 0.7,
-        shadowRadius: 15,
-        elevation: 10,
-    },
-
-    /** Body Container with Blur Effect */
     bodyContainer: {
-        flexDirection: "column",
-        justifyContent: "flex-end",
-        padding: 25,
-        gap: 15,
+        paddingHorizontal: theme.padding.xl,
+        paddingVertical: theme.padding.xl,
+        maxHeight: height * .7,
         width: "100%",
-        height: "100%",
-        borderTopLeftRadius: 40,
-        borderTopRightRadius: 40,
+        gap: "15@ms",
+        borderTopLeftRadius: "40@s",
+        borderTopRightRadius: "40@s",
+        boxShadow: "0px -10px 25px 10px rgba(255, 132, 0, .7)",
         overflow: "hidden",
     },
-
-    /** Go Back Button */
     goBackContainer: {
         flexDirection: "row",
         alignItems: "center",
-        alignSelf: "flex-start",
-        paddingTop: 15,
-        gap: 10,
+        gap: "10@ms",
     },
     goBackText: {
         color: theme.colors.white,
-        fontSize: 16,
+        fontSize: theme.fontSize.md,
     },
-
-    /** Form Header */
     formHeader: {
-        fontSize: 20,
+        fontSize: theme.fontSize.lg,
         color: theme.colors.white,
         fontWeight: "bold",
     },
-
-    /** Form Input Fields */
     formContainer: {
         flexDirection: "column",
-        gap: 10,
-        width: "100%",
-    },
-
-    /** Scrollable Form Container to prevent UI cutoff */
-    scrollFormContainer: {
-        maxHeight: "100%", // Ensures scrolling only when necessary
+        justifyContent: "flex-start",
+        alignItems: "stretch",
+        gap: "10@ms",
+        paddingBottom: theme.padding.lg,
     },
 });

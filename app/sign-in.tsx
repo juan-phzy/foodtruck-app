@@ -97,7 +97,7 @@ export default function SignIn() {
                         </Text>
                     </View>
 
-                    {/* Blurred Background for Form */}
+                    {/* Blurred Body Container for Form */}
                     <BlurView intensity={10} style={styles.bodyContainer}>
                         {/* Form Gradient Overlay */}
                         {/* <LinearGradient
@@ -193,7 +193,6 @@ const styles = ScaledSheet.create({
     },
     safeAreaView: {
         flex: 1,
-        flexDirection: "column",
         justifyContent: "flex-end",
         alignItems: "center",
     },
