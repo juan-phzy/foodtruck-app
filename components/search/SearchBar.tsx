@@ -256,7 +256,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
                             }}
                         >
                             <Ionicons
-                                name="locate"
+                                name="locate-outline"
                                 size={ms(20)}
                                 color={theme.colors.primary}
                             />
