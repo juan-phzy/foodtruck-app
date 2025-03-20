@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { FlatList } from "react-native";
+import { FlatList, ListRenderItem } from "react-native";
 import TruckCardSmall from "@/components/TruckCardSmall";
 import { FoodTruck } from "@/types";
 
@@ -9,8 +9,8 @@ interface TruckCardListProps {
 
 const TruckCardList: React.FC<TruckCardListProps> = ({ trucks }) => {
   // Optimize `renderItem` using useCallback
-  const renderItem = useCallback(
-    ({ item }: { item: FoodTruck }) => <TruckCardSmall truck={item} />,
+  const renderItem: ListRenderItem<FoodTruck> = useCallback(
+    ({ item }) => <TruckCardSmall truck={item} />,
     []
   );
 
@@ -23,11 +23,6 @@ const TruckCardList: React.FC<TruckCardListProps> = ({ trucks }) => {
       initialNumToRender={10} // Reduce initial render time
       maxToRenderPerBatch={10} // Optimize batch rendering
       windowSize={5} // Adjusts the number of items kept in memory
-      getItemLayout={(_, index) => ({
-        length: 80, // Approximate height of each row
-        offset: 80 * index,
-        index,
-      })} // Enables smooth scrolling
     />
   );
 };
