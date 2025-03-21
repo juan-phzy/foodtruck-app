@@ -16,6 +16,7 @@ const theme = {
         white: "rgba(255, 255, 255, 1)",
         whiteInactive: "rgba(255, 255, 255, 0.5)",
         green: "rgba(0, 128, 0, 1)",
+        greenLight: "rgb(0, 199, 0)",
         red: "rgba(255, 0, 0, 1)",
     },
     fontSize: {

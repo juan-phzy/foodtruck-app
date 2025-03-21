@@ -13,7 +13,7 @@ import { ActivityIndicator, View } from "react-native";
 // Custom Components
 import SearchBar from "@/components/search/SearchBar";
 import NearbyTrucks from "@/components/indexPage/NearbyTrucks";
-import SelectedTruckCard from "@/components/SelectedTruckCard";
+import SelectedTruck from "@/components/indexPage/SelectedTruck";
 import CategoryModal from "@/components/CategoryModal";
 import MenuModal from "@/components/MenuModal";
 import TruckPage from "@/components/TruckPage";
@@ -246,7 +246,7 @@ export default function Index() {
 
             {/* Conditional Card Rendering */}
             {selectedTruck ? (
-                <SelectedTruckCard truck={selectedTruck} />
+                <SelectedTruck truck={selectedTruck} />
             ) : (
                 <NearbyTrucks trucks={truckFeatures.filteredTrucks} />
             )}

@@ -19,7 +19,7 @@ MunchMap is a mobile-first application designed to help users discover nearby fo
   - `MenuModal`: Full screen modal that shows a truck's menu items.
   - `NearbyTrucks`: Card that lists the visible trucks on the map.
   - `SearchBar`: Google API address search UI on top of the map.
-  - `SelectedTruckCard`: Modal that shows the selected truck's information.
+  - `SelectedTruck`: Modal that shows the selected truck's information.
   - `TruckCardList`: Returns a list of small truck cards.
   - `TruckCardSmall`: Minimized truck card displaying key information.
   - `TruckPage`: Full truck page that shows all specific truck information.
@@ -77,7 +77,7 @@ FOODTRUCK-APP
 │   ├── MenuModal.tsx
 │   ├── NearbyTrucks.tsx
 │   ├── SearchBar.tsx
-│   ├── SelectedTruckCard.tsx
+│   ├── SelectedTruck.tsx
 │   ├── TruckCardList.tsx
 │   ├── TruckCardSmall.tsx
 │   └── TruckPage.tsx
