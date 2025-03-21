@@ -6,6 +6,7 @@ import {
     Pressable,
     FlatList,
     TouchableOpacity,
+    Dimensions,
 } from "react-native";
 import { BlurView } from "expo-blur";
 import {
@@ -24,6 +25,8 @@ interface SelectedTruckProps {
     truck: FoodTruck;
 }
 
+const {width} = Dimensions.get("window");
+
 const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
     const [isFavorite, setIsFavorite] = useState(false);
 
@@ -36,9 +39,12 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
         setIsFavorite((prev) => !prev);
     }, []);
 
+    console.log(truck.distance);
+
     // Calculate estimated driving & walking time once
-    const estimatedDriveTime = Math.round(truck.distance * 3);
-    const estimatedWalkTime = Math.round(truck.distance * 20);
+    const estimatedDriveTime = Math.round(truck.distance * 2);
+    const estimatedBikeTime = Math.round(truck.distance * 6);
+    const estimatedWalkTime = Math.round(truck.distance * 10);
 
     return (
         <BlurView intensity={10} style={styles.rootContainer}>
@@ -71,114 +77,123 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
 
             {/* Truck Info */}
             <View>
-                <View style={styles.detailsRow}>
-                    <View style={styles.detailsDistance}>
-                        <Ionicons name="walk" size={ms(15)} />
-                        <Text style={styles.detailText}>{"12 mins"}</Text>
+                <View style={styles.spaceBetweenRow}>
+                    <View style={styles.distanceContainer}>
+                        <View style={styles.detailsDistance}>
+                            <Ionicons name="walk" size={ms(15)} />
+                            <Text style={styles.detailText}>
+                                {estimatedWalkTime}
+                            </Text>
+                        </View>
+                        <View style={styles.detailsDistance}>
+                            <Ionicons name="bicycle" size={ms(15)} />
+                            <Text style={styles.detailText}>
+                                {estimatedBikeTime}
+                            </Text>
+                        </View>
+                        <View style={styles.detailsDistance}>
+                            <Ionicons name="car" size={ms(15)} />
+                            <Text style={styles.detailText}>
+                                {estimatedDriveTime}
+                            </Text>
+                        </View>
                     </View>
-                    <View style={styles.detailsDistance}>
-                        <Ionicons name="bicycle" size={ms(15)} />
-                        <Text style={styles.detailText}>{"7 mins"}</Text>
-                    </View>
-                    <View style={styles.detailsDistance}>
-                        <Ionicons name="car" size={ms(15)} />
-                        <Text style={styles.detailText}>{"3 mins"}</Text>
+
+                    <View style={styles.detailsRow}>
+                        <View style={styles.stars}>
+                            {Array.from({ length: 5 }, (_, index) => (
+                                <Ionicons
+                                    key={index}
+                                    name={
+                                        index < Math.floor(truck.rating)
+                                            ? "star"
+                                            : "star-outline"
+                                    }
+                                    size={12}
+                                    color={theme.colors.primary}
+                                />
+                            ))}
+                        </View>
+                        <Text
+                            style={[
+                                styles.openStatus,
+                                truck.isOpen ? styles.open : styles.closed,
+                            ]}
+                        >
+                            {truck.isOpen ? "Open" : "Closed"}
+                        </Text>
                     </View>
                 </View>
-
-                <View style={styles.detailsRow}>
-                    <Text
-                        style={[
-                            styles.openStatus,
-                            truck.isOpen ? styles.open : styles.closed,
-                        ]}
-                    >
-                        {truck.isOpen ? "Open" : "Closed"}
+                <View style={styles.spaceBetweenRow}>
+                    <Text style={styles.detailText}>Categories:</Text>
+                    <Text style={styles.detailText}>
+                        {truck.categories.join(", ")}
                     </Text>
-                    <View style={styles.stars}>
-                        {Array.from({ length: 5 }, (_, index) => (
-                            <Ionicons
-                                key={index}
-                                name={
-                                    index < Math.floor(truck.rating)
-                                        ? "star"
-                                        : "star-outline"
-                                }
-                                size={12}
-                                color={theme.colors.primary}
-                            />
-                        ))}
-                    </View>{" "}
-                </View>
-
-                <Text style={styles.bolded}>{truck.categories.join(", ")}</Text>
-
-                <Text style={styles.bolded}>Stationary Truck</Text>
-
-                <Text style={styles.bolded}>Hours:</Text>
-                <Text style={styles.detail}>9am - 9pm</Text>
-
-                {/* Action Buttons */}
-                <View style={styles.buttonRow}>
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={toggleMenuModal}
-                    >
-                        <MaterialIcons
-                            name="restaurant-menu"
-                            size={20}
-                            color="white"
-                        />
-                        <Text style={styles.buttonText}>Menu</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.button}>
-                        <MaterialCommunityIcons
-                            name="directions"
-                            size={20}
-                            color="white"
-                        />
-                        <Text style={styles.buttonText}>Directions</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={toggleTruckPage}
-                    >
-                        <MaterialCommunityIcons
-                            name="truck-outline"
-                            size={20}
-                            color="white"
-                        />
-                        <Text style={styles.buttonText}>View Truck</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={handleToggleFavorite}
-                    >
-                        <Ionicons
-                            name={isFavorite ? "bookmark" : "bookmark-outline"}
-                            size={ms(25)}
-                            color={theme.colors.white}
-                        />
-                        <Text style={styles.buttonText}>Save</Text>
-                    </TouchableOpacity>
                 </View>
             </View>
 
+            {/* Action Buttons */}
+            <View style={styles.buttonRow}>
+                <TouchableOpacity style={styles.button}>
+                    <MaterialCommunityIcons
+                        name="directions"
+                        size={ms(17)}
+                        color="white"
+                    />
+                    <Text style={styles.buttonText}>Nav</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={toggleTruckPage}
+                >
+                    <MaterialCommunityIcons
+                        name="truck-outline"
+                        size={ms(17)}
+                        color="white"
+                    />
+                    <Text style={styles.buttonText}>View</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={toggleMenuModal}
+                >
+                    <MaterialIcons
+                        name="restaurant-menu"
+                        size={ms(17)}
+                        color="white"
+                    />
+                    <Text style={styles.buttonText}>Menu</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleToggleFavorite}
+                >
+                    <Ionicons
+                        name={isFavorite ? "bookmark" : "bookmark-outline"}
+                        size={ms(17)}
+                        color={theme.colors.white}
+                    />
+                    <Text style={styles.buttonText}>
+                        {isFavorite ? "Saved" : "Save"}
+                    </Text>
+                </TouchableOpacity>
+            </View>
             {/* Image Gallery */}
-            <View style={styles.imageGallery}>
-                <FlatList
-                    data={truck.images}
-                    horizontal
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => (
-                        <Image source={{ uri: item }} style={styles.image} />
-                    )}
-                    showsHorizontalScrollIndicator={false}
-                />
-            </View>
+            <FlatList
+                data={truck.images}
+                horizontal
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                    <Image source={{ uri: item }} style={styles.image} />
+                )}
+                showsHorizontalScrollIndicator={false}
+                ItemSeparatorComponent={() => (
+                    <View style={{width:ms(5)}}></View>
+                )}
+            />
 
             {/* Navigation Buttons */}
             <View style={styles.navigationButtons}>
@@ -236,7 +251,17 @@ const styles = ScaledSheet.create({
         backgroundColor: theme.colors.primary,
         borderRadius: "20@ms",
     },
-    detailsRow: {
+    spaceBetweenRow: {
+        flex: 1,
+        height: "30@ms",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "10@ms",
+        borderBottomColor: theme.colors.gray,
+        borderBottomWidth: 1,
+    },
+    distanceContainer: {
         flexDirection: "row",
         alignItems: "center",
         gap: "10@ms",
@@ -250,10 +275,17 @@ const styles = ScaledSheet.create({
         fontSize: theme.fontSize.xs,
         color: theme.colors.black,
     },
+    detailsRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: "10@ms",
+    },
+    stars: {
+        flexDirection: "row",
+    },
     openStatus: {
         textAlignVertical: "center",
-        fontSize: theme.fontSize.sm,
-        color: theme.colors.white,
+        fontSize: theme.fontSize.xs,
         fontWeight: "bold",
         height: "25@ms",
     },
@@ -262,33 +294,6 @@ const styles = ScaledSheet.create({
     },
     closed: {
         color: theme.colors.red,
-    },
-    bolded: {
-        fontSize: theme.fontSize.xs,
-        color: theme.colors.black,
-        fontWeight: "medium",
-    },
-    detail: {
-        fontSize: theme.fontSize.xs,
-        color: theme.colors.black,
-    },
-    vert: {
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        gap: 1,
-    },
-    ratingContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    ratingText: {
-        fontSize: 12,
-        fontWeight: "bold",
-        color: theme.colors.black,
-    },
-    stars: {
-        flexDirection: "row",
     },
     buttonRow: {
         flexDirection: "row",
@@ -301,40 +306,27 @@ const styles = ScaledSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        paddingVertical: 10,
-        paddingHorizontal: theme.padding.xs,
-        borderRadius: 10,
-        gap: 5,
+        borderRadius: "10@ms",
+        paddingVertical: "10@ms",
+        gap: "2@ms",
     },
     buttonText: {
         color: "white",
         fontSize: theme.fontSize.xs,
         fontWeight: "bold",
     },
-    imageGallery: {
-        flexDirection: "row",
-        marginVertical: 2,
-    },
     image: {
-        width: 150, // Adjust width for each image
-        height: 100, // Adjust height for each image
+        width: width*.4,
+        height: width*.25,
         borderRadius: 10,
-        marginRight: 10, // Add spacing between images
-        resizeMode: "cover", // Ensure the image covers the area properly
+        resizeMode: "cover", 
     },
     navigationButtons: {
         flexDirection: "row",
         justifyContent: "space-between",
     },
     navButton: {
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-    },
-    divider: {
-        height: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.1)",
-        width: "100%",
-        marginVertical: 5,
+        paddingHorizontal: theme.padding.sm,
     },
 });
 
