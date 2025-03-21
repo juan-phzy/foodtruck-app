@@ -122,7 +122,7 @@ export default function Index() {
         if (selectedTruck && mapLoaded) {
             moveCamera(
                 selectedTruck.coordinates.longitude,
-                selectedTruck.coordinates.latitude - 0.0012,
+                selectedTruck.coordinates.latitude - ms(0.0007),
                 16
             );
         } else {
