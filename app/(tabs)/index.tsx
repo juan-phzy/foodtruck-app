@@ -45,7 +45,6 @@ import useTruckStore from "@/store/useTruckStore";
 import useFilterStore from "@/store/useFilterStore";
 import useMenuModalStore from "@/store/useMenuModalStore";
 import useMapLayerStore from "@/store/useMapLayerStore";
-import { FoodTruck } from "@/types";
 
 // Types
 type Coordinates = { latitude: number; longitude: number };
