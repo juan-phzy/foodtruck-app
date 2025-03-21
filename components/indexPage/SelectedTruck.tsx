@@ -39,6 +39,10 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
         setIsFavorite((prev) => !prev);
     }, []);
 
+    const renderSeparator = () => (
+        <View style={{width:ms(5)}}></View>
+    );
+
     // Calculate estimated driving & walking time once
     const estimatedDriveTime = Math.round(truck.distance * 2);
     const estimatedBikeTime = Math.round(truck.distance * 6);
@@ -188,9 +192,7 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                     <Image source={{ uri: item }} style={styles.image} />
                 )}
                 showsHorizontalScrollIndicator={false}
-                ItemSeparatorComponent={() => (
-                    <View style={{width:ms(5)}}></View>
-                )}
+                ItemSeparatorComponent={renderSeparator}
             />
 
             {/* Navigation Buttons */}
