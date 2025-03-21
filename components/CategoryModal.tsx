@@ -1,7 +1,7 @@
 /**
  * @file CategoryModal.tsx
  * @description This component displays a modal where users can filter food trucks based on categories.
- * 
+ *
  * Used In:
  * - index.tsx: Used in the main app file to render the category filters selection modal.
  *
@@ -27,6 +27,7 @@ import {
     Text,
     View,
     Dimensions,
+    TouchableOpacity,
 } from "react-native";
 
 // Expo Libraries
@@ -38,7 +39,9 @@ import useFilterStore from "@/store/useFilterStore";
 
 // Constants & Theme
 import { CATEGORIES } from "@/constants";
-import theme from '@/assets/theme';
+import theme from "@/assets/theme";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ms, s, ScaledSheet } from "react-native-size-matters";
 
 // Get screen dimensions for responsive UI scaling
 const { width, height } = Dimensions.get("window");
@@ -63,137 +66,136 @@ const CategoryModal: React.FC = () => {
         [updateCategories]
     );
 
+    const renderSeparator = () => <View style={{ height: ms(12) }} />;
+
     return (
-        <View style={styles.categoryModal}>
-            <View style={styles.categoryHeader}>
-                {/* Gradient Background */}
+        <View style={styles.rootContainer}>
+            <SafeAreaView style={styles.safeAreaView}>
                 <LinearGradient
-                    colors={["rgba(255, 132, 0, 0.9)", "rgba(255, 132, 0, 0)"]}
                     style={styles.gradient}
+                    colors={["rgba(255, 132, 0, 1)", "rgba(255, 132, 0, 0)"]}
+                    locations={[0.02, 0.12]}
                 />
-                <Pressable
-                    style={styles.backBtnContainer}
-                    onPress={toggleCategoryModal} // Uses Zustand store function
-                >
-                    <Ionicons
-                        name="arrow-back"
-                        size={30}
-                        color={theme.colors.white}
-                    />
-                </Pressable>
-            </View>
+                <View style={styles.header}>
+                    {/* Gradient Background */}
 
-            {/* Category Title Bar */}
-            <View style={styles.categoryTitleBar}>
-                <Text style={styles.title}>Select Categories</Text>
-                <Pressable style={{ paddingHorizontal: 15 }} onPress={clearCategoryFilters}>
-                    <Text style={styles.clearText}>Clear All</Text>
-                </Pressable>
-            </View>
-
-            {/* Category Selection List */}
-            <FlatList
-                style={styles.categoryListView}
-                columnWrapperStyle={styles.columnWrapper} // Adds spacing between columns
-                data={CATEGORIES}
-                numColumns={3}
-                keyExtractor={(item) => item.name}
-                showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => (
-                    <Pressable
-                        style={[
-                            styles.categoryButton,
-                            categoryFilters.includes(item.name)
-                                ? styles.categorySelected
-                                : {},
-                        ]}
-                        onPress={() => handleCategoryPress(item.name)}
+                    <TouchableOpacity
+                        style={styles.backButton}
+                        onPress={toggleCategoryModal}
                     >
-                        <Image
-                            source={{ uri: item.url }}
-                            style={styles.image}
+                        <Ionicons
+                            name="arrow-back"
+                            size={ms(20)}
+                            color={theme.colors.white}
                         />
-                        <Text style={styles.btnText}>{item.name}</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.title}>Select Categories</Text>
+                    <Pressable
+                        style={{ paddingHorizontal: 15 }}
+                        onPress={clearCategoryFilters}
+                    >
+                        <Text style={styles.clearText}>Clear All</Text>
                     </Pressable>
-                )}
-            />
+                </View>
+
+                {/* Category Selection List */}
+                <FlatList
+                    style={styles.categoryListView}
+                    columnWrapperStyle={styles.columnWrapper} // Adds spacing between columns
+                    data={CATEGORIES}
+                    horizontal={false}
+                    numColumns={3}
+                    ItemSeparatorComponent={renderSeparator}
+                    keyExtractor={(item) => item.name}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item }) => (
+                        <Pressable
+                            style={[
+                                styles.categoryButton,
+                                categoryFilters.includes(item.name)
+                                    ? styles.categorySelected
+                                    : {},
+                            ]}
+                            onPress={() => handleCategoryPress(item.name)}
+                        >
+                            <Image
+                                source={{ uri: item.url }}
+                                style={styles.image}
+                            />
+                            <Text style={styles.btnText}>{item.name}</Text>
+                        </Pressable>
+                    )}
+                />
+            </SafeAreaView>
         </View>
     );
 };
 
-const styles = StyleSheet.create({
-    categoryModal: {
+const styles = ScaledSheet.create({
+    rootContainer: {
         position: "absolute",
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
+        zIndex: 20,
         backgroundColor: theme.colors.white,
-        zIndex: 100,
     },
-    categoryHeader: {
-        position: "relative",
-        flexDirection: "row",
-        justifyContent: "flex-start",
-        alignItems: "center",
-        paddingHorizontal: 10,
-        paddingTop: 80,
-        paddingBottom: 30,
+    safeAreaView: {
+        flex: 1,
+        gap: "15@ms",
     },
     gradient: {
         ...StyleSheet.absoluteFillObject,
     },
-    backBtnContainer: {
-        padding: 10,
+    header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: "5@ms",
+        paddingHorizontal: theme.padding.sm,
+        paddingTop: theme.padding.xxxxl,
+        paddingBottom: theme.padding.lg,
+        borderColor: theme.colors.grayInactive,
+        borderBottomWidth: 1,
+    },
+    backButton: {
+        padding: theme.padding.xxs,
         position: "relative",
         backgroundColor: theme.colors.primary,
-        borderRadius: 30,
+        borderRadius: "30@ms",
         justifyContent: "center",
         alignItems: "center",
     },
-    categoryTitleBar: {
-        flexDirection: "row",
-        position: "relative",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
-        paddingVertical: 20,
-        borderBottomColor: "rgba(0, 0, 0, 0.1)",
-        borderBottomWidth: 1,
-        marginHorizontal: 10,
-        marginBottom: 20,
-    },
     title: {
-        fontSize: 24,
-        fontWeight: "bold",
+        flex: 1,
+        fontSize: theme.fontSize.xl,
         color: theme.colors.primary,
+        fontWeight: "bold",
     },
     clearText: {
         color: theme.colors.primary,
-        fontSize: 16,
+        fontSize: theme.fontSize.md,
     },
     categoryListView: {
         flex: 1,
-        marginHorizontal: 10,
-        position: "relative",
     },
     columnWrapper: {
-        justifyContent: "space-between",
+        justifyContent: "space-evenly",
     },
     categoryButton: {
-        position: "relative",
         width: width * 0.28,
         height: width * 0.28,
-        borderRadius: 15,
+        borderRadius: "15@ms",
         justifyContent: "center",
         alignItems: "center",
-        padding: 10,
-        marginBottom: 10,
-        gap: 5,
+        gap: "5@ms",
         backgroundColor: theme.colors.primaryLight,
     },
     btnText: {
         color: theme.colors.black,
-        fontSize: 12,
+        fontSize: theme.fontSize.xs,
+        fontWeight: "semibold",
     },
     image: {
         width: "50%",

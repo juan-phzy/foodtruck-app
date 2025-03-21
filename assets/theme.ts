@@ -39,6 +39,7 @@ const theme = {
         xl: ms(20),
         xxl: ms(24),
         xxxl: ms(28),
+        xxxxl: ms(35),
     },
 };
 
