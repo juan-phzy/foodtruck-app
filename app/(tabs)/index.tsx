@@ -52,25 +52,6 @@ type Coordinates = { latitude: number; longitude: number };
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY ?? "");
 
-function getDistanceFromLatLonInMiles(
-    lat1: number,
-    lon1: number,
-    lat2: number,
-    lon2: number
-) {
-    const R = 3958.8; // Radius of the earth in miles
-    const dLat = ((lat2 - lat1) * Math.PI) / 180;
-    const dLon = ((lon2 - lon1) * Math.PI) / 180;
-    const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos((lat1 * Math.PI) / 180) *
-            Math.cos((lat2 * Math.PI) / 180) *
-            Math.sin(dLon / 2) *
-            Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c;
-}
-
 export default function Index() {
     // Zustand store for managing selected truck
     const {
@@ -161,32 +142,16 @@ export default function Index() {
         [moveCamera, setSelectedTruckId]
     );
 
-    let trucksWithDistance: FoodTruck[] = [];
-
     /**
      * Filters and computes food truck features only when dependencies change.
      */
     const truckFeatures = useMemo(() => {
-        // Add a distance property (in miles) to each truck object
-        if (userLocation) {
-            trucksWithDistance = FOOD_TRUCKS.map((truck) => ({
-                ...truck,
-                distance: getDistanceFromLatLonInMiles(
-                    userLocation.latitude,
-                    userLocation.longitude,
-                    truck.coordinates.latitude,
-                    truck.coordinates.longitude
-                ),
-            }));
-        } else {
-            trucksWithDistance = FOOD_TRUCKS;
-        }
 
         // Then filter trucks based on category filters
         const filteredTrucks =
             categoryFilters.length === 0
-                ? trucksWithDistance
-                : trucksWithDistance.filter((truck) =>
+                ? FOOD_TRUCKS
+                : FOOD_TRUCKS.filter((truck) =>
                       truck.categories.some((c) => categoryFilters.includes(c))
                   );
 
@@ -204,7 +169,7 @@ export default function Index() {
                 )
             ),
         };
-    }, [categoryFilters, userLocation]);
+    }, [categoryFilters]);
 
     /**
      * Ensures the component is still mounted

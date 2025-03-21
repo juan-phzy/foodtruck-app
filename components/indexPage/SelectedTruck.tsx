@@ -39,8 +39,6 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
         setIsFavorite((prev) => !prev);
     }, []);
 
-    console.log(truck.distance);
-
     // Calculate estimated driving & walking time once
     const estimatedDriveTime = Math.round(truck.distance * 2);
     const estimatedBikeTime = Math.round(truck.distance * 6);
@@ -200,7 +198,7 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                 <Pressable onPress={previousTruck}>
                     <Ionicons
                         name="chevron-back"
-                        size={40}
+                        size={ms(35)}
                         color={theme.colors.primary}
                         style={styles.navButton}
                     />
@@ -208,7 +206,7 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                 <Pressable onPress={nextTruck}>
                     <Ionicons
                         name="chevron-forward"
-                        size={40}
+                        size={ms(35)}
                         color={theme.colors.primary}
                         style={styles.navButton}
                     />
