@@ -112,7 +112,7 @@ const NearbyTrucks: React.FC<NearbyTrucksProps> = ({ trucks }) => {
             </View>
 
             {/* Truck List */}
-            <TruckCardList trucks={sortedTrucks} />
+            <TruckCardList trucks={sortedTrucks} pressable={true} />
         </BlurView>
     );
 };

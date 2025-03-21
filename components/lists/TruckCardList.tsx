@@ -5,12 +5,13 @@ import { FoodTruck } from "@/types";
 
 interface TruckCardListProps {
   trucks: FoodTruck[];
+  pressable: boolean;
 }
 
-const TruckCardList: React.FC<TruckCardListProps> = ({ trucks }) => {
+const TruckCardList: React.FC<TruckCardListProps> = ({ trucks, pressable }) => {
   // Optimize `renderItem` using useCallback
   const renderItem: ListRenderItem<FoodTruck> = useCallback(
-    ({ item }) => <TruckCardSmall truck={item} />,
+    ({ item }) => <TruckCardSmall truck={item} pressable={pressable} />,
     []
   );
 

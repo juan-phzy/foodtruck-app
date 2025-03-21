@@ -19,19 +19,23 @@ import { Ionicons } from "@expo/vector-icons";
 import theme from "@/assets/theme";
 import { FoodTruck } from "@/types";
 import { ms, ScaledSheet } from "react-native-size-matters";
+import useTruckStore from "@/store/useTruckStore";
 
 const { width } = Dimensions.get("window");
 
 interface TruckCardSmallProps {
     truck: FoodTruck; // Data object containing truck information
+    pressable: boolean; // Determines if the card is pressable
 }
 
 /**
  * @component TruckCardSmall
  * @description A single compact food truck card optimized for performance in large lists.
  */
-const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
+const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck, pressable }) => {
     const [isFavorite, setIsFavorite] = useState(false);
+
+    const { setSelectedTruckId } = useTruckStore();
 
     /**
      * Toggles the favorite status of the truck.
@@ -62,6 +66,12 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
         [truck.rating]
     );
 
+    const handlePress = () => {
+        if (pressable) {
+            setSelectedTruckId(truck.id);
+        }
+    }
+
     return (
         /*
             The root container holds the body and then a divider
@@ -70,7 +80,7 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
               divider
             }
         */
-        <View style={styles.rootContainer}>
+        <Pressable onPress={handlePress} style={styles.rootContainer}>
             <View style={styles.bodyContainer}>
                 {/* Truck Image */}
                 <Image source={{ uri: truck.imageUrl }} style={styles.image} />
@@ -119,7 +129,7 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
                 </Pressable>
             </View>
             <View style={styles.divider} />
-        </View>
+        </Pressable>
     );
 };
 

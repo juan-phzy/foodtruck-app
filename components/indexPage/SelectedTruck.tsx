@@ -30,7 +30,7 @@ const {width} = Dimensions.get("window");
 const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
     const [isFavorite, setIsFavorite] = useState(false);
 
-    const { clearSelectedTruck, nextTruck, previousTruck, toggleTruckPage } =
+    const { clearSelectedTruck, nextTruck, previousTruck, toggleTruckModal } =
         useTruckStore();
     const { toggleMenuModal } = useMenuModalStore();
 
@@ -143,7 +143,7 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
 
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={toggleTruckPage}
+                    onPress={toggleTruckModal}
                 >
                     <MaterialCommunityIcons
                         name="truck-outline"

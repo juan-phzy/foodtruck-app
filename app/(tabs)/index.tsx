@@ -16,7 +16,7 @@ import NearbyTrucks from "@/components/indexPage/NearbyTrucks";
 import SelectedTruck from "@/components/indexPage/SelectedTruck";
 import CategoryModal from "@/components/CategoryModal";
 import MenuModal from "@/components/MenuModal";
-import TruckPage from "@/components/TruckPage";
+import TruckModal from "@/components/modals/TruckModal";
 
 // Constants & Types & Themes
 import { ms, ScaledSheet } from "react-native-size-matters";
@@ -55,7 +55,7 @@ export default function Index() {
     // Zustand store for managing selected truck
     const {
         selectedTruck,
-        showTruckPage,
+        showTruckModal,
         setSelectedTruckId,
         clearSelectedTruck,
     } = useTruckStore();
@@ -259,8 +259,8 @@ export default function Index() {
             )}
 
             {/* Truck Page */}
-            {showTruckPage && selectedTruck && (
-                <TruckPage
+            {showTruckModal && selectedTruck && (
+                <TruckModal
                     truck={selectedTruck}
                 />
             )}
@@ -283,6 +283,7 @@ const styles = ScaledSheet.create({
         backgroundColor: theme.colors.white,
     },
 });
+
 const circleLayerStyle = {
     circlePitchAlignment: "map",
     circleColor: theme.colors.primary,

@@ -22,7 +22,7 @@ MunchMap is a mobile-first application designed to help users discover nearby fo
   - `SelectedTruck`: Modal that shows the selected truck's information.
   - `TruckCardList`: Returns a list of small truck cards.
   - `TruckCardSmall`: Minimized truck card displaying key information.
-  - `TruckPage`: Full truck page that shows all specific truck information.
+  - `TruckModal`: Full truck page that shows all specific truck information.
 - **Blur and Gradient Effects**: Modern design elements such as background blur and gradients.  
 - **Food Truck List and Search**:  
   - Dynamically filter food trucks by category.  
@@ -80,7 +80,7 @@ FOODTRUCK-APP
 │   ├── SelectedTruck.tsx
 │   ├── TruckCardList.tsx
 │   ├── TruckCardSmall.tsx
-│   └── TruckPage.tsx
+│   └── TruckModal.tsx
 │
 ├── context                  # Placeholder context for authentication (not actually implemented)
 │   └── ctx.tsx
