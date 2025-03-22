@@ -14,14 +14,15 @@ import { ActivityIndicator, View } from "react-native";
 import SearchBar from "@/components/search/SearchBar";
 import NearbyTrucks from "@/components/indexPage/NearbyTrucks";
 import SelectedTruck from "@/components/indexPage/SelectedTruck";
-import CategoryModal from "@/components/CategoryModal";
-import MenuModal from "@/components/MenuModal";
+import CategoryModal from "@/components/modals/CategoryModal";
+import MenuModal from "@/components/modals/MenuModal";
 import TruckModal from "@/components/modals/TruckModal";
 
 // Constants & Types & Themes
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { FOOD_TRUCKS } from "@/constants";
 import theme from "@/assets/theme";
+
 // Mapbox Imports
 import Mapbox, {
     Camera,
@@ -145,7 +146,6 @@ export default function Index() {
      * Filters and computes food truck features only when dependencies change.
      */
     const truckFeatures = useMemo(() => {
-
         // Then filter trucks based on category filters
         const filteredTrucks =
             categoryFilters.length === 0
@@ -260,9 +260,7 @@ export default function Index() {
 
             {/* Truck Page */}
             {showTruckModal && selectedTruck && (
-                <TruckModal
-                    truck={selectedTruck}
-                />
+                <TruckModal truck={selectedTruck} />
             )}
         </View>
     );

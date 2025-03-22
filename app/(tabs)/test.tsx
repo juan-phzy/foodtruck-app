@@ -1,21 +1,18 @@
 import React from "react";
-import { View } from "react-native";
+import { FlatList, View, Text, Image, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
+import FlatListCard from "@/components/cards/FlatListCard";
+import ItemCard from "@/components/cards/ItemCard";
+
+const { width, height } = Dimensions.get("window");
 
 export default function HeightExamples() {
     return (
         <View style={styles.mainContainer}>
             <SafeAreaView style={styles.safeAreaContainer}>
-                <View
-                    style={{
-                        height: "50%",
-                        width: "50%",
-                        backgroundColor: theme.colors.primary,
-                        boxShadow: "0px -5px 35px 10px rgba(0, 0, 0, 0.6)",
-                    }}
-                ></View>
+        
             </SafeAreaView>
         </View>
     );
@@ -29,5 +26,6 @@ const styles = ScaledSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        padding: theme.padding.xl,
     },
 });
