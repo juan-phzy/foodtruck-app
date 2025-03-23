@@ -51,6 +51,7 @@ export default function Search() {
                             <FlatList
                                 contentContainerStyle={styles.flatListGap}
                                 horizontal={true}
+                                showsHorizontalScrollIndicator={false}
                                 data={CATEGORIES}
                                 keyExtractor={(item, index) =>
                                     item.name + index
