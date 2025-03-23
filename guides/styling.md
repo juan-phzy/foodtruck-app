@@ -38,6 +38,8 @@ This document outlines best practices for styling in React Native, focusing on e
     -   [Step 5: Create the Body](#step-5-create-the-body)
     -   [Step 6: Create the truck card](#step-6-create-the-truck-card)
     -   [Step 7: Integrate truck card](#step-7-integrate-the-truck-card-into-the-flatlist)
+    -   [Step 8: Restructure the layout](#step-8-restructure-layout)
+    -   [Step 9: Redner the category button](#step-9-render-the-category-button)
 
 <br>
 
@@ -1742,6 +1744,8 @@ const styles = ScaledSheet.create({
 
 ## Step 7: Integrate the truck card into the flatlist
 
+[Back to table of contents](#table-of-contents)
+
 **Now that you finished creating this new custom component, we can render it out where it's actually needed.**
 
 ```tsx
@@ -1889,8 +1893,7 @@ interface TruckCardProps {
     readonly truck: FoodTruck;
 }
 
-export default function TruckCard({truck}: TruckCardProps) {
-
+export default function TruckCard({ truck }: TruckCardProps) {
     const starIcons = useMemo(
         () =>
             Array.from({ length: 5 }, (_, index) => (
@@ -1910,23 +1913,16 @@ export default function TruckCard({truck}: TruckCardProps) {
 
     return (
         <View style={styles.rootContainer}>
-            <Image
-                style={styles.image}
-                source={{ uri: truck.imageUrl }}
-            />
+            <Image style={styles.image} source={{ uri: truck.imageUrl }} />
             <View style={styles.textContainer}>
                 <Text style={styles.title}>
                     {truck.name}
                     {` ⦁ `}
-                    <Text
-                        style={truck.isOpen ? styles.open : styles.closed}
-                    >
+                    <Text style={truck.isOpen ? styles.open : styles.closed}>
                         {truck.isOpen ? "OPEN" : "CLOSED"}
                     </Text>
                 </Text>
-                <Text style={styles.text}>
-                    {truck.categories.join(", ")}
-                </Text>
+                <Text style={styles.text}>{truck.categories.join(", ")}</Text>
                 <Text style={styles.text}>
                     {starIcons}
                     {` ⦁ `}
@@ -2050,7 +2046,9 @@ export default function Search() {
                                             so that all the information can be
                                             passed down to the card
                                         */
-                                        return truck ? <TruckCard truck={truck} /> : null;
+                                        return truck ? (
+                                            <TruckCard truck={truck} />
+                                        ) : null;
                                     }}
                                 />
                             </FlatListCard>
@@ -2104,9 +2102,12 @@ const styles = ScaledSheet.create({
 
 ## Step 8: Restructure layout
 
-While developing, you will sometimes realize that the original structure or method you implemented doesn't do exactly what you wanted it to. For example, at this stage if you run all the code we've made, yes it renders all the truck cards, but when you scroll vertically, the search categories card is not scrolling with the rest of the page. This is because we didn't wrap body together as a scrollview. This was intentionally left out to show you how to fix an error such as this. 
+[Back to table of contents](#table-of-contents)
+
+While developing, you will sometimes realize that the original structure or method you implemented doesn't do exactly what you wanted it to. For example, at this stage if you run all the code we've made, yes it renders all the truck cards, but when you scroll vertically, the search categories card is not scrolling with the rest of the page. This is because we didn't wrap body together as a scrollview. This was intentionally left out to show you how to fix an error such as this.
 
 So we know two things
+
 1. We want the entire body to scroll together
 2. We want to map through a list of sections that each contain their unique list of trucks
 
@@ -2146,7 +2147,7 @@ export default function Search() {
                             "rgba(255, 132, 0, 1)",
                             "rgba(255, 255, 255, 1)",
                         ]}
-                        locations={[0.1, .95]}
+                        locations={[0.1, 0.95]}
                     />
                     <TextInput
                         style={styles.searchBar}
@@ -2257,7 +2258,9 @@ const styles = ScaledSheet.create({
 });
 ```
 
-## Step 9: Render the category buttons
+## Step 9: Render the category button
+
+[Back to table of contents](#table-of-contents)
 
 This was left for last since we already have the styling for these buttons in another file which is the category modal. So we'll just copy it over and adjust the width and height of the buttons to match our needs on this page.
 
