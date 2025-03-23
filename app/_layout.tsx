@@ -10,6 +10,7 @@ import { SessionProvider } from "@/context/ctx";
 
 // Polyfills and Utilities
 import "react-native-get-random-values";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 /**
  * RootLayout Component
@@ -26,24 +27,26 @@ import "react-native-get-random-values";
 export default function RootLayout() {
     return (
         <SessionProvider>
-            {/* GestureHandlerRootView is required for handling touch gestures in React Native */}
-            <GestureHandlerRootView style={{ flex: 1 }}>
-                {/* Sets the status bar style to light (white text/icons) */}
-                <StatusBar style="light" />
+            <SafeAreaProvider>
+                {/* GestureHandlerRootView is required for handling touch gestures in React Native */}
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                    {/* Sets the status bar style to light (white text/icons) */}
+                    <StatusBar style="light" />
 
-                {/* Stack navigation handles the main screen transitions */}
-                <Stack screenOptions={{ headerShown: false }}>
-                    {/* Tab-based navigation screen (Main App) */}
-                    <Stack.Screen name="(tabs)" />
+                    {/* Stack navigation handles the main screen transitions */}
+                    <Stack screenOptions={{ headerShown: false }}>
+                        {/* Tab-based navigation screen (Main App) */}
+                        <Stack.Screen name="(tabs)" />
 
-                    {/* Authentication Screens */}
-                    <Stack.Screen name="sign-in" />
-                    <Stack.Screen name="create-account" />
+                        {/* Authentication Screens */}
+                        <Stack.Screen name="sign-in" />
+                        <Stack.Screen name="create-account" />
 
-                    {/* Fallback screen for undefined routes */}
-                    <Stack.Screen name="+not-found" />
-                </Stack>
-            </GestureHandlerRootView>
+                        {/* Fallback screen for undefined routes */}
+                        <Stack.Screen name="+not-found" />
+                    </Stack>
+                </GestureHandlerRootView>
+            </SafeAreaProvider>
         </SessionProvider>
     );
 }

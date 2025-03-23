@@ -8,7 +8,7 @@ This document outlines best practices for styling in React Native, focusing on e
 
 1.  [Styling Base Setup](#styling-base-setup)
 
-    -   [Define a ScaleSheet StyleSheet](#define-a-stylesheet-with-react-native-size-matters)
+    -   [Define a ScaledSheet StyleSheet](#define-a-stylesheet-with-react-native-size-matters)
     -   [Style Organization](#style-organization)
     -   [Naming Conventions](#naming-conventions)
     -   [Theme Management](#theme-management)
@@ -22,13 +22,22 @@ This document outlines best practices for styling in React Native, focusing on e
     -   [Flex Gaps](#flex-gaps)
 
 3.  [Sizing & Spacing](#sizing--spacing)
+
     -   [Width](#width)
     -   [Width Code Example](#width-code-example)
     -   [Height](#height)
     -   [Height Code Example](#height-code-example)
     -   [Padding & Margin](#padding--margin)
 
-[Containers, Parents, & Children](#container-parents-and-children)
+4.  [Standard Workflow](#standard-workflow)
+
+    -   [Step 1: Define the Component and Stylesheet](#step-1-define-functional-component-and-scaledsheet)
+    -   [Step 2: Add SafeArea and Define Root Styling](#step-2-add-the-safeareaview-and-define-styling-for-the-root-containers)
+    -   [Step 3: Analyze Design and Create Blocks](#step-3-analyze-figma-design-and-determine-page-blocks)
+    -   [Step 4: Work Top Down, Create Header](#step-4-work-top-down-create-header)
+    -   [Step 5: Create the Body](#step-5-create-the-body)
+    -   [Step 6: Create the truck card](#step-6-create-the-truck-card)
+    -   [Step 7: Integrate truck card](#step-7-integrate-the-truck-card-into-the-flatlist)
 
 <br>
 
@@ -147,18 +156,81 @@ As seen above, ALL style names must be relevant to what they actually are. Do no
 
 [Back to table of contents](#table-of-contents)
 
-Maintain and use our centralized theme file for colors to ensure consistency. DO NOT hard code colors into your stylesheet. The only exception to this is Linear Gradient color styling. Linear Gradients will be done with in-line styling for now. To use our themes import the following:
+Maintain and use our centralized theme file for colors, font size, and padding to ensure consistency. DO NOT hard code colors, font size, or padding into your stylesheet. The only exception to this is Linear Gradient color styling. Linear Gradients will be done with in-line styling for now. To use our themes import the following:
 
 ```tsx
-import theme from "@/theme/theme";
-.
-.
-.
+import React from "react";
+import { Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScaledSheet } from "react-native-size-matters";
+import theme from "@/assets/theme";
+
+export default function Test() {
+    return (
+        <View style={styles.mainContainer}>
+            <SafeAreaView style={styles.safeAreaContainer}>
+                <View style={{ flex: 1 }}>
+                    {Object.entries(theme.colors).map(([key, value]) => (
+                        <View
+                            key={key}
+                            style={{
+                                flex: 1,
+                                backgroundColor: value,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: key != "black" ? "black" : "white",
+                                }}
+                            >
+                                {key}
+                            </Text>
+                        </View>
+                    ))}
+                </View>
+                <View style={{ flex: 1 }}>
+                    {Object.entries(theme.padding).map(([key, value]) => (
+                        <View
+                            key={key}
+                            style={{
+                                flex: 1,
+                                padding: value,
+                                borderColor: "purple",
+                                borderWidth: 1,
+                            }}
+                        >
+                            <Text>Pd-{key}</Text>
+                        </View>
+                    ))}
+                </View>
+                <View style={{ flex: 1 }}>
+                    {Object.entries(theme.fontSize).map(([key, value]) => (
+                        <View
+                            key={key}
+                            style={{
+                                borderColor: "purple",
+                            }}
+                        >
+                            <Text style={{ fontSize: value }}>Fs-{key}</Text>
+                        </View>
+                    ))}
+                </View>
+            </SafeAreaView>
+        </View>
+    );
+}
+
 const styles = ScaledSheet.create({
-    randomStyle: {
-    backgroundColor: theme.colors.primary,
-    }
-})
+    mainContainer: {
+        flex: 1,
+    },
+    safeAreaContainer: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "flex-start",
+        alignItems: "stretch",
+    },
+});
 ```
 
 # Flexbox Layout
@@ -850,6 +922,1521 @@ Almost all components require a bit of padding, whether that's all around or at 
 
 [Back to table of contents](#table-of-contents)
 
-Now that you are familiar with the major basic concepts of styling in React Native for mobile apps with stylesheets, I will guide you through the workflow of creating and styling a page plus a component. For this lesson we will be creating and styling our **Search Page** found in `search.tsx`.
+Now that you are familiar with the major basic concepts of styling in React Native for mobile apps with stylesheets, I will guide you through the workflow of creating and styling a page plus its components. For this lesson we will be creating and styling our **Search Page** found in `search.tsx`.
 
-## Step 1: Define ScaleSheet
+For reference, the page should look like this design from Figma:
+
+![Search Page](/assets/images/examples/image.png)
+
+## Step 1: Define Functional Component and ScaledSheet
+
+[Back to table of contents](#table-of-contents)
+
+The first step in creating any page or component is defining the main functional component that is to be exported as well as its ScaledSheet. Make sure to name the file accordingly to its purpose. Other developers should be able to read the name of a file or component and know exactly what it is or what it does. Do not name it arbitrarily or something similar to what it is. Name it exactly what it is.
+
+```tsx
+import { View, Text } from "react-native";
+import { ScaledSheet } from "react-native-size-matters";
+
+// This is named Search since it is the main search page
+export default function Search() {
+    return (
+        <View>
+            <Text>search</Text>
+        </View>
+    );
+}
+
+// Make sure to use ScaledSheet from react-native-size-matters
+const styles = ScaledSheet.create({});
+```
+
+## Step 2: Add the SafeAreaView and define styling for the root containers.
+
+[Back to table of contents](#table-of-contents)
+
+The root container of a PAGE should always take up the entire screen.
+
+Since the root container of a page will take up the entire screen, it will also be in the way of the status bar on the top of a phone.
+
+To avoid this, we will use the `SafeAreaView` from `react-native-safe-area-context` to make sure our content does not collide with the status bar.
+
+We will apply `flex: 1` to both our root container and our safe area view so that they take up the entire screen while avoiding the status bar for the rest of the children components.
+
+To test that the styling is correct and there are no bugs, we must use borders that stand out. The `Text` component in the following step is to ensure that our root container and safe area view is working properly. It will be removed right after.
+
+```tsx
+import { View, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScaledSheet } from "react-native-size-matters";
+
+export default function Search() {
+    return (
+        <View style={styles.rootContainer}>
+            <SafeAreaView style={styles.safeAreaView}>
+                <Text style={styles.testText}>Search Page</Text>
+            </SafeAreaView>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        flex: 1,
+        borderColor: "red",
+        borderWidth: 5,
+    },
+    safeAreaView: {
+        flex: 1,
+        borderColor: "blue",
+        borderWidth: 5,
+    },
+    testText: {
+        fontSize: "20@s",
+        textAlign: "center",
+        textAlignVertical: "center",
+        width: "100%",
+        height: "100%",
+        borderColor: "green",
+        borderWidth: 5,
+    },
+});
+```
+
+## Step 3: Analyze figma design and determine page blocks
+
+[Back to table of contents](#table-of-contents)
+
+After setting up the previous base, you must create the general page blocks based off the design.
+
+In our figma, we can clearly see two major blocks. The first is the header/top container which includes the gradient and the search bar. The second block is the list of suggestion cards. Our roots are automatically flex column and align stretch so that our children will be stacked on top of each other and take up the full width. Let's create our blocks to visualize further.
+
+```tsx
+import { View, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScaledSheet } from "react-native-size-matters";
+
+export default function Search() {
+    return (
+        <View style={styles.rootContainer}>
+            <SafeAreaView style={styles.safeAreaView}>
+                <View style={styles.header}>
+                    <Text style={styles.testText}>Header</Text>
+                </View>
+                <View style={styles.body}>
+                    <Text style={styles.testText}>
+                        {`Body \n\n`}
+                        {`Red: rootContainer View \n\n`}
+                        {`Blue: SafeAreaView \n\n`}
+                        {`Yellow: Header View \n\n`}
+                        {`Orange: Body View \n\n`}
+                        {`Black: Text View \n\n`}
+                    </Text>
+                </View>
+            </SafeAreaView>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        flex: 1,
+        borderColor: "red",
+        borderWidth: 15,
+    },
+    safeAreaView: {
+        flex: 1,
+        borderColor: "blue",
+        borderWidth: 10,
+    },
+    testText: {
+        flex: 1,
+        fontSize: "20@s",
+        textAlign: "center",
+        textAlignVertical: "center",
+        width: "100%",
+        borderColor: "black",
+        borderWidth: 1,
+    },
+    header: {
+        // Temporary height, the actual
+        // height will be auto/not set
+        height: "100@s",
+        borderColor: "yellow",
+        borderWidth: 5,
+    },
+    body: {
+        flex: 1,
+        borderColor: "orange",
+        borderWidth: 5,
+    },
+});
+```
+
+## Step 4: Work Top Down, Create Header
+
+[Back to table of contents](#table-of-contents)
+
+Now that we have our two major page blocks that take up the screen, we can start working top down and styling our first major component. This will be our header component which includes a simple search bar and a linear gradient.
+
+1. Our first step will be to remove distracting borders and focus only on the header. You must also create a split in your scaledsheet to keep the chronological order of your styles.
+
+```tsx
+import { View, Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScaledSheet } from "react-native-size-matters";
+
+export default function Search() {
+    return (
+        <View style={styles.rootContainer}>
+            <SafeAreaView style={styles.safeAreaView}>
+                <View style={styles.header}>
+                    <Text style={styles.testText}>Header</Text>
+                </View>
+                <View style={styles.body}>
+                    <Text style={styles.testText}>Body</Text>
+                </View>
+            </SafeAreaView>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        flex: 1,
+    },
+    safeAreaView: {
+        flex: 1,
+    },
+    testText: {
+        flex: 1,
+        fontSize: "20@s",
+        textAlign: "center",
+        textAlignVertical: "center",
+        width: "100%",
+    },
+    header: {
+        height: "100@s",
+        borderColor: "red",
+        borderWidth: 5,
+    },
+    body: {
+        flex: 1,
+        borderWidth: 5,
+    },
+});
+```
+
+2. Now we will add our linear gradient
+
+```tsx
+import { LinearGradient } from "expo-linear-gradient";
+import { View, Text, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScaledSheet } from "react-native-size-matters";
+
+export default function Search() {
+    return (
+        <View style={styles.rootContainer}>
+            <SafeAreaView style={styles.safeAreaView}>
+                <View style={styles.header}>
+                    <LinearGradient
+                        style={styles.gradient}
+                        colors={[
+                            "rgba(255, 132, 0, 1)",
+                            "rgba(255, 132, 0, 0)",
+                        ]}
+                        locations={[0.1, 1]}
+                    />
+                    <Text style={styles.testText}>Header</Text>
+                </View>
+                <View style={styles.body}>
+                    <Text style={styles.testText}>Body</Text>
+                </View>
+            </SafeAreaView>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        flex: 1,
+    },
+    safeAreaView: {
+        flex: 1,
+    },
+    testText: {
+        flex: 1,
+        fontSize: "20@s",
+        textAlign: "center",
+        textAlignVertical: "center",
+        width: "100%",
+    },
+    header: {
+        height: "100@s",
+        borderColor: "red",
+        borderWidth: 5,
+    },
+    gradient: {
+        // This is a special style from the native
+        // StyleSheet that will make the LinearGradient
+        // fill the entire parent container through
+        // absolute positioning.
+        ...StyleSheet.absoluteFillObject,
+    },
+    //------------------------------
+    /*
+      This split is necessary as we work on
+      our header to keep the order of styles
+      */
+    //------------------------------
+    body: {
+        flex: 1,
+        borderWidth: 5,
+    },
+});
+```
+
+3. If you noticed, the status bar is still white and the linear gradient does not affect it. To make it smoothly blend, we will make the overall background our primary color. We will then have the gradient go from our primary color to white, and the body container will also be white.
+
+```tsx
+import theme from "@/assets/theme";
+import { LinearGradient } from "expo-linear-gradient";
+import { View, Text, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScaledSheet } from "react-native-size-matters";
+
+export default function Search() {
+    return (
+        <View style={styles.rootContainer}>
+            <SafeAreaView style={styles.safeAreaView}>
+                <View style={styles.header}>
+                    <LinearGradient
+                        style={styles.gradient}
+                        colors={[
+                            "rgba(255, 132, 0, 1)",
+                            "rgba(255, 255, 255, 1)",
+                        ]}
+                        locations={[0.1, 1]}
+                    />
+                    <Text style={styles.testText}>Header</Text>
+                </View>
+                <View style={styles.body}>
+                    <Text style={styles.testText}>Body</Text>
+                </View>
+            </SafeAreaView>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        flex: 1,
+        backgroundColor: theme.colors.primary,
+    },
+    safeAreaView: {
+        flex: 1,
+    },
+    testText: {
+        flex: 1,
+        fontSize: "20@s",
+        textAlign: "center",
+        textAlignVertical: "center",
+        width: "100%",
+    },
+    header: {
+        height: "100@s",
+        borderColor: "red",
+        borderWidth: 5,
+    },
+    gradient: {
+        // This is a special style from the native
+        // StyleSheet that will make the LinearGradient
+        // fill the entire parent container through
+        // absolute positioning.
+        ...StyleSheet.absoluteFillObject,
+    },
+    //------------------------------
+    /*
+      This split is necessary as we work on
+      our header to keep the order of styles
+      */
+    //------------------------------
+    body: {
+        flex: 1,
+        backgroundColor: theme.colors.white,
+        borderWidth: 5,
+    },
+});
+```
+
+4. Perfect! Now we're halfway done with our header. We got the linear gradient down and now we just need the search bar. If we look at our figma we can see some clear styling which is
+    - the searchbar is centered vertically in the header
+    - the searchbar takes up the entire width
+    - the header has horizontal padding
+    - the search bar has a white background and the corners are rounded
+    - the search bar itself also has padding to create space around the text
+    - we will also remove the preset header's height with vertical padding instead so it only takes up the height that's necessary
+
+```tsx
+import theme from "@/assets/theme";
+import { LinearGradient } from "expo-linear-gradient";
+import { View, Text, StyleSheet, TextInput } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScaledSheet } from "react-native-size-matters";
+
+export default function Search() {
+    return (
+        <View style={styles.rootContainer}>
+            <SafeAreaView style={styles.safeAreaView}>
+                <View style={styles.header}>
+                    <LinearGradient
+                        style={styles.gradient}
+                        colors={[
+                            "rgba(255, 132, 0, 1)",
+                            "rgba(255, 255, 255, 1)",
+                        ]}
+                        locations={[0.1, 1]}
+                    />
+                    <TextInput
+                        style={styles.searchBar}
+                        placeholder="Search Trucks"
+                        placeholderTextColor={theme.colors.primaryInactive}
+                    />
+                </View>
+                <View style={styles.body}>
+                    <Text style={styles.testText}>Body</Text>
+                </View>
+            </SafeAreaView>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        flex: 1,
+        backgroundColor: theme.colors.primary,
+    },
+    safeAreaView: {
+        flex: 1,
+    },
+    testText: {
+        flex: 1,
+        fontSize: "20@s",
+        textAlign: "center",
+        textAlignVertical: "center",
+        width: "100%",
+    },
+    header: {
+        justifyContent: "center",
+        paddingHorizontal: theme.padding.sm,
+        paddingVertical: theme.padding.xxxl,
+    },
+    gradient: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    searchBar: {
+        fontSize: theme.fontSize.xs,
+        backgroundColor: theme.colors.white,
+        borderRadius: "30@ms",
+        paddingHorizontal: theme.padding.md,
+        paddingVertical: theme.padding.md,
+    },
+    body: {
+        flex: 1,
+        backgroundColor: theme.colors.white,
+        borderWidth: 5,
+    },
+});
+```
+
+And just like that we've finished the header in four small steps!
+
+## Step 5: Create the body
+
+[Back to table of contents](#table-of-contents)
+
+Now we need to create the body which is a little more intricate due to the nested lists and components. Luckily, we already have all of the necessary components except one from previous sections of our apps. Our menu modal from the index page is essentially the same as this except we're rendering category and truck cards instead of food items. We will split the body into two views, the first will handle only the categories and the second will handle the different lists of recommended trucks.
+
+```tsx
+import theme from "@/assets/theme";
+import FlatListCard from "@/components/cards/FlatListCard";
+import { CATEGORIES, FOOD_TRUCKS, SEARCH_SECTIONS } from "@/constants";
+import { LinearGradient } from "expo-linear-gradient";
+import { View, Text, StyleSheet, TextInput, FlatList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScaledSheet } from "react-native-size-matters";
+
+export default function Search() {
+    return (
+        <View style={styles.rootContainer}>
+            <SafeAreaView style={styles.safeAreaView}>
+                {/* Header Section */}
+                <View style={styles.header}>
+                    <LinearGradient
+                        style={styles.gradient}
+                        colors={[
+                            "rgba(255, 132, 0, 1)",
+                            "rgba(255, 255, 255, 1)",
+                        ]}
+                        locations={[0.1, 1]}
+                    />
+                    <TextInput
+                        style={styles.searchBar}
+                        placeholder="Search Trucks"
+                        placeholderTextColor={theme.colors.primaryInactive}
+                    />
+                </View>
+
+                {/* Individual Search Categories Card */}
+                <View style={styles.cardContainer}>
+                    <FlatListCard title="Search Categories">
+                        <FlatList
+                            contentContainerStyle={{ gap: 10 }}
+                            horizontal={true}
+                            data={CATEGORIES}
+                            keyExtractor={(item, index) => item.name + index}
+                            renderItem={({ item }) => <Text>{item.name}</Text>}
+                        />
+                    </FlatListCard>
+                </View>
+
+                {/* List of Section Cards */}
+                <FlatList
+                    data={SEARCH_SECTIONS}
+                    style={{
+                        backgroundColor: theme.colors.white,
+                    }}
+                    keyExtractor={(section) => section.name}
+                    renderItem={({ item: section }) => (
+                        <View style={styles.cardContainer}>
+                            <FlatListCard title={section.name}>
+                                <FlatList
+                                    contentContainerStyle={{ gap: 10 }}
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={section.trucks}
+                                    keyExtractor={(truckId) =>
+                                        truckId.toString()
+                                    }
+                                    renderItem={({ item: truckId }) => {
+                                        const truck =
+                                            FOOD_TRUCKS.find(
+                                                (truck) =>
+                                                    truck.id ==
+                                                    truckId.toString()
+                                            ) ?? null;
+
+                                        return truck ? (
+                                            <Text>{truck.name}</Text>
+                                        ) : null;
+                                    }}
+                                />
+                            </FlatListCard>
+                        </View>
+                    )}
+                />
+            </SafeAreaView>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        flex: 1,
+        backgroundColor: theme.colors.primary,
+    },
+    safeAreaView: {
+        flex: 1,
+    },
+    testText: {
+        flex: 1,
+        fontSize: "20@s",
+        textAlign: "center",
+        textAlignVertical: "center",
+        width: "100%",
+    },
+    header: {
+        justifyContent: "center",
+        paddingHorizontal: theme.padding.sm,
+        paddingVertical: theme.padding.xxxl,
+    },
+    gradient: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    searchBar: {
+        fontSize: theme.fontSize.xs,
+        backgroundColor: theme.colors.white,
+        borderRadius: "30@ms",
+        paddingHorizontal: theme.padding.md,
+        paddingVertical: theme.padding.md,
+    },
+    cardContainer: {
+        backgroundColor: theme.colors.white,
+        padding: theme.padding.sm,
+    },
+});
+```
+
+Explanation: This code was a bigger jump forward than what we did with the header. But if we break it apart it's really simple.
+
+1. The first thing we did was remove the singular view with the body style. Since we're splitting into two smaller section, we don't need an overarching body view wrapping the two new sections.
+
+    So from
+
+    ```
+    <View style={styles.header}></View>
+
+    <View style={styles.body}></View>
+    ```
+
+    We go to
+
+    ```
+    <View style={styles.header}></View>
+
+    <View style={styles.cardContainer}></View>
+    <FlatList ...props />
+    ```
+
+2. Since all we need to do is render the same card over and over, we will have one cardContainer style for all of them. Remember that the root container has an orange bg so we need to make the bg of these cards white. All this card does is give padding and space between the cards so that the shadow is properly visible and so
+    ```
+    cardContainer: {
+        backgroundColor: theme.colors.white,
+        padding: theme.padding.sm,
+    },
+    ```
+3. The first view contains just one flatlistcard. The second view is a flatlist itself that will take up the rest of the space available on the screen. It will render out however many recommendation sections we have. The background color of this must also be white to cover any leftover orange at the bottom.
+4. Our flatlists here must be `horizontal={true}` so that we scroll horizontally as shown in the figma.
+5. In flatlists, don't confuse `style` with `contentContainerStyle`. They target two different things. `style` targets the outer overall View of the flatlist. `contentContainerStyle` targets the inner contents. This is why the gap is set within the `contentContainerStyle`
+6. The `data` prop of a flatlist is exactly what it sounds like. It should be the array of data that will be mapped through. You can check out the type definitions I created in the constants file of each data set so you can understand it better. It should be self explanatory since it's just data manipulation with arrays.
+7. The `keyExtractor` prop is another necessary prop which will give each rendered element a unique key. You can usually set this key with the id of the data itself or a mixture of one of the data's attributes plus the index of the data item.
+8. The `renderItem` item will do just that. It will determine how each item from the data set is rendered. This is also where you can nest lists as we are doing for the list of section cards.
+
+## Step 6: Create the truck card
+
+[Back to table of contents](#table-of-contents)
+
+Now that we have all of our section cards active with the truck names rendering correctly, we can replace the truck name text with the actual truck cards needed. Since this can be reused in many places, we will not create it directly in the page.
+
+It will have its own tsx file and we will place it in the correct components folder bin. Since it's a card, we will place it inside `/components/cards/`.
+
+Use the `test.tsx` page to style and test out your new component.
+
+**test.tsx**:
+
+```tsx
+import React from "react";
+import { View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScaledSheet } from "react-native-size-matters";
+import theme from "@/assets/theme";
+import TruckCard from "@/components/cards/TruckCard";
+
+export default function Test() {
+    return (
+        <View style={styles.mainContainer}>
+            <SafeAreaView style={styles.safeAreaContainer}>
+                <TruckCard />
+            </SafeAreaView>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    mainContainer: {
+        flex: 1,
+    },
+    safeAreaContainer: {
+        flex: 1,
+        padding: theme.padding.xxxl,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+});
+```
+
+**TruckCard.tsx**:
+
+```tsx
+import { View, Text } from "react-native";
+import React from "react";
+import { ScaledSheet } from "react-native-size-matters";
+
+export default function TruckCard() {
+    return (
+        <View style={styles.rootContainer}>
+            <Text>TruckCard</Text>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {},
+});
+```
+
+1. Now that we have our base files set up correctly, we need to import a sample data set to test our file on. We will use a singular truck object from our constants file to render our card. We can render out the name just to make sure that everything is working right. Even though we are working in our TruckCard.tsx file, the change should be updated immediately and shown on the test.tsx file.
+
+```tsx
+import { View, Text } from "react-native";
+import React from "react";
+import { ScaledSheet } from "react-native-size-matters";
+import { FOOD_TRUCKS } from "@/constants";
+
+export default function TruckCard() {
+    const sampleTruck = FOOD_TRUCKS[0];
+
+    return (
+        <View style={styles.rootContainer}>
+            <Text>{sampleTruck.name}</Text>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {},
+});
+```
+
+2. The first main attribute that we see in the figma is that this card's width is just about half the screen's width. We also see that it's split in half where the top is the image section and the bottom is the details section. We also see that the card has a border radius. Let's start showing all these attributes first.
+
+```tsx
+import { View, Text, Image, Dimensions } from "react-native";
+import React from "react";
+import { ScaledSheet } from "react-native-size-matters";
+import { FOOD_TRUCKS } from "@/constants";
+import theme from "@/assets/theme";
+
+const { width } = Dimensions.get("window");
+
+export default function TruckCard() {
+    const sampleTruck = FOOD_TRUCKS[0];
+
+    return (
+        <View style={styles.rootContainer}>
+            <Image
+                style={styles.image}
+                source={{ uri: sampleTruck.imageUrl }}
+            />
+            <View style={styles.textContainer}>
+                <Text>Text</Text>
+            </View>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        width: width * 0.5,
+        overflow: "hidden",
+        borderRadius: "20@ms",
+        borderColor: "red",
+        borderWidth: 2,
+    },
+    image: {
+        width: "100%",
+        height: width * 0.25,
+        resizeMode: "cover",
+    },
+    textContainer: {
+        padding: theme.padding.xs,
+    },
+});
+```
+
+3. Already half way done! Now we just need to add in the rest of the text and style it correctly. The styles needed are the background color of the root container, the thin light gray border, and some space under the title text. We also have to make the open/close text conditional.
+
+```tsx
+import { View, Text, Image, Dimensions } from "react-native";
+import React, { useMemo } from "react";
+import { ms, ScaledSheet } from "react-native-size-matters";
+import { FOOD_TRUCKS } from "@/constants";
+import theme from "@/assets/theme";
+import { Ionicons } from "@expo/vector-icons";
+
+const { width } = Dimensions.get("window");
+
+export default function TruckCard() {
+    const sampleTruck = FOOD_TRUCKS[0];
+
+    const starIcons = useMemo(
+        () =>
+            Array.from({ length: 5 }, (_, index) => (
+                <Ionicons
+                    key={index}
+                    name={
+                        index < Math.floor(sampleTruck.rating)
+                            ? "star"
+                            : "star-outline"
+                    }
+                    size={ms(10)}
+                    color={theme.colors.primary}
+                />
+            )),
+        [sampleTruck.rating]
+    );
+
+    return (
+        <View style={styles.rootContainer}>
+            <Image
+                style={styles.image}
+                source={{ uri: sampleTruck.imageUrl }}
+            />
+            <View style={styles.textContainer}>
+                <Text style={styles.title}>
+                    {sampleTruck.name}
+                    {` ⦁ `}
+                    <Text
+                        style={sampleTruck.isOpen ? styles.open : styles.closed}
+                    >
+                        {sampleTruck.isOpen ? "OPEN" : "CLOSED"}
+                    </Text>
+                </Text>
+                <Text style={styles.text}>
+                    {sampleTruck.categories.join(", ")}
+                </Text>
+                <Text style={styles.text}>
+                    {starIcons}
+                    {` ⦁ `}
+                    {sampleTruck.distance.toFixed(2)} mi away
+                </Text>
+            </View>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        width: width * 0.6,
+        overflow: "hidden",
+        borderRadius: "20@ms",
+        backgroundColor: theme.colors.primaryLight,
+        borderColor: theme.colors.grayLight,
+        borderWidth: 1,
+    },
+    image: {
+        width: "100%",
+        height: width * 0.3,
+        resizeMode: "cover",
+    },
+    textContainer: {
+        padding: theme.padding.xs,
+    },
+    title: {
+        fontSize: theme.fontSize.sm,
+        fontWeight: "bold",
+        marginBottom: theme.padding.xxs,
+    },
+    open: {
+        color: theme.colors.greenLight,
+    },
+    closed: {
+        color: theme.colors.red,
+    },
+    text: {
+        fontSize: theme.fontSize.xs,
+    },
+});
+```
+
+## Step 7: Integrate the truck card into the flatlist
+
+**Now that you finished creating this new custom component, we can render it out where it's actually needed.**
+
+```tsx
+import theme from "@/assets/theme";
+import FlatListCard from "@/components/cards/FlatListCard";
+import TruckCard from "@/components/cards/TruckCard";
+import { CATEGORIES, FOOD_TRUCKS, SEARCH_SECTIONS } from "@/constants";
+import { LinearGradient } from "expo-linear-gradient";
+import { View, Text, StyleSheet, TextInput, FlatList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScaledSheet } from "react-native-size-matters";
+
+export default function Search() {
+    return (
+        <View style={styles.rootContainer}>
+            <SafeAreaView style={styles.safeAreaView}>
+                {/* Header Section */}
+                <View style={styles.header}>
+                    <LinearGradient
+                        style={styles.gradient}
+                        colors={[
+                            "rgba(255, 132, 0, 1)",
+                            "rgba(255, 255, 255, 1)",
+                        ]}
+                        locations={[0.1, 1]}
+                    />
+                    <TextInput
+                        style={styles.searchBar}
+                        placeholder="Search Trucks"
+                        placeholderTextColor={theme.colors.primaryInactive}
+                    />
+                </View>
+
+                {/* Individual Search Categories Card */}
+                <View style={styles.cardContainer}>
+                    <FlatListCard title="Search Categories">
+                        <FlatList
+                            contentContainerStyle={styles.flatListGap}
+                            horizontal={true}
+                            data={CATEGORIES}
+                            keyExtractor={(item, index) => item.name + index}
+                            renderItem={({ item }) => <Text>{item.name}</Text>}
+                        />
+                    </FlatListCard>
+                </View>
+
+                {/* List of Section Cards */}
+                <FlatList
+                    data={SEARCH_SECTIONS}
+                    style={{
+                        backgroundColor: theme.colors.white,
+                    }}
+                    keyExtractor={(section) => section.name}
+                    renderItem={({ item: section }) => (
+                        <View style={styles.cardContainer}>
+                            <FlatListCard title={section.name}>
+                                <FlatList
+                                    contentContainerStyle={styles.flatListGap}
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={section.trucks}
+                                    keyExtractor={(truckId) =>
+                                        truckId.toString()
+                                    }
+                                    renderItem={({ item: truckId }) => {
+                                        const truck =
+                                            FOOD_TRUCKS.find(
+                                                (truck) =>
+                                                    truck.id ==
+                                                    truckId.toString()
+                                            ) ?? null;
+                                        /*
+                                            Rendering the truck card here now
+                                            instead of just text
+                                        */
+                                        return truck ? <TruckCard /> : null;
+                                    }}
+                                />
+                            </FlatListCard>
+                        </View>
+                    )}
+                />
+            </SafeAreaView>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        flex: 1,
+        backgroundColor: theme.colors.primary,
+    },
+    safeAreaView: {
+        flex: 1,
+    },
+    testText: {
+        flex: 1,
+        fontSize: "20@s",
+        textAlign: "center",
+        textAlignVertical: "center",
+        width: "100%",
+    },
+    header: {
+        justifyContent: "center",
+        paddingHorizontal: theme.padding.sm,
+        paddingVertical: theme.padding.xxxl,
+    },
+    gradient: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    searchBar: {
+        fontSize: theme.fontSize.xs,
+        backgroundColor: theme.colors.white,
+        borderRadius: "30@ms",
+        paddingHorizontal: theme.padding.md,
+        paddingVertical: theme.padding.md,
+    },
+    cardContainer: {
+        backgroundColor: theme.colors.white,
+        padding: theme.padding.sm,
+    },
+    flatListGap: {
+        gap: "10@ms",
+    },
+});
+```
+
+**There's still something wrong though. All the trucks being rendered are the same! That's because our truck data that we are rendering in the card is still hard-coded. We have to create an interface and pass the data through props. So let's go back into our truck card file and add this functionality.**
+
+1. Remove the truck card from your test.tsx if it's still there. We no longer need to test it there
+
+2. Go into your truckcard.tsx and remove the sample truck variable and the import of all the truck constants. Your truckcard.tsx should now be this:
+
+```tsx
+import { View, Text, Image, Dimensions } from "react-native";
+import React, { useMemo } from "react";
+import { ms, ScaledSheet } from "react-native-size-matters";
+import theme from "@/assets/theme";
+import { Ionicons } from "@expo/vector-icons";
+import { FoodTruck } from "@/types";
+
+const { width } = Dimensions.get("window");
+
+interface TruckCardProps {
+    readonly truck: FoodTruck;
+}
+
+export default function TruckCard({truck}: TruckCardProps) {
+
+    const starIcons = useMemo(
+        () =>
+            Array.from({ length: 5 }, (_, index) => (
+                <Ionicons
+                    key={index}
+                    name={
+                        index < Math.floor(truck.rating)
+                            ? "star"
+                            : "star-outline"
+                    }
+                    size={ms(10)}
+                    color={theme.colors.primary}
+                />
+            )),
+        [truck.rating]
+    );
+
+    return (
+        <View style={styles.rootContainer}>
+            <Image
+                style={styles.image}
+                source={{ uri: truck.imageUrl }}
+            />
+            <View style={styles.textContainer}>
+                <Text style={styles.title}>
+                    {truck.name}
+                    {` ⦁ `}
+                    <Text
+                        style={truck.isOpen ? styles.open : styles.closed}
+                    >
+                        {truck.isOpen ? "OPEN" : "CLOSED"}
+                    </Text>
+                </Text>
+                <Text style={styles.text}>
+                    {truck.categories.join(", ")}
+                </Text>
+                <Text style={styles.text}>
+                    {starIcons}
+                    {` ⦁ `}
+                    {truck.distance.toFixed(2)} mi away
+                </Text>
+            </View>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        width: width * 0.6,
+        overflow: "hidden",
+        borderRadius: "20@ms",
+        backgroundColor: theme.colors.primaryLight,
+        borderColor: theme.colors.grayLight,
+        borderWidth: 1,
+    },
+    image: {
+        width: "100%",
+        height: width * 0.3,
+        resizeMode: "cover",
+    },
+    textContainer: {
+        padding: theme.padding.xs,
+    },
+    title: {
+        fontSize: theme.fontSize.sm,
+        fontWeight: "bold",
+        marginBottom: theme.padding.xxs,
+    },
+    open: {
+        color: theme.colors.greenLight,
+    },
+    closed: {
+        color: theme.colors.red,
+    },
+    text: {
+        fontSize: theme.fontSize.xs,
+    },
+});
+```
+
+**Now we can pass our truck prop into our card so the correct data is rendered into each card.**
+
+```tsx
+import theme from "@/assets/theme";
+import FlatListCard from "@/components/cards/FlatListCard";
+import TruckCard from "@/components/cards/TruckCard";
+import { CATEGORIES, FOOD_TRUCKS, SEARCH_SECTIONS } from "@/constants";
+import { LinearGradient } from "expo-linear-gradient";
+import { View, Text, StyleSheet, TextInput, FlatList } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScaledSheet } from "react-native-size-matters";
+
+export default function Search() {
+    return (
+        <View style={styles.rootContainer}>
+            <SafeAreaView style={styles.safeAreaView}>
+                {/* Header Section */}
+                <View style={styles.header}>
+                    <LinearGradient
+                        style={styles.gradient}
+                        colors={[
+                            "rgba(255, 132, 0, 1)",
+                            "rgba(255, 255, 255, 1)",
+                        ]}
+                        locations={[0.1, 1]}
+                    />
+                    <TextInput
+                        style={styles.searchBar}
+                        placeholder="Search Trucks"
+                        placeholderTextColor={theme.colors.primaryInactive}
+                    />
+                </View>
+
+                {/* Individual Search Categories Card */}
+                <View style={styles.cardContainer}>
+                    <FlatListCard title="Search Categories">
+                        <FlatList
+                            contentContainerStyle={styles.flatListGap}
+                            horizontal={true}
+                            data={CATEGORIES}
+                            keyExtractor={(item, index) => item.name + index}
+                            renderItem={({ item }) => <Text>{item.name}</Text>}
+                        />
+                    </FlatListCard>
+                </View>
+
+                {/* List of Section Cards */}
+                <FlatList
+                    data={SEARCH_SECTIONS}
+                    style={{
+                        backgroundColor: theme.colors.white,
+                    }}
+                    keyExtractor={(section) => section.name}
+                    renderItem={({ item: section }) => (
+                        <View style={styles.cardContainer}>
+                            <FlatListCard title={section.name}>
+                                <FlatList
+                                    contentContainerStyle={styles.flatListGap}
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={section.trucks}
+                                    keyExtractor={(truckId) =>
+                                        truckId.toString()
+                                    }
+                                    renderItem={({ item: truckId }) => {
+                                        const truck =
+                                            FOOD_TRUCKS.find(
+                                                (truck) =>
+                                                    truck.id ==
+                                                    truckId.toString()
+                                            ) ?? null;
+                                        /*
+                                            Rendering the truck card here now
+                                            instead of just text
+
+                                            Added the truck prop to the TruckCard
+                                            so that all the information can be
+                                            passed down to the card
+                                        */
+                                        return truck ? <TruckCard truck={truck} /> : null;
+                                    }}
+                                />
+                            </FlatListCard>
+                        </View>
+                    )}
+                />
+            </SafeAreaView>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        flex: 1,
+        backgroundColor: theme.colors.primary,
+    },
+    safeAreaView: {
+        flex: 1,
+    },
+    testText: {
+        flex: 1,
+        fontSize: "20@s",
+        textAlign: "center",
+        textAlignVertical: "center",
+        width: "100%",
+    },
+    header: {
+        justifyContent: "center",
+        paddingHorizontal: theme.padding.sm,
+        paddingVertical: theme.padding.xxxl,
+    },
+    gradient: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    searchBar: {
+        fontSize: theme.fontSize.xs,
+        backgroundColor: theme.colors.white,
+        borderRadius: "30@ms",
+        paddingHorizontal: theme.padding.md,
+        paddingVertical: theme.padding.md,
+    },
+    cardContainer: {
+        backgroundColor: theme.colors.white,
+        padding: theme.padding.sm,
+    },
+    flatListGap: {
+        gap: "10@ms",
+    },
+});
+```
+
+## Step 8: Restructure layout
+
+While developing, you will sometimes realize that the original structure or method you implemented doesn't do exactly what you wanted it to. For example, at this stage if you run all the code we've made, yes it renders all the truck cards, but when you scroll vertically, the search categories card is not scrolling with the rest of the page. This is because we didn't wrap body together as a scrollview. This was intentionally left out to show you how to fix an error such as this. 
+
+So we know two things
+1. We want the entire body to scroll together
+2. We want to map through a list of sections that each contain their unique list of trucks
+
+We can still do this by replacing the original FlatList with the simple `.map()` function. `.map()` works perfectly here since the list of sections is short. It's never going to be long enough where rendering it all at once will slow down the app too much. Use flatlist when you expect to render many, many elements with lazy loading so only what you see is rendered. Use .map() when it's a short list of elements that you want to be automatically rendered whether or not it's visible on screen.
+
+So the steps will be:
+
+1. Replace the flatlist for the sections with `SEARCH_SECTION.map()`
+2. Wrap the individual search category card and the .map function with a scrollview that has flex: 1 and a white background. You will be left with this which works as it's actually intended to.
+
+```tsx
+import theme from "@/assets/theme";
+import FlatListCard from "@/components/cards/FlatListCard";
+import TruckCard from "@/components/cards/TruckCard";
+import { CATEGORIES, FOOD_TRUCKS, SEARCH_SECTIONS } from "@/constants";
+import { LinearGradient } from "expo-linear-gradient";
+import {
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    FlatList,
+    ScrollView,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScaledSheet } from "react-native-size-matters";
+
+export default function Search() {
+    return (
+        <View style={styles.rootContainer}>
+            <SafeAreaView style={styles.safeAreaView}>
+                {/* Header Section */}
+                <View style={styles.header}>
+                    <LinearGradient
+                        style={styles.gradient}
+                        colors={[
+                            "rgba(255, 132, 0, 1)",
+                            "rgba(255, 255, 255, 1)",
+                        ]}
+                        locations={[0.1, .95]}
+                    />
+                    <TextInput
+                        style={styles.searchBar}
+                        placeholder="Search Trucks"
+                        placeholderTextColor={theme.colors.primaryInactive}
+                    />
+                </View>
+
+                <ScrollView style={styles.body}>
+                    {/* Individual Search Categories Card */}
+                    <View style={styles.cardContainer}>
+                        <FlatListCard title="Search Categories">
+                            <FlatList
+                                contentContainerStyle={styles.flatListGap}
+                                horizontal={true}
+                                data={CATEGORIES}
+                                keyExtractor={(item, index) =>
+                                    item.name + index
+                                }
+                                renderItem={({ item }) => (
+                                    <Text>{item.name}</Text>
+                                )}
+                            />
+                        </FlatListCard>
+                    </View>
+
+                    {SEARCH_SECTIONS.map((section) => (
+                        <View key={section.name} style={styles.cardContainer}>
+                            <FlatListCard title={section.name}>
+                                <FlatList
+                                    contentContainerStyle={styles.flatListGap}
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={section.trucks}
+                                    keyExtractor={(truckId) =>
+                                        truckId.toString()
+                                    }
+                                    renderItem={({ item: truckId }) => {
+                                        const truck =
+                                            FOOD_TRUCKS.find(
+                                                (truck) =>
+                                                    truck.id ==
+                                                    truckId.toString()
+                                            ) ?? null;
+                                        /*
+                                            Rendering the truck card here now
+                                            instead of just text
+
+                                            Added the truck prop to the TruckCard
+                                            so that all the information can be
+                                            passed down to the card
+                                        */
+                                        return truck ? (
+                                            <TruckCard truck={truck} />
+                                        ) : null;
+                                    }}
+                                />
+                            </FlatListCard>
+                        </View>
+                    ))}
+                </ScrollView>
+            </SafeAreaView>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        flex: 1,
+        backgroundColor: theme.colors.primary,
+    },
+    safeAreaView: {
+        flex: 1,
+    },
+    testText: {
+        flex: 1,
+        fontSize: "20@s",
+        textAlign: "center",
+        textAlignVertical: "center",
+        width: "100%",
+    },
+    header: {
+        justifyContent: "center",
+        paddingHorizontal: theme.padding.sm,
+        paddingVertical: theme.padding.xxxl,
+    },
+    gradient: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    searchBar: {
+        fontSize: theme.fontSize.xs,
+        backgroundColor: theme.colors.white,
+        borderRadius: "30@ms",
+        paddingHorizontal: theme.padding.md,
+        paddingVertical: theme.padding.md,
+    },
+    body: {
+        flex: 1,
+        backgroundColor: theme.colors.white,
+    },
+    cardContainer: {
+        backgroundColor: theme.colors.white,
+        padding: theme.padding.sm,
+    },
+    flatListGap: {
+        gap: "10@ms",
+    },
+});
+```
+
+## Step 9: Render the category buttons
+
+This was left for last since we already have the styling for these buttons in another file which is the category modal. So we'll just copy it over and adjust the width and height of the buttons to match our needs on this page.
+
+```tsx
+import theme from "@/assets/theme";
+import FlatListCard from "@/components/cards/FlatListCard";
+import TruckCard from "@/components/cards/TruckCard";
+import { CATEGORIES, FOOD_TRUCKS, SEARCH_SECTIONS } from "@/constants";
+import { LinearGradient } from "expo-linear-gradient";
+import {
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    FlatList,
+    ScrollView,
+    TouchableOpacity,
+    Dimensions,
+    Image,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScaledSheet } from "react-native-size-matters";
+
+const { width } = Dimensions.get("window");
+
+export default function Search() {
+    const handleCategoryPress = (category: string) => {
+        console.log(`Pressed Category: ${category}`);
+    };
+
+    return (
+        <View style={styles.rootContainer}>
+            <SafeAreaView style={styles.safeAreaView}>
+                {/* Header Section */}
+                <View style={styles.header}>
+                    <LinearGradient
+                        style={styles.gradient}
+                        colors={[
+                            "rgba(255, 132, 0, 1)",
+                            "rgba(255, 255, 255, 1)",
+                        ]}
+                        locations={[0.1, 0.95]}
+                    />
+                    <TextInput
+                        style={styles.searchBar}
+                        placeholder="Search Trucks"
+                        placeholderTextColor={theme.colors.primaryInactive}
+                    />
+                </View>
+
+                <ScrollView style={styles.body}>
+                    {/* Individual Search Categories Card */}
+                    <View style={styles.cardContainer}>
+                        <FlatListCard title="Search Categories">
+                            <FlatList
+                                contentContainerStyle={styles.flatListGap}
+                                horizontal={true}
+                                data={CATEGORIES}
+                                keyExtractor={(item, index) =>
+                                    item.name + index
+                                }
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity
+                                        style={styles.categoryButton}
+                                        onPress={() =>
+                                            handleCategoryPress(item.name)
+                                        }
+                                    >
+                                        <Image
+                                            source={{ uri: item.url }}
+                                            style={styles.image}
+                                        />
+                                        <Text style={styles.buttonText}>
+                                            {item.name}
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
+                            />
+                        </FlatListCard>
+                    </View>
+
+                    {SEARCH_SECTIONS.map((section) => (
+                        <View key={section.name} style={styles.cardContainer}>
+                            <FlatListCard title={section.name}>
+                                <FlatList
+                                    contentContainerStyle={styles.flatListGap}
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={section.trucks}
+                                    keyExtractor={(truckId) =>
+                                        truckId.toString()
+                                    }
+                                    renderItem={({ item: truckId }) => {
+                                        const truck =
+                                            FOOD_TRUCKS.find(
+                                                (truck) =>
+                                                    truck.id ==
+                                                    truckId.toString()
+                                            ) ?? null;
+                                        /*
+                                            Rendering the truck card here now
+                                            instead of just text
+
+                                            Added the truck prop to the TruckCard
+                                            so that all the information can be
+                                            passed down to the card
+                                        */
+                                        return truck ? (
+                                            <TruckCard truck={truck} />
+                                        ) : null;
+                                    }}
+                                />
+                            </FlatListCard>
+                        </View>
+                    ))}
+                </ScrollView>
+            </SafeAreaView>
+        </View>
+    );
+}
+
+const styles = ScaledSheet.create({
+    rootContainer: {
+        flex: 1,
+        backgroundColor: theme.colors.primary,
+    },
+    safeAreaView: {
+        flex: 1,
+    },
+    testText: {
+        flex: 1,
+        fontSize: "20@s",
+        textAlign: "center",
+        textAlignVertical: "center",
+        width: "100%",
+    },
+    header: {
+        justifyContent: "center",
+        paddingHorizontal: theme.padding.sm,
+        paddingVertical: theme.padding.xxxl,
+    },
+    gradient: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    searchBar: {
+        fontSize: theme.fontSize.xs,
+        backgroundColor: theme.colors.white,
+        borderRadius: "30@ms",
+        paddingHorizontal: theme.padding.md,
+        paddingVertical: theme.padding.md,
+    },
+    body: {
+        flex: 1,
+        backgroundColor: theme.colors.white,
+    },
+    cardContainer: {
+        backgroundColor: theme.colors.white,
+        padding: theme.padding.sm,
+    },
+    flatListGap: {
+        gap: "10@ms",
+    },
+    categoryButton: {
+        width: width * 0.2,
+        height: width * 0.2,
+        borderRadius: "10@ms",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: "5@ms",
+        backgroundColor: theme.colors.primaryLight,
+    },
+    image: {
+        width: "50%",
+        height: "50%",
+    },
+    buttonText: {
+        fontSize: theme.fontSize.xxs,
+    },
+});
+```
+
+**The search page is now finalized**
