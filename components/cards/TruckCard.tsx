@@ -63,7 +63,7 @@ const styles = ScaledSheet.create({
     rootContainer: {
         width: width * 0.6,
         overflow: "hidden",
-        borderRadius: "20@ms",
+        borderRadius: "10@ms",
         backgroundColor: theme.colors.primaryLight,
         borderColor: theme.colors.grayLight,
         borderWidth: 1,
