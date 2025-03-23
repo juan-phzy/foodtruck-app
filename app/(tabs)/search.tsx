@@ -1,13 +1,13 @@
 import theme from "@/assets/theme";
 import FlatListCard from "@/components/cards/FlatListCard";
 import TruckCard from "@/components/cards/TruckCard";
+import TextInputStandard from "@/components/inputs/TextInputStandard";
 import { CATEGORIES, FOOD_TRUCKS, SEARCH_SECTIONS } from "@/constants";
 import { LinearGradient } from "expo-linear-gradient";
 import {
     View,
     Text,
     StyleSheet,
-    TextInput,
     FlatList,
     ScrollView,
     TouchableOpacity,
@@ -15,7 +15,7 @@ import {
     Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScaledSheet } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 
 const { width } = Dimensions.get("window");
 
@@ -37,10 +37,10 @@ export default function Search() {
                         ]}
                         locations={[0.1, 0.95]}
                     />
-                    <TextInput
-                        style={styles.searchBar}
+                    <TextInputStandard
+                        radius="full"
                         placeholder="Search Trucks"
-                        placeholderTextColor={theme.colors.primaryInactive}
+                        fontSize={ms(12)}
                     />
                 </View>
 
@@ -94,14 +94,6 @@ export default function Search() {
                                                     truck.id ==
                                                     truckId.toString()
                                             ) ?? null;
-                                        /*
-                                            Rendering the truck card here now
-                                            instead of just text
-
-                                            Added the truck prop to the TruckCard
-                                            so that all the information can be
-                                            passed down to the card
-                                        */
                                         return truck ? (
                                             <TruckCard truck={truck} />
                                         ) : null;
@@ -140,7 +132,6 @@ const styles = ScaledSheet.create({
         ...StyleSheet.absoluteFillObject,
     },
     searchBar: {
-        fontSize: theme.fontSize.xs,
         backgroundColor: theme.colors.white,
         borderRadius: "30@ms",
         paddingHorizontal: theme.padding.md,
