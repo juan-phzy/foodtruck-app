@@ -14,21 +14,28 @@
  */
 
 import React, { useState, useCallback, useMemo } from "react";
-import { StyleSheet, View, Text, Image, Pressable } from "react-native";
+import { View, Text, Image, Pressable, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import theme from "@/theme/theme";
+import theme from "@/assets/theme";
 import { FoodTruck } from "@/types";
+import { ms, ScaledSheet } from "react-native-size-matters";
+import useTruckStore from "@/store/useTruckStore";
+
+const { width } = Dimensions.get("window");
 
 interface TruckCardSmallProps {
     truck: FoodTruck; // Data object containing truck information
+    pressable: boolean; // Determines if the card is pressable
 }
 
 /**
  * @component TruckCardSmall
  * @description A single compact food truck card optimized for performance in large lists.
  */
-const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
+const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck, pressable }) => {
     const [isFavorite, setIsFavorite] = useState(false);
+
+    const { setSelectedTruckId } = useTruckStore();
 
     /**
      * Toggles the favorite status of the truck.
@@ -47,17 +54,34 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
             Array.from({ length: 5 }, (_, index) => (
                 <Ionicons
                     key={index}
-                    name={index < Math.floor(truck.rating) ? "star" : "star-outline"}
-                    size={16}
+                    name={
+                        index < Math.floor(truck.rating)
+                            ? "star"
+                            : "star-outline"
+                    }
+                    size={ms(12)}
                     color={theme.colors.primary}
                 />
             )),
         [truck.rating]
     );
 
+    const handlePress = () => {
+        if (pressable) {
+            setSelectedTruckId(truck.id);
+        }
+    }
+
     return (
-        <View style={styles.outerContainer}>
-            <View style={styles.container}>
+        /*
+            The root container holds the body and then a divider
+            root {
+              body row
+              divider
+            }
+        */
+        <Pressable onPress={handlePress} style={styles.rootContainer}>
+            <View style={styles.bodyContainer}>
                 {/* Truck Image */}
                 <Image source={{ uri: truck.imageUrl }} style={styles.image} />
 
@@ -66,7 +90,9 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
                     {/* Name and Open/Closed Status */}
                     <Text style={styles.name}>
                         {truck.name} ⦁{" "}
-                        <Text style={truck.isOpen ? styles.open : styles.closed}>
+                        <Text
+                            style={truck.isOpen ? styles.open : styles.closed}
+                        >
                             {truck.isOpen ? "OPEN" : "CLOSED"}
                         </Text>
                     </Text>
@@ -79,13 +105,17 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
                     </Text>
 
                     {/* Categories */}
-                    <Text style={styles.categories}>{truck.categories.join(", ")}</Text>
+                    <Text style={styles.details}>
+                        {truck.categories.join(", ")}
+                    </Text>
 
                     {/* Star Ratings */}
                     <View style={styles.ratingContainer}>
                         {starIcons}
                         <Text style={styles.ratingText}>{truck.rating}</Text>
-                        <Text style={styles.reviewCount}>({truck.reviewCount})</Text>
+                        <Text style={styles.ratingText}>
+                            ({truck.reviewCount})
+                        </Text>
                     </View>
                 </View>
 
@@ -93,13 +123,13 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
                 <Pressable style={styles.bookmarkIcon} onPress={toggleFavorite}>
                     <Ionicons
                         name={isFavorite ? "bookmark" : "bookmark-outline"}
-                        size={35}
+                        size={ms(30)}
                         color={theme.colors.primary}
                     />
                 </Pressable>
             </View>
             <View style={styles.divider} />
-        </View>
+        </Pressable>
     );
 };
 
@@ -107,70 +137,59 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck }) => {
  * @constant styles
  * @description Styles for the TruckCardSmall component.
  */
-const styles = StyleSheet.create({
-    outerContainer: {
+const styles = ScaledSheet.create({
+    rootContainer: {
         gap: 5,
         marginBottom: 5,
     },
-    container: {
+    bodyContainer: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "transparent",
-        width: "100%",
+        gap: "5@ms",
     },
     image: {
-        width: 70,
-        height: 70,
-        borderRadius: 10,
+        width: width * .18,
+        height: width * .18,
+        borderRadius: "8@ms",
         resizeMode: "cover",
     },
     infoContainer: {
         flex: 1,
-        flexDirection: "column",
-        paddingLeft: 10,
-        gap: 2,
+        gap: "1@ms",
     },
     name: {
-        fontSize: 14,
-        fontWeight: "bold",
+        fontSize: theme.fontSize.sm,
         color: theme.colors.black,
+        fontWeight: "bold",
     },
     open: {
-        color: "green",
+        color: theme.colors.green,
     },
     closed: {
-        color: "red",
+        color: theme.colors.red,
     },
     details: {
-        fontSize: 12,
-        color: theme.colors.black,
-    },
-    categories: {
-        fontSize: 12,
+        fontSize: theme.fontSize.xs,
         color: theme.colors.black,
     },
     ratingContainer: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 2,
+        gap: "2@ms",
     },
     ratingText: {
-        marginLeft: 5,
-        fontSize: 12,
-        color: theme.colors.black,
-    },
-    reviewCount: {
-        fontSize: 12,
-        color: theme.colors.black,
+        fontWeight: "medium",
+        fontSize: theme.fontSize.xs,
+        color: theme.colors.primary,
     },
     bookmarkIcon: {
         justifyContent: "center",
         alignItems: "center",
-        paddingHorizontal: 10,
+        paddingHorizontal: theme.padding.sm,
     },
     divider: {
         height: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.1)",
+        backgroundColor: theme.colors.gray,
         width: "100%",
         marginVertical: 5,
     },

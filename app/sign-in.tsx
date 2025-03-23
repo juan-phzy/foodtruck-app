@@ -7,7 +7,6 @@
  * - Background image with gradient overlay.
  * - Toggle between Email and Phone sign-in.
  * - Input fields for credentials.
- * - Alternative sign-in options (Email, Gmail, Phone).
  * - Navigation to Create Account screen.
  * - Fully responsive layout for different screen sizes.
  */
@@ -21,65 +20,47 @@ import {
     View,
     Text,
     ImageBackground,
-    Dimensions,
-    Alert,
     ActivityIndicator,
 } from "react-native";
 
 // Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
 // Custom Components
-import CustomTextInput from "@/components/CustomTextInput";
-import CustomButton from "@/components/CustomButton";
-import IconButton from "@/components/IconButton";
+import TextInputFancy from "@/components/inputs/TextInputFancy";
+import ButtonStandard from "@/components/buttons/ButtonStandard";
 
 // Context & State Management
-import { useAuth } from "@/context/authContext"; // ✅ Updated to Amplify Gen 2 auth
+import { useSession } from "@/context/ctx";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Theme & Styles
-import theme from "@/theme/theme";
-
-// Get screen dimensions for responsive UI scaling
-const { width, height } = Dimensions.get("window");
+import theme from "@/assets/theme";
+import { ScaledSheet } from "react-native-size-matters";
 
 export default function SignIn() {
-    // State for toggling between Phone and Email sign-in
-    const [signInOption, setSignInOption] = useState<"Phone" | "Email">(
-        "Email"
-    );
+   
     const [credentials, setCredentials] = useState({
         username: "",
         password: "",
     });
     const [loading, setLoading] = useState(false);
 
-    const { signIn } = useAuth(); // ✅ Use new Amplify authentication API
+    const { signIn } = useSession();
 
     /**
      * Handles the sign-in process
      */
     const handleSignIn = async () => {
-        if (!credentials.username || !credentials.password) {
-            Alert.alert("Error", "Please enter your credentials.");
-            return;
-        }
-
-        try {
-            setLoading(true);
-            await signIn(credentials.username, credentials.password);
-            Alert.alert("Success", "You have signed in successfully!");
-            router.replace("/"); // Redirect to home
-        } catch (error) {
-            console.error("Sign-in error:", error);
-            Alert.alert("Sign-in Failed, An error occurred.");
-        } finally {
+        console.log("Sign In Pressed");
+        setLoading(true); // Set loading state
+        setTimeout(() => {
             setLoading(false);
-        }
+            signIn(); // Simulated sign-in
+            router.replace("/"); // Redirect to home screen
+        }, 750); // Simulated loading
     };
 
     /**
@@ -89,180 +70,111 @@ export default function SignIn() {
         router.push("/create-account");
     };
 
-    /**
-     * Renders the toggle button to switch between Phone and Email sign-in
-     */
-    const renderSignInToggle = () => {
-        return signInOption === "Phone" ? (
-            <IconButton
-                icon={<MaterialIcons name="email" size={25} color="white" />}
-                label="Email"
-                iconBackground={theme.colors.primary}
-                onPress={() => setSignInOption("Email")}
-            />
-        ) : (
-            <IconButton
-                icon={
-                    <MaterialCommunityIcons
-                        name="phone"
-                        size={25}
-                        color="white"
-                    />
-                }
-                label="Phone"
-                iconBackground={theme.colors.primary}
-                onPress={() => setSignInOption("Phone")}
-            />
-        );
-    };
-
     return (
-        // Main Container
-        <View style={styles.container}>
-            {/* Background Image with Overlay */}
+        <View style={styles.rootContainer}>
             <ImageBackground
                 source={require("@/assets/images/sign-in-bg.jpg")}
-                style={styles.background}
+                style={styles.backgroundImage}
                 imageStyle={{ resizeMode: "cover" }}
             >
-                <SafeAreaView style={styles.safeArea}>
-                    {/* Background Gradient Overlay */}
+                <SafeAreaView style={styles.safeAreaView}>
+                    {/* Gradient Overlay */}
                     <LinearGradient
+                        style={styles.gradient}
                         colors={[
                             "rgba(255, 132, 0, 1)", // Orange (Primary Theme Color)
-                            "rgba(122, 63, 0, 0.85)", // Dark Orange
+                            "rgba(91, 47, 0, 0.90)", // Dark Orange
                             "rgba(0, 0, 0, 1)", // Black
                         ]}
-                        locations={[0, 0.3, 0.95]}
-                        style={styles.gradient}
+                        locations={[0, 0.5, .9]}
                     />
 
-                    {/* Main Content */}
-                    <View style={styles.content}>
-                        {/* Logo Section */}
-                        <View style={styles.logoContainer}>
-                            <Text style={styles.title}>MunchMap</Text>
-                            <Text style={styles.subtitle}>
-                                Find Nearby Food Trucks
-                            </Text>
-                        </View>
-
-                        {/* Form Container with Shadow Effect */}
-                        <View style={styles.shadowContainer}>
-                            {/* Blurred Background for Form */}
-                            <BlurView
-                                intensity={8}
-                                style={styles.bodyContainer}
-                            >
-                                {/* Form Gradient Overlay */}
-                                <LinearGradient
-                                    colors={[
-                                        "rgba(210, 210, 210, 0.2)",
-                                        "rgba(0, 0, 0, 0)",
-                                    ]}
-                                    locations={[0.5, 1]}
-                                    style={styles.gradient}
-                                />
-
-                                {/* Input Form */}
-                                <View style={styles.child}>
-                                    <CustomTextInput
-                                        label={signInOption}
-                                        placeholder={
-                                            signInOption === "Phone"
-                                                ? "(123)-456-7890"
-                                                : "muncher@email.com"
-                                        }
-                                        value={credentials.username}
-                                        onChangeText={(text) =>
-                                            setCredentials({
-                                                ...credentials,
-                                                username: text,
-                                            })
-                                        }
-                                    />
-                                    <CustomTextInput
-                                        label="Password"
-                                        placeholder="Enter your password"
-                                        secureTextEntry
-                                        value={credentials.password}
-                                        onChangeText={(text) =>
-                                            setCredentials({
-                                                ...credentials,
-                                                password: text,
-                                            })
-                                        }
-                                    />
-                                    <CustomButton
-                                        style="light"
-                                        verticalPadding={10}
-                                        fontSize={16}
-                                        text={
-                                            loading
-                                                ? "Signing In..."
-                                                : "Sign In"
-                                        }
-                                        onPress={handleSignIn}
-                                        disabled={loading}
-                                    />
-                                </View>
-
-                                {loading && (
-                                    <ActivityIndicator
-                                        size="large"
-                                        color={theme.colors.primary}
-                                    />
-                                )}
-
-                                {/* Divider Line */}
-                                <View style={styles.dividerContainer}>
-                                    <View style={styles.dividerLine} />
-                                    <Text style={styles.dividerText}>OR</Text>
-                                    <View style={styles.dividerLine} />
-                                </View>
-
-                                {/* Other Sign-In Options */}
-                                <View style={styles.otherOptionsContainer}>
-                                    {renderSignInToggle()}
-                                    <IconButton
-                                        icon={
-                                            <MaterialCommunityIcons
-                                                name="gmail"
-                                                size={25}
-                                                color="white"
-                                            />
-                                        }
-                                        label="Gmail"
-                                        iconBackground={theme.colors.primary}
-                                        onPress={() =>
-                                            console.log("Gmail Button Pressed")
-                                        }
-                                    />
-                                </View>
-
-                                {/* New User Section */}
-                                <View style={styles.newUserContainer}>
-                                    <Text style={styles.newUserLabel}>
-                                        New User?
-                                    </Text>
-                                    <CustomButton
-                                        style="outlineLight"
-                                        verticalPadding={10}
-                                        fontSize={16}
-                                        text="Create Account Here"
-                                        onPress={handleCreateAccount}
-                                    />
-                                </View>
-
-                                {/* Switch to Vendor Login */}
-                                <View style={styles.switchVendorContainer}>
-                                    <Text style={styles.switchVendorText}>
-                                        Switch to Vendor Login
-                                    </Text>
-                                </View>
-                            </BlurView>
-                        </View>
+                    {/* Logo Section */}
+                    <View style={styles.logoContainer}>
+                        <Text style={styles.title}>MunchMap</Text>
+                        <Text style={styles.subtitle}>
+                            Find Nearby FoodTrucks
+                        </Text>
                     </View>
+
+                    {/* Blurred Body Container for Form */}
+                    <BlurView intensity={10} style={styles.bodyContainer}>
+                        {/* Form Gradient Overlay */}
+                        {/* <LinearGradient
+                            style={styles.gradient}
+                            colors={[
+                                "rgba(210, 210, 210, 0.2)",
+                                "rgba(0, 0, 0, 0)",
+                            ]}
+                            locations={[0.5, 1]}
+                        /> */}
+
+                        {/* Input Form */}
+                        <View style={styles.signInForm}>
+                            <TextInputFancy
+                                label="Email"
+                                placeholder="you@email.com"
+                                value={credentials.username}
+                                onChangeText={(text) =>
+                                    setCredentials({
+                                        ...credentials,
+                                        username: text,
+                                    })
+                                }
+                            />
+                            <TextInputFancy
+                                label="Password"
+                                placeholder="Enter your password"
+                                secureTextEntry
+                                value={credentials.password}
+                                onChangeText={(text) =>
+                                    setCredentials({
+                                        ...credentials,
+                                        password: text,
+                                    })
+                                }
+                            />
+                            <ButtonStandard
+                                style="light"
+                                verticalPadding={theme.padding.xs}
+                                fontSize={theme.fontSize.sm}
+                                text={loading ? "Signing In..." : "Sign In"}
+                                onPress={handleSignIn}
+                                disabled={loading}
+                            />
+                        </View>
+
+                        {loading && (
+                            <ActivityIndicator
+                                size="large"
+                                color={theme.colors.primary}
+                            />
+                        )}
+
+                        {/* Divider Line For Future Sign In Options */}
+                        {/* <View style={styles.dividerContainer}>
+                            <View style={styles.dividerLine} />
+                            <Text style={styles.dividerText}>OR</Text>
+                            <View style={styles.dividerLine} />
+                        </View> */}
+
+                        {/* New User Section */}
+                        <View style={styles.newUserContainer}>
+                            <Text style={styles.newUserLabel}>New User?</Text>
+                            <ButtonStandard
+                                style="outlineLight"
+                                verticalPadding={theme.padding.xs}
+                                fontSize={theme.fontSize.sm}
+                                text="Create Account Here"
+                                onPress={handleCreateAccount}
+                            />
+                        </View>
+
+                        {/* Switch to Vendor Login */}
+                        <Text style={styles.switchVendorText}>
+                            Switch to Vendor Login
+                        </Text>
+                    </BlurView>
                 </SafeAreaView>
             </ImageBackground>
         </View>
@@ -272,162 +184,81 @@ export default function SignIn() {
 /**
  * Styles for SignIn Screen
  */
-const styles = StyleSheet.create({
-    // Main Container
-    container: {
+const styles = ScaledSheet.create({
+    rootContainer: {
         flex: 1,
-        justifyContent: "center",
     },
-
-    background: {
+    backgroundImage: {
         flex: 1,
-        justifyContent: "center",
-        position: "relative",
     },
-
+    safeAreaView: {
+        flex: 1,
+        justifyContent: "flex-end",
+        alignItems: "center",
+    },
     gradient: {
         ...StyleSheet.absoluteFillObject,
     },
-
-    safeArea: {
-        flex: 1,
-        position: "relative",
-    },
-
-    // Content Container
-    content: {
-        flex: 1,
-        position: "relative",
-        flexDirection: "column",
-        justifyContent: "flex-end",
-        alignItems: "center",
-    },
-
-    // Logo Container
     logoContainer: {
-        width: "100%",
-        position: "relative",
-        alignItems: "center",
-        justifyContent: "center",
-        paddingVertical: 30,
-    },
-
-    title: {
-        fontSize: width * 0.12, // Dynamically adjusts based on screen width
-        color: "white",
-    },
-
-    subtitle: {
-        fontSize: width * 0.05, // Dynamically adjusts based on screen width
-        color: "white",
-    },
-
-    // Shadow Container
-    shadowContainer: {
-        flexDirection: "column",
-        justifyContent: "flex-end",
-        position: "relative",
-        width: "100%",
-        height: "70%",
-
-        // Shadow (iOS + Android)
-        shadowColor: theme.colors.primary,
-        shadowOffset: { width: 0, height: -10 },
-        shadowOpacity: 0.7,
-        shadowRadius: 15,
-        elevation: 10,
-    },
-
-    // Body Container
-    bodyContainer: {
-        flexDirection: "column",
-        position: "relative",
-        padding: 25,
-        gap: 15,
-        width: "100%",
-        height: "100%",
-
-        // Borders
-        borderTopLeftRadius: 40,
-        borderTopRightRadius: 40,
-        overflow: "hidden", // Clips the gradient to rounded corners
-    },
-
-    child: {
-        width: "100%",
-        minHeight: 20,
-        flexDirection: "column",
-        gap: 10,
-
-        // Borders
-        borderWidth: 0,
-        borderColor: "red",
-    },
-
-    // Divider Container
-    dividerContainer: {
-        width: "100%",
-        flexDirection: "row",
-        alignItems: "center",
-        paddingVertical: 10,
-
-        // Borders
-        borderWidth: 0,
-        borderColor: "red",
-    },
-
-    dividerLine: {
         flex: 1,
-        height: 1,
-        marginHorizontal: 10,
-        backgroundColor: theme.colors.white,
-    },
-
-    dividerText: {
-        color: theme.colors.white,
-        fontSize: 16,
-        fontWeight: "medium",
-    },
-
-    // Other Options Container
-    otherOptionsContainer: {
-        flexDirection: "row",
+        width: "100%",
         justifyContent: "center",
         alignItems: "center",
-        gap: 50,
     },
-
-    // New User View Styles
-    newUserContainer: {
-        flexDirection: "column",
-        alignItems: "flex-start",
-        justifyContent: "flex-start",
-        gap: 10,
+    title: {
+        fontSize: theme.fontSize.xxxxl,
+        color: theme.colors.white,
+    },
+    subtitle: {
+        fontSize: theme.fontSize.lg,
+        color: theme.colors.white,
+    },
+    bodyContainer: {
+        paddingHorizontal: theme.padding.xl,
+        paddingVertical: theme.padding.xxxl,
         width: "100%",
+        gap: "15@ms",
+        borderTopLeftRadius: "40@s",
+        borderTopRightRadius: "40@s",
+        boxShadow: "0px -10px 25px 10px rgba(255, 132, 0, .7)",
+        overflow: "hidden",
     },
-
+    signInForm: {
+        gap: "15@ms",
+    },
+    // DO NOT DELETE: SAVE FOR FUTURE USE
+    // dividerContainer: {
+    //     flexDirection: "row",
+    //     alignItems: "center",
+    //     paddingVertical: theme.padding.xxs,
+    //     borderColor: theme.colors.white,
+    //     borderWidth: 1,
+    // },
+    // dividerLine: {
+    //     flex: 1,
+    //     height: 1,
+    //     backgroundColor: theme.colors.white,
+    // },
+    // dividerText: {
+    //     color: theme.colors.white,
+    //     fontSize: theme.padding.lg,
+    //     fontWeight: "medium",
+    //     marginHorizontal: "10@ms",
+    // },
+    newUserContainer: {
+        gap: "5@ms",
+    },
     newUserLabel: {
         color: theme.colors.white,
-        fontSize: 14,
+        fontSize: theme.fontSize.sm,
         fontWeight: "medium",
     },
-
-    // Switch to Vendor Login Styles
-    switchVendorContainer: {
+    switchVendorText: {
+        width: "100%",
+        color: theme.colors.white,
+        fontSize: theme.fontSize.xs,
+        paddingVertical: theme.padding.xxs,
         borderTopWidth: 1,
         borderTopColor: theme.colors.white,
-
-        // Flexbox
-        alignItems: "flex-start",
-
-        // Spacing
-        marginTop: 20,
-        paddingVertical: 10,
-        width: "100%",
-    },
-
-    switchVendorText: {
-        color: theme.colors.white,
-        fontSize: 14,
     },
 });

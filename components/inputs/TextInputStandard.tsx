@@ -1,15 +1,17 @@
-import theme from "@/theme/theme";
+import theme from "@/assets/theme";
 import { TextInput } from "react-native";
 
 import { ScaledSheet } from "react-native-size-matters";
 
 // GENERAL COMPONENT
 
-interface NormTextInputProps {
+interface TextInputStandardProps {
     readonly radius?: "sm" | "md" | "lg" | "full";
+    readonly placeholder?: string;
+    readonly fontSize?: number;
 }
 
-export default function NormTextInput({ radius }: NormTextInputProps) {
+export default function TextInputStandard({ radius, placeholder, fontSize }: TextInputStandardProps) {
     return (
         <TextInput
             style={[
@@ -18,8 +20,9 @@ export default function NormTextInput({ radius }: NormTextInputProps) {
                 radius === "md" && styles.radiusMd,
                 radius === "lg" && styles.radiusLg,
                 radius === "full" && styles.radiusFull,
+                { fontSize: fontSize}
             ]}
-            placeholder="Search for a food truck..."
+            placeholder={placeholder}
             placeholderTextColor={theme.colors.primaryInactive}
         />
     );
@@ -28,13 +31,9 @@ export default function NormTextInput({ radius }: NormTextInputProps) {
 const styles = ScaledSheet.create({
     inputText: {
         width: "100%",
-        borderColor: "white",
-        borderWidth: 3,
         backgroundColor: theme.colors.white,
         color: theme.colors.primary,
-        paddingHorizontal: "15@ms",
-        paddingVertical: "5@ms",
-        fontSize: "12@ms",
+        padding: theme.padding.sm,
     },
     radiusSm: {
         borderRadius: "5@ms",

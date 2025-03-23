@@ -1,5 +1,5 @@
 /**
- * @file TruckPage.tsx
+ * @file TruckModal.tsx
  * @description Displays detailed information about a selected food truck.
  * 
  * Features:
@@ -30,18 +30,18 @@ import {
 } from "react-native";
 
 // Constants & Theme
-import theme from "@/theme/theme";
+import theme from '@/assets/theme';
 
 // Types
 import { FoodTruck, Hours } from "@/types";
 
 // Component Props
-interface TruckPageProps {
+interface TruckModalProps {
     truck: FoodTruck;
 }
 
-const TruckPage: React.FC<TruckPageProps> = ({ truck }) => {
-    const { toggleTruckPage } = useTruckStore();
+const TruckModal: React.FC<TruckModalProps> = ({ truck }) => {
+    const { toggleTruckModal } = useTruckStore();
 
     // State Hooks
     const [isFavorite, setIsFavorite] = useState(false);
@@ -93,13 +93,13 @@ const TruckPage: React.FC<TruckPageProps> = ({ truck }) => {
                     }}
                     imageStyle={{ resizeMode: "cover" }}
                 >
-                    <LinearGradient colors={[theme.colors.primarySuperLight, theme.colors.primary]} style={styles.gradient} />
+                    <LinearGradient colors={[theme.colors.primaryLight, theme.colors.primary]} style={styles.gradient} />
                     
                     {/* Header Content */}
                     <View style={styles.headerContent}>
                         <View style={styles.headerRow}>
                             {/* Back Button */}
-                            <Pressable style={styles.backBtnContainer} onPress={toggleTruckPage}>
+                            <Pressable style={styles.backBtnContainer} onPress={toggleTruckModal}>
                                 <Ionicons name="arrow-back" size={30} color={theme.colors.white} />
                             </Pressable>
 
@@ -356,4 +356,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default TruckPage;
+export default TruckModal;

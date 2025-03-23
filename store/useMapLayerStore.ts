@@ -7,7 +7,7 @@ interface MapLayerState {
 }
 
 const useMapLayerStore = create<MapLayerState>((set) => ({
-    mapStyle: Mapbox.StyleURL.Street, // Default to Street
+    mapStyle: Mapbox.StyleURL.Street,
     setMapStyle: (style) => set({ mapStyle: style }),
 }));
 

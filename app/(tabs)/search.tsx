@@ -1,84 +1,107 @@
-import {
-    Text,
-    View,
-    StyleSheet,
-    Image,
-    Pressable,
-    Dimensions,
-    ScrollView,
-} from "react-native";
-import SearchTruckCard from "@/components/SearchTruckCard";
-import { CATEGORIES, FOOD_TRUCKS } from "@/constants";
-import { useCallback } from "react";
-import DividerList from "@/components/DividerList";
-import theme from "@/theme/theme";
-import { FoodTruck } from "@/types";
-import { SafeAreaView } from "react-native-safe-area-context";
-import NormTextInput from "@/components/input/NormTextInput";
+import theme from "@/assets/theme";
+import FlatListCard from "@/components/cards/FlatListCard";
+import TruckCard from "@/components/cards/TruckCard";
+import TextInputStandard from "@/components/inputs/TextInputStandard";
+import { CATEGORIES, FOOD_TRUCKS, SEARCH_SECTIONS } from "@/constants";
 import { LinearGradient } from "expo-linear-gradient";
-import { ScaledSheet } from "react-native-size-matters";
+import {
+    View,
+    Text,
+    StyleSheet,
+    FlatList,
+    ScrollView,
+    TouchableOpacity,
+    Dimensions,
+    Image,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ms, ScaledSheet } from "react-native-size-matters";
 
 const { width } = Dimensions.get("window");
 
 export default function Search() {
-    const renderItem = useCallback(
-        ({ item }: { item: FoodTruck }) => <SearchTruckCard truck={item} />,
-        []
-    );
+    const handleCategoryPress = (category: string) => {
+        console.log(`Pressed Category: ${category}`);
+    };
 
     return (
-        <View style={styles.wholeContainer}>
-            <SafeAreaView style={styles.safeAreaViewStyle}>
-                {/* TOP CONTAINER: Includes search bar header and linear gradient */}
-                <View style={styles.topContainer}>
+        <View style={styles.rootContainer}>
+            <SafeAreaView style={styles.safeAreaView}>
+                {/* Header Section */}
+                <View style={styles.header}>
                     <LinearGradient
+                        style={styles.gradient}
                         colors={[
                             "rgba(255, 132, 0, 1)",
-                            "rgba(255, 132, 0, 0)",
+                            "rgba(255, 255, 255, 1)",
                         ]}
-                        locations={[0, .98]}
-                        style={styles.gradient}
+                        locations={[0.1, 0.95]}
                     />
-                    <NormTextInput radius="full" />
+                    <TextInputStandard
+                        radius="full"
+                        placeholder="Search Trucks"
+                        fontSize={ms(12)}
+                    />
                 </View>
 
-                {/* MIDDLE CONTAINER: Includes search categories, recommendations, top rated, and on the move */}
-                <ScrollView style={styles.middleContainer}>
-                    <DividerList
-                        text="Search Categories"
-                        list={CATEGORIES}
-                        keyExtractor={(item) => item.name}
-                        renderItem={({ item }) => (
-                            <Pressable
-                                style={styles.categoryButton}
-                                onPress={null}
-                            >
-                                <Image
-                                    source={{ uri: item.url }}
-                                    style={styles.image}
+                <ScrollView style={styles.body}>
+                    {/* Individual Search Categories Card */}
+                    <View style={styles.cardContainer}>
+                        <FlatListCard title="Search Categories">
+                            <FlatList
+                                contentContainerStyle={styles.flatListGap}
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                data={CATEGORIES}
+                                keyExtractor={(item, index) =>
+                                    item.name + index
+                                }
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity
+                                        style={styles.categoryButton}
+                                        onPress={() =>
+                                            handleCategoryPress(item.name)
+                                        }
+                                    >
+                                        <Image
+                                            source={{ uri: item.url }}
+                                            style={styles.image}
+                                        />
+                                        <Text style={styles.buttonText}>
+                                            {item.name}
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
+                            />
+                        </FlatListCard>
+                    </View>
+
+                    {SEARCH_SECTIONS.map((section) => (
+                        <View key={section.name} style={styles.cardContainer}>
+                            <FlatListCard title={section.name}>
+                                <FlatList
+                                    contentContainerStyle={styles.flatListGap}
+                                    horizontal={true}
+                                    showsHorizontalScrollIndicator={false}
+                                    data={section.trucks}
+                                    keyExtractor={(truckId) =>
+                                        truckId.toString()
+                                    }
+                                    renderItem={({ item: truckId }) => {
+                                        const truck =
+                                            FOOD_TRUCKS.find(
+                                                (truck) =>
+                                                    truck.id ==
+                                                    truckId.toString()
+                                            ) ?? null;
+                                        return truck ? (
+                                            <TruckCard truck={truck} />
+                                        ) : null;
+                                    }}
                                 />
-                                <Text style={styles.btnText}>{item.name}</Text>
-                            </Pressable>
-                        )}
-                    />
-                    <DividerList
-                        text="Our Recommendations"
-                        list={FOOD_TRUCKS}
-                        keyExtractor={(truck) => truck.name}
-                        renderItem={renderItem}
-                    />
-                    <DividerList
-                        text="Top Rated"
-                        list={FOOD_TRUCKS}
-                        keyExtractor={(truck) => truck.name}
-                        renderItem={renderItem}
-                    />
-                    <DividerList
-                        text="On The Move"
-                        list={FOOD_TRUCKS}
-                        keyExtractor={(truck) => truck.name}
-                        renderItem={renderItem}
-                    />
+                            </FlatListCard>
+                        </View>
+                    ))}
                 </ScrollView>
             </SafeAreaView>
         </View>
@@ -86,56 +109,59 @@ export default function Search() {
 }
 
 const styles = ScaledSheet.create({
-    wholeContainer: {
+    rootContainer: {
         flex: 1,
-        // borderColor: "red",
-        // borderWidth: 4,
         backgroundColor: theme.colors.primary,
     },
-    safeAreaViewStyle: {
+    safeAreaView: {
         flex: 1,
-        flexDirection: "column",
-        // borderColor: "green",
-        // borderWidth: 4,
     },
-    topContainer: {
+    testText: {
+        flex: 1,
+        fontSize: "20@s",
+        textAlign: "center",
+        textAlignVertical: "center",
+        width: "100%",
+    },
+    header: {
         justifyContent: "center",
-        alignItems: "center",
-        paddingHorizontal: "10@ms",
-        paddingVertical: "30@ms",
-        backgroundColor: theme.colors.white,
-
-        // borderColor: "blue",
-        // borderWidth: 4,
+        paddingHorizontal: theme.padding.sm,
+        paddingVertical: theme.padding.xxxl,
     },
     gradient: {
         ...StyleSheet.absoluteFillObject,
     },
-    middleContainer: {
-        gap: 10,
-        padding: "10@ms",
+    searchBar: {
+        backgroundColor: theme.colors.white,
+        borderRadius: "30@ms",
+        paddingHorizontal: theme.padding.md,
+        paddingVertical: theme.padding.md,
+    },
+    body: {
         flex: 1,
         backgroundColor: theme.colors.white,
     },
+    cardContainer: {
+        backgroundColor: theme.colors.white,
+        padding: theme.padding.sm,
+    },
+    flatListGap: {
+        gap: "10@ms",
+    },
     categoryButton: {
-        position: "relative",
-        width: width * 0.21,
-        height: width * 0.21,
-        borderRadius: 15,
+        width: width * 0.2,
+        height: width * 0.2,
+        borderRadius: "10@ms",
         justifyContent: "center",
         alignItems: "center",
-        padding: 10,
-        marginBottom: 10,
-        gap: 5,
-        backgroundColor: theme.colors.primarySuperLight,
+        gap: "5@ms",
+        backgroundColor: theme.colors.primaryLight,
     },
     image: {
         width: "50%",
         height: "50%",
     },
-    btnText: {
-        color: theme.colors.primary,
-        fontSize: 9.8,
-        fontWeight: "bold",
+    buttonText: {
+        fontSize: theme.fontSize.xxs,
     },
 });

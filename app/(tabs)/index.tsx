@@ -8,19 +8,20 @@ import React, {
 } from "react";
 
 // React Native Components
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 
 // Custom Components
-import SearchBar from "@/components/SearchBar";
-import NearbyTrucksCard from "@/components/NearbyTrucksCard";
-import SelectedTruckCard from "@/components/SelectedTruckCard";
-import CategoryModal from "@/components/CategoryModal";
-import MenuModal from "@/components/MenuModal";
-import TruckPage from "@/components/TruckPage";
+import SearchBar from "@/components/search/SearchBar";
+import NearbyTrucks from "@/components/indexPage/NearbyTrucks";
+import SelectedTruck from "@/components/indexPage/SelectedTruck";
+import CategoryModal from "@/components/modals/CategoryModal";
+import MenuModal from "@/components/modals/MenuModal";
+import TruckModal from "@/components/modals/TruckModal";
 
 // Constants & Types & Themes
+import { ms, ScaledSheet } from "react-native-size-matters";
 import { FOOD_TRUCKS } from "@/constants";
-import theme from "@/theme/theme";
+import theme from "@/assets/theme";
 
 // Mapbox Imports
 import Mapbox, {
@@ -55,7 +56,7 @@ export default function Index() {
     // Zustand store for managing selected truck
     const {
         selectedTruck,
-        showTruckPage,
+        showTruckModal,
         setSelectedTruckId,
         clearSelectedTruck,
     } = useTruckStore();
@@ -122,7 +123,7 @@ export default function Index() {
         if (selectedTruck && mapLoaded) {
             moveCamera(
                 selectedTruck.coordinates.longitude,
-                selectedTruck.coordinates.latitude - 0.0012,
+                selectedTruck.coordinates.latitude - ms(0.0007),
                 16
             );
         } else {
@@ -145,6 +146,7 @@ export default function Index() {
      * Filters and computes food truck features only when dependencies change.
      */
     const truckFeatures = useMemo(() => {
+        // Then filter trucks based on category filters
         const filteredTrucks =
             categoryFilters.length === 0
                 ? FOOD_TRUCKS
@@ -161,9 +163,7 @@ export default function Index() {
                             truck.coordinates.longitude,
                             truck.coordinates.latitude,
                         ],
-                        {
-                            id: truck.id,
-                        }
+                        { id: truck.id }
                     )
                 )
             ),
@@ -181,20 +181,7 @@ export default function Index() {
     }, []);
 
     return (
-        <View style={styles.container}>
-            {/* Category Modal */}
-            {showCategoryModal && <CategoryModal />}
-
-            {/* Menu Modal */}
-            {showMenuModal && selectedTruck && (
-                <MenuModal truck={selectedTruck} />
-            )}
-
-            {/* Truck Page */}
-            {showTruckPage && selectedTruck && (
-                <TruckPage truck={selectedTruck} />
-            )}
-
+        <View style={styles.rootContainer}>
             {/* Search Bar */}
             <SearchBar
                 onSearch={handleSearch}
@@ -258,17 +245,29 @@ export default function Index() {
 
             {/* Conditional Card Rendering */}
             {selectedTruck ? (
-                <SelectedTruckCard truck={selectedTruck} />
+                <SelectedTruck truck={selectedTruck} />
             ) : (
-                <NearbyTrucksCard trucks={truckFeatures.filteredTrucks} />
+                <NearbyTrucks trucks={truckFeatures.filteredTrucks} />
+            )}
+
+            {/* Category Modal */}
+            {showCategoryModal && <CategoryModal />}
+
+            {/* Menu Modal */}
+            {showMenuModal && selectedTruck && (
+                <MenuModal truck={selectedTruck} />
+            )}
+
+            {/* Truck Page */}
+            {showTruckModal && selectedTruck && (
+                <TruckModal truck={selectedTruck} />
             )}
         </View>
     );
 }
 
-// Styles
-const styles = StyleSheet.create({
-    container: { position: "relative", flex: 1 },
+const styles = ScaledSheet.create({
+    rootContainer: { flex: 1 },
     map: { flex: 1 },
     loadingContainer: {
         position: "absolute",
@@ -279,31 +278,30 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "rgba(255, 255, 255, 1)", // Light overlay
+        backgroundColor: theme.colors.white,
     },
 });
 
-// Mapbox Layer Styles
 const circleLayerStyle = {
     circlePitchAlignment: "map",
-    circleColor: "orange",
-    circleRadius: 30,
-    circleOpacity: 0.4,
-    circleStrokeWidth: 2,
-    circleStrokeColor: "orange",
+    circleColor: theme.colors.primary,
+    circleRadius: ms(30),
+    circleOpacity: 0.65,
+    circleStrokeWidth: ms(3),
+    circleStrokeColor: theme.colors.primary,
 };
 
 const symbolCountStyle = {
     textField: ["get", "point_count"],
-    textColor: "white",
-    textSize: 25,
+    textColor: theme.colors.white,
+    textSize: ms(25),
 };
 
 const symbolLayerStyle = {
     iconImage: "icon",
-    iconSize: 0.05,
+    iconSize: ms(0.05),
 };
 
 const locationPuckStyle = {
-    pulsing: { isEnabled: true, color: "orange" },
+    pulsing: { isEnabled: true, color: theme.colors.primary },
 };

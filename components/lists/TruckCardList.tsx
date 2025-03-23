@@ -1,16 +1,17 @@
 import React, { useCallback } from "react";
-import { StyleSheet, FlatList } from "react-native";
-import TruckCardSmall from "./TruckCardSmall";
+import { FlatList, ListRenderItem } from "react-native";
+import TruckCardSmall from "@/components/cards/TruckCardSmall";
 import { FoodTruck } from "@/types";
 
 interface TruckCardListProps {
   trucks: FoodTruck[];
+  pressable: boolean;
 }
 
-const TruckCardList: React.FC<TruckCardListProps> = ({ trucks }) => {
+const TruckCardList: React.FC<TruckCardListProps> = ({ trucks, pressable }) => {
   // Optimize `renderItem` using useCallback
-  const renderItem = useCallback(
-    ({ item }: { item: FoodTruck }) => <TruckCardSmall truck={item} />,
+  const renderItem: ListRenderItem<FoodTruck> = useCallback(
+    ({ item }) => <TruckCardSmall truck={item} pressable={pressable} />,
     []
   );
 
@@ -23,22 +24,8 @@ const TruckCardList: React.FC<TruckCardListProps> = ({ trucks }) => {
       initialNumToRender={10} // Reduce initial render time
       maxToRenderPerBatch={10} // Optimize batch rendering
       windowSize={5} // Adjusts the number of items kept in memory
-      getItemLayout={(_, index) => ({
-        length: 80, // Approximate height of each row
-        offset: 80 * index,
-        index,
-      })} // Enables smooth scrolling
     />
   );
 };
-
-const styles = StyleSheet.create({
-  divider: {
-    height: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-    width: "100%",
-    marginVertical: 5,
-  },
-});
 
 export default React.memo(TruckCardList); // Prevents unnecessary re-renders
