@@ -72,7 +72,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const [iconsLoaded, setIconsLoaded] = useState(false);
     const [showClearButton, setShowClearButton] = useState(false);
     const [showBackButton, setShowBackButton] = useState(false);
-    const [text, setText] = useState("");
 
     const { setMapStyle } = useMapLayerStore();
     const { clearSelectedTruck } = useTruckStore();
@@ -93,16 +92,14 @@ const SearchBar: React.FC<SearchBarProps> = ({
     const handleClear = () => {
         if (googlePlacesRef.current) {
             googlePlacesRef.current.clear();
-            setShowClearButton(false);
         }
     };
 
     const handleBack = () => {
         if (googlePlacesRef.current) {
             googlePlacesRef.current.blur();
-            setShowBackButton(false);
         }
-    }
+    };
 
     // Load the font for Ionicons
     useEffect(() => {
@@ -113,10 +110,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
         loadIcons();
     }, []);
-
-    useEffect(() => {
-        setShowClearButton(text.length > 0);
-    }, [text]);
 
     return (
         <View style={styles.rootContainer}>
@@ -131,16 +124,21 @@ const SearchBar: React.FC<SearchBarProps> = ({
                 <GooglePlacesAutocomplete
                     ref={googlePlacesRef}
                     placeholder="Search other places"
-                    minLength={2} // Minimum characters before search triggers
+                    minLength={2}
                     query={{
                         key: GOOGLE_PLACES_API_KEY,
                         language: "en",
                     }}
                     onPress={(data, details = null) => {
+                        if (details) {
+                            Object.entries(details).forEach(([key, value]) => {
+                                console.log(key);
+                            });
+                        }
                         if (details?.geometry?.location) {
                             const { lat: latitude, lng: longitude } =
                                 details.geometry.location;
-                            onSearch({ latitude, longitude }); // Pass selected location to parent component
+                            onSearch({ latitude, longitude });
                         }
                     }}
                     styles={{
@@ -183,12 +181,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
                     }}
                     textInputProps={{
                         placeholderTextColor: theme.colors.primaryInactive,
-                        onPointerCancel: () => {
-                            setShowBackButton(false);
-                        },
-                        onChangeText: (text) => setText(text),
                         onFocus: () => {
                             setShowBackButton(true);
+                            setShowClearButton(true);
+                        },
+                        onBlur: () => {
+                            setShowBackButton(false);
+                            setShowClearButton(false);
                         },
                     }}
                     enablePoweredByContainer={false}

@@ -136,6 +136,7 @@ export default function Index() {
      */
     const handleSearch = useCallback(
         ({ latitude, longitude }: Coordinates) => {
+            console.log("Handle Search called")
             moveCamera(longitude, latitude);
             setSelectedTruckId(null);
         },
