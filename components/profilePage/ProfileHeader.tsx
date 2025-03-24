@@ -50,7 +50,7 @@ const styles = ScaledSheet.create({
         paddingHorizontal: theme.padding.sm,
         paddingVertical: theme.padding.lg,
         gap: theme.padding.xs,
-        borderBottomColor: theme.colors.gray,
+        borderBottomColor: theme.colors.grayLight,
         borderBottomWidth: 1,
     },
     mainRow: {
