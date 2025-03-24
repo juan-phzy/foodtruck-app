@@ -4,7 +4,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import ProfileHeader from "@/components/profilePage/ProfileHeader";
 import { useSession } from "@/context/ctx";
 
-const Profile = () => {
+export default function Profile(){
     const { signOut } = useSession();
     return (
         <View style={styles.container}>
@@ -31,5 +31,3 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFFFFF",
     },
 });
-
-export default Profile;

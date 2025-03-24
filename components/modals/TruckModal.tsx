@@ -93,7 +93,7 @@ const TruckModal: React.FC<TruckModalProps> = ({ truck }) => {
                     }}
                     imageStyle={{ resizeMode: "cover" }}
                 >
-                    <LinearGradient colors={[theme.colors.primaryLight, theme.colors.primary]} style={styles.gradient} />
+                    <LinearGradient colors={["rgba(255, 132, 0, .2)", theme.colors.primary]} style={styles.gradient} />
                     
                     {/* Header Content */}
                     <View style={styles.headerContent}>
