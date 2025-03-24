@@ -1,5 +1,5 @@
 /**
- * @file ButtonStandard.tsx
+ * @file StandardButton.tsx
  * @description A customizable button component that supports different styles, padding, font sizes, and widths.
  * 
  * Used In:
@@ -36,10 +36,10 @@ type ButtonProps = Readonly<{
 }>;
 
 /**
- * ButtonStandard Component
+ * StandardButton Component
  * A reusable and customizable button with various styles and configurations.
  */
-export default function ButtonStandard({
+export default function StandardButton({
   style = "dark", // Default button style
   text,
   onPress,
@@ -77,7 +77,7 @@ export default function ButtonStandard({
   );
 }
 
-// Styles for the ButtonStandard Component
+// Styles for the StandardButton Component
 const styles = ScaledSheet.create({
   // Base button style
   base: {

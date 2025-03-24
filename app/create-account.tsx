@@ -20,7 +20,7 @@ import { router } from "expo-router";
 
 // Custom Components
 import TextInputFancy from "@/components/inputs/TextInputFancy";
-import ButtonStandard from "@/components/buttons/ButtonStandard";
+import StandardButton from "@/components/buttons/StandardButton";
 
 // Theme & Constants
 import theme from "@/assets/theme";
@@ -199,7 +199,7 @@ export default function CreateAccountScreen() {
                         </ScrollView>
 
                         {/* Sign Up Button */}
-                        <ButtonStandard
+                        <StandardButton
                             style="light"
                             verticalPadding={theme.padding.sm}
                             fontSize={theme.fontSize.md}

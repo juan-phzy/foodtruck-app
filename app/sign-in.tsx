@@ -30,7 +30,7 @@ import { router } from "expo-router";
 
 // Custom Components
 import TextInputFancy from "@/components/inputs/TextInputFancy";
-import ButtonStandard from "@/components/buttons/ButtonStandard";
+import StandardButton from "@/components/buttons/StandardButton";
 
 // Context & State Management
 import { useSession } from "@/context/ctx";
@@ -134,7 +134,7 @@ export default function SignIn() {
                                     })
                                 }
                             />
-                            <ButtonStandard
+                            <StandardButton
                                 style="light"
                                 verticalPadding={theme.padding.xs}
                                 fontSize={theme.fontSize.sm}
@@ -161,7 +161,7 @@ export default function SignIn() {
                         {/* New User Section */}
                         <View style={styles.newUserContainer}>
                             <Text style={styles.newUserLabel}>New User?</Text>
-                            <ButtonStandard
+                            <StandardButton
                                 style="outlineLight"
                                 verticalPadding={theme.padding.xs}
                                 fontSize={theme.fontSize.sm}

@@ -1,4 +1,5 @@
 // constants.ts
+import { FoodTruck } from "@/types";
 
 export const FORM_FIELDS = [
     { label: "First Name", placeholder: "Enter your first name" },
@@ -10,7 +11,33 @@ export const FORM_FIELDS = [
     { label: "Phone Number", placeholder: "(123)-456-7890" },
 ];
 
-import { FoodTruck } from "./types";
+
+
+export type MunchUser = {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+    munchLevel: number;
+    favoriteTrucks: number[];
+    reviews: number[];
+    recentlyViewed: number[];
+    favoriteCategories: string[];
+}
+
+export const USER: MunchUser = {
+    id: "1",
+    name: "Juan Hernandez",
+    email: "juanhernandez@munchmap.com",
+    phone: "(123)-456-7890",
+    password: "password123",
+    munchLevel: 3,
+    favoriteTrucks: [],
+    reviews: [],
+    recentlyViewed: [],
+    favoriteCategories: [],
+}
 
 type SearchSection = {
     name: string;

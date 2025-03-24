@@ -45,7 +45,7 @@ import { FoodTruck } from "@/types";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import FlatListCard from "@/components/cards/FlatListCard";
-import ItemCard from "../cards/ItemCard";
+import ItemCard from "@/components/cards/ItemCard";
 
 // Props Interface
 interface MenuModalProps {

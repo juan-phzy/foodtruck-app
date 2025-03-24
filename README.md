@@ -62,7 +62,7 @@ FOODTRUCK-APP
 |
 ├── components               	# Reusable UI components
 │   ├── buttons
-|	|	└── ButtonStandard.tsx	# Standard Button component with preset styles
+|	|	└── StandardButton.tsx	# Standard Button component with preset styles
 │   ├── cards
 │   |   ├── FlatListCard.tsx	# White labeled card with box shadow, takes in a title and children
 │   |   ├── ItemCard.tsx		# Renders a food item with name, price, description, and image
