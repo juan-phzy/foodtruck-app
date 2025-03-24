@@ -6,11 +6,20 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
 // Context Providers
+import { ClerkProvider } from "@clerk/clerk-expo";
 import { SessionProvider } from "@/context/ctx";
 
 // Polyfills and Utilities
 import "react-native-get-random-values";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+
+const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
+
+if (!publishableKey) {
+    throw new Error(
+        "Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env"
+    );
+}
 
 /**
  * RootLayout Component
