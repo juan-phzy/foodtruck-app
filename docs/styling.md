@@ -2443,3 +2443,5 @@ const styles = ScaledSheet.create({
 ```
 
 **The search page is now finalized**
+
+**NOTE, the final final version of the search page has some additional tweaks after I reviewed it again. The version here is for tutorial purposes only**

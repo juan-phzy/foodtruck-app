@@ -1,35 +1,63 @@
 // app/(tabs)/profile.tsx
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import ProfileHeader from "@/components/profilePage/ProfileHeader";
-import { useSession } from "@/context/ctx";
+import { LinearGradient } from "expo-linear-gradient";
+import theme from "@/assets/theme";
+import { ScaledSheet } from "react-native-size-matters";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { PROFILE_SECTIONS, USER } from "@/constants";
+import LargeIconButton from "@/components/buttons/LargeIconButton";
+import AchievementSection from "@/components/profilePage/AchievementSection";
 
-const Profile = () => {
-    const { signOut } = useSession();
+export default function Profile() {
     return (
-        <View style={styles.container}>
-            <View style={{ height: 50 }}></View>
-
-            <ProfileHeader
-                name="Juan"
-                level={1}
-                phoneNumber="123-456-7890"
-                email="juan@gmail.com"
-                progress={0.75}
+        <View style={styles.rootContainer}>
+            <LinearGradient
+                style={styles.gradient}
+                colors={["rgba(255, 132, 0, 1)", "rgba(255, 132, 0, 0)"]}
+                locations={[0.01, 0.09]}
             />
-
-            <TouchableOpacity onPress={signOut}>
-                <Text>Sign Out</Text>
-            </TouchableOpacity>
+            <SafeAreaView style={styles.safeAreaView}>
+                <ProfileHeader user={USER} />
+                <View style={styles.sections}>
+                    <FlatList
+                        data={PROFILE_SECTIONS}
+                        contentContainerStyle={styles.gap}
+                        columnWrapperStyle={styles.gap}
+                        keyExtractor={(item) => item.name}
+                        renderItem={({ item }) => (
+                            <LargeIconButton
+                                text={item.name}
+                                icon={item.icon}
+                            />
+                        )}
+                        numColumns={2}
+                    />
+                </View>
+                <AchievementSection />
+            </SafeAreaView>
         </View>
     );
-};
+}
 
-const styles = StyleSheet.create({
-    container: {
+const styles = ScaledSheet.create({
+    rootContainer: {
         flex: 1,
-        backgroundColor: "#FFFFFF",
+        backgroundColor: theme.colors.white,
+    },
+    gradient: {
+        ...StyleSheet.absoluteFillObject,
+    },
+    safeAreaView: {
+        flex: 1,
+    },
+    sections: {
+        padding: theme.padding.sm,
+        borderBottomColor: theme.colors.grayLight,
+        borderBottomWidth: 1,
+    },
+    gap: {
+        gap: theme.padding.xs,
     },
 });
-
-export default Profile;

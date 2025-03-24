@@ -31,7 +31,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import useFilterStore from "@/store/useFilterStore";
 
 // Custom Components
-import ButtonStandard from "@/components/buttons/ButtonStandard";
+import StandardButton from "@/components/buttons/StandardButton";
 import TruckCardList from "@/components/lists/TruckCardList"
 
 interface NearbyTrucksProps {
@@ -79,7 +79,7 @@ const NearbyTrucks: React.FC<NearbyTrucksProps> = ({ trucks }) => {
             <View style={styles.filterBar}>
                 <Text style={styles.filterBarText}>Filters:</Text>
 
-                <ButtonStandard
+                <StandardButton
                     style={categoryFilters.length > 0 ? "dark" : "outlineDark"}
                     verticalPadding={theme.padding.xxs}
                     fontSize={theme.fontSize.xs}
@@ -88,7 +88,7 @@ const NearbyTrucks: React.FC<NearbyTrucksProps> = ({ trucks }) => {
                     onPress={toggleCategoryModal}
                 />
 
-                <ButtonStandard
+                <StandardButton
                     style={sortBy === "distance" ? "dark" : "outlineDark"}
                     verticalPadding={theme.padding.xxs}
                     fontSize={theme.fontSize.xs}
@@ -99,7 +99,7 @@ const NearbyTrucks: React.FC<NearbyTrucksProps> = ({ trucks }) => {
                     }
                 />
 
-                <ButtonStandard
+                <StandardButton
                     style={sortBy === "rating" ? "dark" : "outlineDark"}
                     verticalPadding={theme.padding.xxs}
                     fontSize={theme.fontSize.xs}
