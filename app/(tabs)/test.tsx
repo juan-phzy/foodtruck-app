@@ -20,7 +20,7 @@ const styles = ScaledSheet.create({
     },
     safeAreaContainer: {
         flex: 1,
-        padding: theme.padding.xxxl,
+        padding: theme.padding.lg,
         justifyContent: "center",
         alignItems: "center",
     },

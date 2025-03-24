@@ -62,6 +62,7 @@ FOODTRUCK-APP
 |
 ├── components               	# Reusable UI components
 │   ├── buttons
+│   |   ├── LargeIconButton.tsx	# Renders the large buttons in profile page
 |	|	└── StandardButton.tsx	# Standard Button component with preset styles
 │   ├── cards
 │   |   ├── FlatListCard.tsx	# White labeled card with box shadow, takes in a title and children
@@ -81,7 +82,8 @@ FOODTRUCK-APP
 │   |   ├── MenuModal.tsx		# Renders the truck menu
 │   |   └── TruckModal.tsx		# Renders the full truck modal
 │   ├── profilePage
-│   |   └── ProfileHeader.tsx	# Renders the profile header
+│   |   ├── AchievementSection.tsx	# Renders the achievement section
+│   |   └── ProfileHeader.tsx	    # Renders the profile header
 │   └── search
 │       └── SearchBar.tsx		# Renders the google autocomplete map searchbar
 │
