@@ -22,6 +22,7 @@ import TruckModal from "@/components/modals/TruckModal";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { FOOD_TRUCKS } from "@/constants";
 import theme from "@/assets/theme";
+import * as Location from 'expo-location';
 
 // Mapbox Imports
 import Mapbox, {
@@ -92,28 +93,39 @@ export default function Index() {
     /**
      * Fetch User Location on Initial Load.
      */
-    useEffect(() => {
-        if (mapLoaded) {
-            const getUserLocation = async () => {
-                try {
-                    const location =
-                        await locationManager.getLastKnownLocation();
-                    if (location && isMounted.current) {
-                        const { latitude, longitude } = location.coords;
-                        console.log("User Location:", { latitude, longitude });
-                        setUserLocation({ latitude, longitude });
-                        moveCamera(longitude, latitude);
-                        setTimeout(() => setShowMap(true), 500);
-                    } else {
-                        console.warn("No last known location available");
-                    }
-                } catch (error) {
-                    console.error("Error getting user location:", error);
-                }
-            };
 
-            getUserLocation();
-        }
+    useEffect(() => {
+      if (mapLoaded) {
+        const getUserLocation = async () => {
+          try {
+            // Ask for location permissions
+            const { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+              console.warn('Permission to access location was denied');
+              return;
+            }
+    
+            // Get user's current location
+            const location = await Location.getCurrentPositionAsync({
+              accuracy: Location.Accuracy.High,
+            });
+    
+            if (location && isMounted.current) {
+              const { latitude, longitude } = location.coords;
+              console.log('User Location:', { latitude, longitude });
+              setUserLocation({ latitude, longitude });
+              moveCamera(longitude, latitude);
+              setTimeout(() => setShowMap(true), 500);
+            } else {
+              console.warn('No location data available');
+            }
+          } catch (error) {
+            console.error('Error getting user location:', error);
+          }
+        };
+    
+        getUserLocation();
+      }
     }, [mapLoaded, moveCamera]);
 
     /**
