@@ -322,7 +322,7 @@ const styles = ScaledSheet.create({
         gap: "5@ms",
     },
     controlButton: {
-        backgroundColor: "white",
+        backgroundColor: theme.colors.white,
         padding: theme.padding.sm,
         borderRadius: "30@ms",
         justifyContent: "center",

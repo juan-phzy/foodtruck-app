@@ -165,6 +165,7 @@ const styles = ScaledSheet.create({
     filterBarText: {
         fontSize: theme.fontSize.md,
         fontWeight: "bold",
+        color: theme.colors.black,
         flex: 1,
     },
 });

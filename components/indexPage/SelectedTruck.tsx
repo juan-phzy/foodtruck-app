@@ -140,7 +140,7 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                     <MaterialCommunityIcons
                         name="directions"
                         size={ms(17)}
-                        color="white"
+                        color={theme.colors.white}
                     />
                     <Text style={styles.buttonText}>Nav</Text>
                 </TouchableOpacity>
@@ -152,7 +152,7 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                     <MaterialCommunityIcons
                         name="truck-outline"
                         size={ms(17)}
-                        color="white"
+                        color={theme.colors.white}
                     />
                     <Text style={styles.buttonText}>View</Text>
                 </TouchableOpacity>
@@ -164,7 +164,7 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                     <MaterialIcons
                         name="restaurant-menu"
                         size={ms(17)}
-                        color="white"
+                        color={theme.colors.white}
                     />
                     <Text style={styles.buttonText}>Menu</Text>
                 </TouchableOpacity>
