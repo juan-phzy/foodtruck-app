@@ -81,14 +81,6 @@ export default function VendorLayout() {
                 }}
             />
 
-            {/* Test Tab */}
-            <Tabs.Screen
-                name="test"
-                options={{
-                    tabBarIcon: (props) =>
-                        renderTabIcon({ ...props, name: "build-outline" }),
-                }}
-            />
         </Tabs>
     );
 }

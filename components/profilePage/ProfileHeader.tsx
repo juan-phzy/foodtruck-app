@@ -4,6 +4,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
 import { MunchUser } from "@/constants";
 import { useClerk } from "@clerk/clerk-expo";
+import { useRouter } from "expo-router";
 
 interface ProfileHeaderProps {
     user: MunchUser;
@@ -13,10 +14,13 @@ const { width } = Dimensions.get("window");
 
 const ProfileHeader = ({ user }: ProfileHeaderProps) => {
     const { signOut } = useClerk();
+    const router = useRouter();
 
     const handleSignOut = async () => {
         try {
             await signOut();
+            router.replace("/(auth)/login");
+
             // Redirect to your desired page
             //   Linking.openURL(Linking.createURL('/'))
         } catch (err) {

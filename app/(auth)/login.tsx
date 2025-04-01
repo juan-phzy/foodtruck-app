@@ -14,6 +14,8 @@ import {
     Text,
     ImageBackground,
     ActivityIndicator,
+    Pressable,
+    TouchableOpacity,
 } from "react-native";
 
 // Expo Libraries
@@ -34,6 +36,11 @@ import { ScaledSheet } from "react-native-size-matters";
 import { useSignIn } from "@clerk/clerk-expo";
 
 export default function SignIn() {
+    /*
+    NEW
+    */
+    const [isVendor, setIsVendor] = useState(false);
+
     const [loading, setLoading] = useState(false);
     const { signIn, setActive, isLoaded } = useSignIn();
     const router = useRouter();
@@ -57,7 +64,11 @@ export default function SignIn() {
             if (signInAttempt.status === "complete") {
                 await setActive({ session: signInAttempt.createdSessionId });
                 setLoading(false);
-                router.replace("/");
+                if (isVendor) {
+                    router.replace("/(vendor)");
+                } else {
+                    router.replace("/(public)");
+                }
             } else {
                 // If the status isn't complete, check why. User might need to
                 // complete further steps.
@@ -160,7 +171,7 @@ export default function SignIn() {
                                     ? "Signing In..."
                                     : "Continue With Google"
                             }
-                            onPress={()=>{}}
+                            onPress={() => {}}
                             disabled={loading}
                             icon="logo-google"
                         />
@@ -179,9 +190,16 @@ export default function SignIn() {
                         </View>
 
                         {/* Switch to Vendor Login */}
-                        <Text style={styles.switchVendorText}>
-                            Switch to Vendor Login
-                        </Text>
+                        <TouchableOpacity
+                            onPress={() => setIsVendor((prev) => !prev)}
+                        >
+                            <Text style={styles.switchVendorText}>
+                                {isVendor
+                                    ? "Switch to Public Login"
+                                    : "Switch to Vendor Login"}
+                            </Text>
+                        </TouchableOpacity>
+
                     </BlurView>
                 </SafeAreaView>
             </ImageBackground>
@@ -259,7 +277,6 @@ const styles = ScaledSheet.create({
         fontWeight: "medium",
     },
     switchVendorText: {
-        width: "100%",
         color: theme.colors.white,
         fontSize: theme.fontSize.xs,
         paddingVertical: theme.padding.xxs,
