@@ -33,7 +33,7 @@ const renderTabIcon = ({ color, name }: TabIconProps) => (
     <Ionicons name={name} size={ms(25)} color={color} />
 );
 
-export default function PublicLayout() {
+export default function VendorLayout() {
 
     return (
         <Tabs
@@ -65,7 +65,7 @@ export default function PublicLayout() {
 
             {/* Search Tab */}
             <Tabs.Screen
-                name="search"
+                name="users"
                 options={{
                     tabBarIcon: (props) =>
                         renderTabIcon({ ...props, name: "search" }),
@@ -74,7 +74,7 @@ export default function PublicLayout() {
 
             {/* Profile Tab */}
             <Tabs.Screen
-                name="profile"
+                name="settings"
                 options={{
                     tabBarIcon: (props) =>
                         renderTabIcon({ ...props, name: "person" }),

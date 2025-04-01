@@ -25,6 +25,7 @@ import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import "react-native-get-random-values";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import InitialLayout from "@/components/navigation/InitialLayout";
+import { Stack } from "expo-router";
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
@@ -41,7 +42,7 @@ export default function RootLayout() {
             <SafeAreaProvider>
                 <GestureHandlerRootView style={{ flex: 1 }}>
                     <StatusBar style="light" />
-                    <InitialLayout />
+                    <Stack screenOptions={{ headerShown: false }} />
                 </GestureHandlerRootView>
             </SafeAreaProvider>
         </ClerkProvider>

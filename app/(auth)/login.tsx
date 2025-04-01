@@ -27,12 +27,11 @@ import StandardButton from "@/components/buttons/StandardButton";
 
 // Context & State Management
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as AuthSession from "expo-auth-session";
 
 // Theme & Styles
 import theme from "@/assets/theme";
 import { ScaledSheet } from "react-native-size-matters";
-import { useSignIn, useSSO } from "@clerk/clerk-expo";
+import { useSignIn } from "@clerk/clerk-expo";
 
 export default function SignIn() {
     const [loading, setLoading] = useState(false);
@@ -41,8 +40,6 @@ export default function SignIn() {
 
     const [emailAddress, setEmailAddress] = React.useState("");
     const [password, setPassword] = React.useState("");
-
-    const { startSSOFlow } = useSSO();
 
     // Handle the submission of the sign-in form
     const onSignInPress = async () => {
@@ -60,7 +57,7 @@ export default function SignIn() {
             if (signInAttempt.status === "complete") {
                 await setActive({ session: signInAttempt.createdSessionId });
                 setLoading(false);
-                router.replace("/(tabs)");
+                router.replace("/");
             } else {
                 // If the status isn't complete, check why. User might need to
                 // complete further steps.
@@ -74,42 +71,6 @@ export default function SignIn() {
             console.error(JSON.stringify(err, null, 2));
         }
     };
-
-    const handleGoogleSignIn = useCallback(async () => {
-        try {
-            const redirectUrl = AuthSession.makeRedirectUri({
-                scheme: "myapp",
-                path: "redirect",
-            });
-
-            console.log("Redirect URL:", redirectUrl);
-            // Start the authentication process by calling `startSSOFlow()`
-            const { createdSessionId, setActive, signIn, signUp } =
-                await startSSOFlow({
-                    strategy: "oauth_google",
-                    // For web, defaults to current path
-                    // For native, you must pass a scheme, like AuthSession.makeRedirectUri({ scheme, path })
-                    // For more info, see https://docs.expo.dev/versions/latest/sdk/auth-session/#authsessionmakeredirecturioptions
-                    redirectUrl,
-                });
-
-            // If sign in was successful, set the active session
-            if (createdSessionId) {
-                setActive!({ session: createdSessionId });
-            } else {
-                // If there is no `createdSessionId`,
-                // there are missing requirements, such as MFA
-                // Use the `signIn` or `signUp` returned from `startSSOFlow`
-                // to handle next steps
-                console.log("Sign In or Sign Up required");
-              
-            }
-        } catch (err) {
-            // See https://clerk.com/docs/custom-flows/error-handling
-            // for more info on error handling
-            console.error(JSON.stringify(err, null, 2));
-        }
-    }, []);
 
     /**
      * Handles navigation to the Create Account screen
