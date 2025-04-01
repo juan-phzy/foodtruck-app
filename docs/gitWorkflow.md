@@ -11,7 +11,7 @@ This guide defines the Git branching strategy and daily workflow for our project
 |---------------|--------------------------------|
 | `main`        | Stable, production-ready code  |
 | `develop`     | Integration branch for features |
-| `feature/*`   | Individual task branches        |
+| `feature/yourname/*`   | Individual task branches        |
 | `bugfix/*`    | Fixes to be merged to `develop` |
 | `hotfix/*`    | Urgent fixes directly to `main` |
 
