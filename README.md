@@ -55,11 +55,7 @@ FOODTRUCK-APP
 │
 ├── assets                   	# Static assets
 │   ├── fonts                	# Fonts used in the application
-│   ├── images
-│   |   ├── favicon.png
-│   |   ├── icon.png
-│   |   ├── sign-in-bg.jpg   	# Background image for Sign-In and Sign-Up screens
-│   |   └── truckImages      	# Images of food trucks
+│   ├── images                  # Image folder
 │	└── theme.ts				# Global theme file
 |
 ├── components               	# Reusable UI components
