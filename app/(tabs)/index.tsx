@@ -33,7 +33,6 @@ import Mapbox, {
     ShapeSource,
     SymbolLayer,
     CircleLayer,
-    locationManager,
 } from "@rnmapbox/maps";
 
 // Geospatial Utilities

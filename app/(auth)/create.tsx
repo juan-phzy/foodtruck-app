@@ -25,7 +25,6 @@ import StandardButton from "@/components/buttons/StandardButton";
 // Theme & Constants
 import theme from "@/assets/theme";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSession } from "@/context/ctx";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
 // Get screen dimensions for responsive UI scaling
@@ -55,7 +54,6 @@ export default function CreateAccountScreen() {
         password: "",
     });
 
-    const { signIn } = useSession();
     const [isLoading, setIsLoading] = useState(false); // Loading state
 
     /**
@@ -70,7 +68,7 @@ export default function CreateAccountScreen() {
      */
     const handleGoBack = () => {
         console.log("Go Back Pressed From Create Account");
-        router.back();
+        router.replace("/(auth)/login");
     };
 
     /**
@@ -81,7 +79,6 @@ export default function CreateAccountScreen() {
         setIsLoading(true); // Set loading state
         setTimeout(() => {
             setIsLoading(false);
-            signIn(); // Simulated sign-in
             router.replace("/"); // Redirect to home screen
         }, 2000); // Simulated loading
     };

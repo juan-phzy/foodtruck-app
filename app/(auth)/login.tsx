@@ -2,17 +2,10 @@
  * SignIn Component
  *
  * This screen provides a user-friendly interface for signing in.
- *
- * Features:
- * - Background image with gradient overlay.
- * - Toggle between Email and Phone sign-in.
- * - Input fields for credentials.
- * - Navigation to Create Account screen.
- * - Fully responsive layout for different screen sizes.
  */
 
 // React & Hooks
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 // React Native Components
 import {
@@ -26,48 +19,103 @@ import {
 // Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 
 // Custom Components
 import TextInputFancy from "@/components/inputs/TextInputFancy";
 import StandardButton from "@/components/buttons/StandardButton";
 
 // Context & State Management
-import { useSession } from "@/context/ctx";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as AuthSession from "expo-auth-session";
 
 // Theme & Styles
 import theme from "@/assets/theme";
 import { ScaledSheet } from "react-native-size-matters";
+import { useSignIn, useSSO } from "@clerk/clerk-expo";
 
 export default function SignIn() {
-   
-    const [credentials, setCredentials] = useState({
-        username: "",
-        password: "",
-    });
     const [loading, setLoading] = useState(false);
+    const { signIn, setActive, isLoaded } = useSignIn();
+    const router = useRouter();
 
-    const { signIn } = useSession();
+    const [emailAddress, setEmailAddress] = React.useState("");
+    const [password, setPassword] = React.useState("");
 
-    /**
-     * Handles the sign-in process
-     */
-    const handleSignIn = async () => {
-        console.log("Sign In Pressed");
-        setLoading(true); // Set loading state
-        setTimeout(() => {
+    const { startSSOFlow } = useSSO();
+
+    // Handle the submission of the sign-in form
+    const onSignInPress = async () => {
+        if (!isLoaded) return;
+        setLoading(true);
+        // Start the sign-in process using the email and password provided
+        try {
+            const signInAttempt = await signIn.create({
+                identifier: emailAddress,
+                password,
+            });
+
+            // If sign-in process is complete, set the created session as active
+            // and redirect the user
+            if (signInAttempt.status === "complete") {
+                await setActive({ session: signInAttempt.createdSessionId });
+                setLoading(false);
+                router.replace("/(tabs)");
+            } else {
+                // If the status isn't complete, check why. User might need to
+                // complete further steps.
+                setLoading(false);
+                console.error(JSON.stringify(signInAttempt, null, 2));
+            }
+        } catch (err) {
+            // See https://clerk.com/docs/custom-flows/error-handling
+            // for more info on error handling
             setLoading(false);
-            signIn(); // Simulated sign-in
-            router.replace("/"); // Redirect to home screen
-        }, 750); // Simulated loading
+            console.error(JSON.stringify(err, null, 2));
+        }
     };
+
+    const handleGoogleSignIn = useCallback(async () => {
+        try {
+            const redirectUrl = AuthSession.makeRedirectUri({
+                scheme: "myapp",
+                path: "redirect",
+            });
+
+            console.log("Redirect URL:", redirectUrl);
+            // Start the authentication process by calling `startSSOFlow()`
+            const { createdSessionId, setActive, signIn, signUp } =
+                await startSSOFlow({
+                    strategy: "oauth_google",
+                    // For web, defaults to current path
+                    // For native, you must pass a scheme, like AuthSession.makeRedirectUri({ scheme, path })
+                    // For more info, see https://docs.expo.dev/versions/latest/sdk/auth-session/#authsessionmakeredirecturioptions
+                    redirectUrl,
+                });
+
+            // If sign in was successful, set the active session
+            if (createdSessionId) {
+                setActive!({ session: createdSessionId });
+            } else {
+                // If there is no `createdSessionId`,
+                // there are missing requirements, such as MFA
+                // Use the `signIn` or `signUp` returned from `startSSOFlow`
+                // to handle next steps
+                console.log("Sign In or Sign Up required");
+              
+            }
+        } catch (err) {
+            // See https://clerk.com/docs/custom-flows/error-handling
+            // for more info on error handling
+            console.error(JSON.stringify(err, null, 2));
+        }
+    }, []);
 
     /**
      * Handles navigation to the Create Account screen
      */
-    const handleCreateAccount = () => {
-        router.push("/create-account");
+    const goToCreateAccount = () => {
+        router.replace("/(auth)/create");
     };
 
     return (
@@ -86,7 +134,7 @@ export default function SignIn() {
                             "rgba(91, 47, 0, 0.90)", // Dark Orange
                             "rgba(0, 0, 0, 1)", // Black
                         ]}
-                        locations={[0, 0.5, .9]}
+                        locations={[0, 0.5, 0.9]}
                     />
 
                     {/* Logo Section */}
@@ -99,39 +147,23 @@ export default function SignIn() {
 
                     {/* Blurred Body Container for Form */}
                     <BlurView intensity={10} style={styles.bodyContainer}>
-                        {/* Form Gradient Overlay */}
-                        {/* <LinearGradient
-                            style={styles.gradient}
-                            colors={[
-                                "rgba(210, 210, 210, 0.2)",
-                                "rgba(0, 0, 0, 0)",
-                            ]}
-                            locations={[0.5, 1]}
-                        /> */}
-
                         {/* Input Form */}
                         <View style={styles.signInForm}>
                             <TextInputFancy
                                 label="Email"
                                 placeholder="you@email.com"
-                                value={credentials.username}
-                                onChangeText={(text) =>
-                                    setCredentials({
-                                        ...credentials,
-                                        username: text,
-                                    })
+                                value={emailAddress}
+                                onChangeText={(emailAddress) =>
+                                    setEmailAddress(emailAddress)
                                 }
                             />
                             <TextInputFancy
                                 label="Password"
                                 placeholder="Enter your password"
                                 secureTextEntry
-                                value={credentials.password}
-                                onChangeText={(text) =>
-                                    setCredentials({
-                                        ...credentials,
-                                        password: text,
-                                    })
+                                value={password}
+                                onChangeText={(password) =>
+                                    setPassword(password)
                                 }
                             />
                             <StandardButton
@@ -139,7 +171,7 @@ export default function SignIn() {
                                 verticalPadding={theme.padding.xs}
                                 fontSize={theme.fontSize.sm}
                                 text={loading ? "Signing In..." : "Sign In"}
-                                onPress={handleSignIn}
+                                onPress={onSignInPress}
                                 disabled={loading}
                             />
                         </View>
@@ -152,11 +184,25 @@ export default function SignIn() {
                         )}
 
                         {/* Divider Line For Future Sign In Options */}
-                        {/* <View style={styles.dividerContainer}>
+                        <View style={styles.dividerContainer}>
                             <View style={styles.dividerLine} />
                             <Text style={styles.dividerText}>OR</Text>
                             <View style={styles.dividerLine} />
-                        </View> */}
+                        </View>
+
+                        <StandardButton
+                            style="dark"
+                            verticalPadding={theme.padding.xs}
+                            fontSize={theme.fontSize.sm}
+                            text={
+                                loading
+                                    ? "Signing In..."
+                                    : "Continue With Google"
+                            }
+                            onPress={()=>{}}
+                            disabled={loading}
+                            icon="logo-google"
+                        />
 
                         {/* New User Section */}
                         <View style={styles.newUserContainer}>
@@ -166,7 +212,8 @@ export default function SignIn() {
                                 verticalPadding={theme.padding.xs}
                                 fontSize={theme.fontSize.sm}
                                 text="Create Account Here"
-                                onPress={handleCreateAccount}
+                                onPress={goToCreateAccount}
+                                disabled={loading}
                             />
                         </View>
 
@@ -226,25 +273,22 @@ const styles = ScaledSheet.create({
     signInForm: {
         gap: "15@ms",
     },
-    // DO NOT DELETE: SAVE FOR FUTURE USE
-    // dividerContainer: {
-    //     flexDirection: "row",
-    //     alignItems: "center",
-    //     paddingVertical: theme.padding.xxs,
-    //     borderColor: theme.colors.white,
-    //     borderWidth: 1,
-    // },
-    // dividerLine: {
-    //     flex: 1,
-    //     height: 1,
-    //     backgroundColor: theme.colors.white,
-    // },
-    // dividerText: {
-    //     color: theme.colors.white,
-    //     fontSize: theme.padding.lg,
-    //     fontWeight: "medium",
-    //     marginHorizontal: "10@ms",
-    // },
+    dividerContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        borderColor: theme.colors.white,
+    },
+    dividerLine: {
+        flex: 1,
+        height: 1,
+        backgroundColor: theme.colors.white,
+    },
+    dividerText: {
+        color: theme.colors.white,
+        fontSize: theme.padding.lg,
+        fontWeight: "medium",
+        marginHorizontal: "10@ms",
+    },
     newUserContainer: {
         gap: "5@ms",
     },

@@ -40,6 +40,10 @@ FOODTRUCK-APP
 │── ios                      	# This folder automatically appears when an ios prebuild is created
 │
 ├── app
+|   ├── (auth)               	# Tab layout and related screens
+│   │   ├── _layout.tsx      	# Auth layout file
+│   │   ├── create.tsx       	# Create Account screen
+|	|	└── login.tsx         	# Login Screen
 │   ├── (tabs)               	# Tab layout and related screens
 │   │   ├── _layout.tsx      	# Tab layout file
 │   │   ├── index.tsx        	# Home screen
@@ -47,9 +51,7 @@ FOODTRUCK-APP
 │   │   ├── search.tsx       	# Search screen
 |	|	└── test.tsx         	# Test Screen
 │   ├── _layout.tsx          	# Root layout
-│   ├── +not-found.tsx       	# Page not found redirect
-│   ├── create-account.tsx   	# Create Account screen
-│   └── sign-in.tsx          	# Sign In Screen
+│   └── index.tsx          	    # Root Screen (just for navigation)
 │
 ├── assets                   	# Static assets
 │   ├── fonts                	# Fonts used in the application
@@ -81,22 +83,18 @@ FOODTRUCK-APP
 │   |   ├── CategoryModal.tsx	# Renders the category selection modal
 │   |   ├── MenuModal.tsx		# Renders the truck menu
 │   |   └── TruckModal.tsx		# Renders the full truck modal
+│   └── navigation
+│       └── InitialLayout.tsx	# Used for auth navigation handling throughout app
 │   ├── profilePage
 │   |   ├── AchievementSection.tsx	# Renders the achievement section
 │   |   └── ProfileHeader.tsx	    # Renders the profile header
 │   └── search
 │       └── SearchBar.tsx		# Renders the google autocomplete map searchbar
-│
-├── context                  	# Placeholder context for authentication (not actually implemented)
-│   └── ctx.tsx
 |
 ├── docs					 	# Markdown Documentation
 |   └── styling.md           	# Guide for styling
 │
 ├── node_modules             	# Automatically appears when npm and expo is initialized
-│
-├── storage                  	# Placeholder local storage utilities (not fully implemented)
-│   └── useStorageState.ts
 │
 ├── store                    	# Contains Zustand custom hooks
 │   ├── useFilterStore.tsx   	# State management for selected category filters
