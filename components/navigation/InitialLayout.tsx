@@ -19,9 +19,9 @@ export default function InitialLayout() {
             router.replace("/(auth)/login");
         } else if (isSignedIn && inAuthScreen) {
             console.log(
-                "User is signed in, redirecting to (tabs) from InitialLayout."
+                "User is signed in, redirecting to (public) from InitialLayout."
             );
-            router.replace("/(tabs)");
+            router.replace("/");
         }
     }, [isLoaded, isSignedIn, segments]);
 
