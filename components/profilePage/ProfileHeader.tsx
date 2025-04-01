@@ -3,7 +3,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
 import { MunchUser } from "@/constants";
-import { Redirect } from "expo-router";
 import { useClerk } from "@clerk/clerk-expo";
 
 interface ProfileHeaderProps {
