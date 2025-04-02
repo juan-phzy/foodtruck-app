@@ -19,8 +19,8 @@ import { ms } from "react-native-size-matters";
 
 // Type for icon props
 type TabIconProps = {
-    color: string;
-    name: keyof typeof Ionicons.glyphMap;
+  color: string;
+  name: keyof typeof Ionicons.glyphMap;
 };
 
 /**
@@ -30,65 +30,60 @@ type TabIconProps = {
  * on every render, which improves performance.
  */
 const renderTabIcon = ({ color, name }: TabIconProps) => (
-    <Ionicons name={name} size={ms(25)} color={color} />
+  <Ionicons name={name} size={ms(25)} color={color} />
 );
 
 export default function PublicLayout() {
+  return (
+    <Tabs
+      screenOptions={{
+        tabBarStyle: {
+          backgroundColor: theme.colors.primary, // Tab bar background color
+          elevation: 0, // Remove shadow on Android
+        },
+        tabBarItemStyle: {
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        headerShown: false, // Hide the header
+        tabBarShowLabel: false, // Hide text labels
+        tabBarActiveTintColor: theme.colors.white, // Active tab icon color
+        tabBarInactiveTintColor: theme.colors.whiteInactive, // Inactive tab icon color
+      }}
+    >
+      {/* Home Tab */}
+      <Tabs.Screen
+        name="index"
+        options={{
+          tabBarIcon: (props) => renderTabIcon({ ...props, name: "home" }),
+        }}
+      />
 
-    return (
-        <Tabs
-            screenOptions={{
-                tabBarStyle: {
-                    backgroundColor: theme.colors.primary, // Tab bar background color
-                    height: ms(50), // Adjust height for proper spacing
-                    elevation: 0, // Remove shadow on Android
-                },
-                tabBarItemStyle: {
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                },
-                headerShown: false, // Hide the header
-                tabBarShowLabel: false, // Hide text labels
-                tabBarActiveTintColor: theme.colors.white, // Active tab icon color
-                tabBarInactiveTintColor: theme.colors.whiteInactive, // Inactive tab icon color
-            }}
-        >
-            {/* Home Tab */}
-            <Tabs.Screen
-                name="index"
-                options={{
-                    tabBarIcon: (props) =>
-                        renderTabIcon({ ...props, name: "home" }),
-                }}
-            />
+      {/* Search Tab */}
+      <Tabs.Screen
+        name="search"
+        options={{
+          tabBarIcon: (props) => renderTabIcon({ ...props, name: "search" }),
+        }}
+      />
 
-            {/* Search Tab */}
-            <Tabs.Screen
-                name="search"
-                options={{
-                    tabBarIcon: (props) =>
-                        renderTabIcon({ ...props, name: "search" }),
-                }}
-            />
+      {/* Profile Tab */}
+      <Tabs.Screen
+        name="profile"
+        options={{
+          tabBarIcon: (props) => renderTabIcon({ ...props, name: "person" }),
+        }}
+      />
 
-            {/* Profile Tab */}
-            <Tabs.Screen
-                name="profile"
-                options={{
-                    tabBarIcon: (props) =>
-                        renderTabIcon({ ...props, name: "person" }),
-                }}
-            />
-
-            {/* Test Tab */}
-            <Tabs.Screen
-                name="test"
-                options={{
-                    tabBarIcon: (props) =>
-                        renderTabIcon({ ...props, name: "build-outline" }),
-                }}
-            />
-        </Tabs>
-    );
+      {/* Test Tab */}
+      <Tabs.Screen
+        name="test"
+        options={{
+          tabBarIcon: (props) =>
+            renderTabIcon({ ...props, name: "build-outline" }),
+        }}
+      />
+    </Tabs>
+  );
 }

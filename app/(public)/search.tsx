@@ -14,21 +14,21 @@ import {
     Dimensions,
     Image,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
 const { width } = Dimensions.get("window");
 
 export default function Search() {
+    const inset = useSafeAreaInsets();
     const handleCategoryPress = (category: string) => {
         console.log(`Pressed Category: ${category}`);
     };
 
     return (
-        <View style={styles.rootContainer}>
-            <SafeAreaView style={styles.safeAreaView}>
+        <View style={[styles.rootContainer,{paddingTop:inset.top}]}>
                 {/* Header Section */}
-                <View style={styles.header}>
+                <View style={[styles.header]}>
                     <LinearGradient
                         style={styles.gradient}
                         colors={[
@@ -103,7 +103,6 @@ export default function Search() {
                         </View>
                     ))}
                 </ScrollView>
-            </SafeAreaView>
         </View>
     );
 }
@@ -126,7 +125,7 @@ const styles = ScaledSheet.create({
     header: {
         justifyContent: "center",
         paddingHorizontal: theme.padding.sm,
-        paddingVertical: theme.padding.xxxl,
+        paddingVertical: theme.padding.xxl,
     },
     gradient: {
         ...StyleSheet.absoluteFillObject,
