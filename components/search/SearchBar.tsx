@@ -41,7 +41,6 @@ import useMapLayerStore from "@/store/useMapLayerStore";
 import * as Font from "expo-font"; // Import Font from Expo
 import Mapbox from "@rnmapbox/maps";
 import {
-  SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
