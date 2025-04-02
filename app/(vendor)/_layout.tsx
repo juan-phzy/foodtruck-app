@@ -40,7 +40,6 @@ export default function VendorLayout() {
             screenOptions={{
                 tabBarStyle: {
                     backgroundColor: theme.colors.primary, // Tab bar background color
-                    height: ms(50), // Adjust height for proper spacing
                     elevation: 0, // Remove shadow on Android
                 },
                 tabBarItemStyle: {
