@@ -209,7 +209,7 @@ export default function CreateAccountScreen() {
                         />
                         <TextInputFancy
                             label="Date of Birth"
-                            placeholder="YYYY-MM-DD"
+                            placeholder="DD/MM/YYYY"
                             onChangeText={(value) =>
                                 handleInputChange("dob", value)
                             }
