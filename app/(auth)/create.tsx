@@ -25,9 +25,7 @@ import StandardButton from "@/components/buttons/StandardButton";
 
 // Theme & Constants
 import theme from "@/assets/theme";
-import {
-    useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
 // Get screen dimensions for responsive UI scaling
@@ -59,6 +57,7 @@ export default function CreateAccountScreen() {
         dob: "",
         primary_city: "",
         password: "",
+        role: "public",
     });
 
     const [isLoading, setIsLoading] = useState(false); // Loading state
@@ -82,44 +81,48 @@ export default function CreateAccountScreen() {
      * Handles user sign-up action using Amplify Auth.
      */
     const handleSignUp = async () => {
-        if (!isLoaded) return;
+        if (!isLoaded || !signUp) return;
 
         setIsLoading(true);
 
         try {
-            const { email, password, first_name, last_name, phone_number } =
-                form;
+            const {
+                email,
+                password,
+                first_name,
+                last_name,
+                phone_number,
+                role,
+            } = form;
 
-            const signUpAttempt = await signUp.create({
+            const result = await signUp.create({
                 emailAddress: email,
                 password,
                 firstName: first_name,
                 lastName: last_name,
                 phoneNumber: phone_number,
+                unsafeMetadata: {
+                    role,
+                },
             });
 
-            await signUpAttempt.prepareEmailAddressVerification({
-                strategy: "email_code",
-            });
+            // If sign-up completes without verification required
+            if (result.status === "complete") {
+                await setActive({ session: result.createdSessionId });
 
-            // Optional: Automatically verify and activate user (only in dev or test)
-            const completeSignUp = await signUp.attemptEmailAddressVerification(
-                {
-                    code: "123456", // Replace with actual code from email input if implementing verification
+                if (role === "vendor") {
+                    router.replace("/(vendor)");
+                } else {
+                    router.replace("/(public)");
                 }
-            );
-
-            if (completeSignUp.status === "complete") {
-                await setActive({ session: completeSignUp.createdSessionId });
-                router.replace("/(public)"); // or route based on user type
             } else {
-                console.log(
-                    "Sign-up incomplete:",
-                    JSON.stringify(completeSignUp, null, 2)
+                console.warn(
+                    "Signup not complete. Verification might be required."
                 );
+                console.log(JSON.stringify(result, null, 2));
             }
         } catch (err) {
-            console.error("Error signing up:", JSON.stringify(err, null, 2));
+            console.error("Sign-up error:", JSON.stringify(err, null, 2));
         } finally {
             setIsLoading(false);
         }
