@@ -1,38 +1,38 @@
 /**
  * RootLayout Component
  *
- * This is the main entry point for the application layout.
- * It sets up the navigation stack and wraps the app with the required providers.
+ * This is the entry point of the app. It wraps the application in all global providers,
+ * including:
+ * - Clerk authentication context
+ * - Convex backend provider
+ * - Safe area support
+ * - Gesture handler support
  *
- * Features:
- * - Provides global session management via `SessionProvider`
- * - Wraps the app with `GestureHandlerRootView` for smooth gesture handling
- * - Uses `Stack` navigation from Expo Router for managing screen navigation
- * - Hides headers for all screens in the stack
+ * It also renders the `InitialLayout` which manages app-level navigation and layout logic.
  */
 
-// React Native Libraries
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-
-// Expo Libraries
-import { StatusBar } from "expo-status-bar";
-
-// Polyfills and Utilities
 import "react-native-get-random-values";
+
+// Expo & React Native
+import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import InitialLayout from "@/components/navigation/InitialLayout";
+
+// Providers & Layout
 import ClerkAndConvexProvider from "@/providers/ClerkAndConvexProvider";
+import InitialLayout from "@/components/navigation/InitialLayout";
 
 export default function RootLayout() {
-    console.log("Entered RootLayout");
-    return (
-        <ClerkAndConvexProvider>
-            <SafeAreaProvider>
-                <GestureHandlerRootView style={{ flex: 1 }}>
-                    <StatusBar style="light" />
-                    <InitialLayout />
-                </GestureHandlerRootView>
-            </SafeAreaProvider>
-        </ClerkAndConvexProvider>
-    );
+  console.log("Entered RootLayout");
+  
+  return (
+    <ClerkAndConvexProvider>
+      <SafeAreaProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <StatusBar style="light" />
+          <InitialLayout />
+        </GestureHandlerRootView>
+      </SafeAreaProvider>
+    </ClerkAndConvexProvider>
+  );
 }
