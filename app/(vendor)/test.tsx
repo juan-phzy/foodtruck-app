@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScaledSheet } from "react-native-size-matters";
 
-export default function UsersScreen() {
+export default function Test() {
     const insets = useSafeAreaInsets();
 
     return (

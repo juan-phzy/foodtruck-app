@@ -1,5 +1,16 @@
+/**
+ * CreateAccountScreen
+ *
+ * Sign-up screen for new users. Collects personal info and creates an account using Clerk.
+ * Behavior:
+ * - Submits email, password, name, and phone to Clerk
+ * - Adds "role" to Clerk's unsafe metadata (public or vendor)
+ * - Redirects to appropriate layout based on role after sign-up
+ * - Skips email verification for faster development iteration
+ */
+
 // React & Hooks
-import React, { useState } from "react";
+import { useState } from "react";
 
 // React Native Components
 import {
@@ -28,28 +39,16 @@ import theme from "@/assets/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
-// Get screen dimensions for responsive UI scaling
-const { width, height } = Dimensions.get("window");
+const { height } = Dimensions.get("window"); // Get the height of the device screen
 
-/**
- * CreateAccountScreen Component
- *
- * This screen provides a user-friendly interface for account creation.
- *
- * Features:
- * - Background image with gradient overlay.
- * - A form with text input fields for user details.
- * - A sign-up button that triggers the authentication process.
- * - A go-back button to navigate to the previous screen.
- * - Responsive design for different screen sizes.
- */
 export default function CreateAccountScreen() {
-    const insets = useSafeAreaInsets();
-    const { isLoaded, signUp, setActive } = useSignUp();
-    const router = useRouter();
+    const insets = useSafeAreaInsets(); // Safe area insets for top and bottom padding
+    const { isLoaded, signUp, setActive } = useSignUp(); // Clerk sign-up hook for user authentication
+    const [isLoading, setIsLoading] = useState(false); // Loading state for the sign-up process
+    const router = useRouter(); // Router for navigation
 
-    // Form State
     const [form, setForm] = useState({
+        // Form State
         first_name: "",
         last_name: "",
         phone_number: "",
@@ -60,26 +59,19 @@ export default function CreateAccountScreen() {
         role: "public",
     });
 
-    const [isLoading, setIsLoading] = useState(false); // Loading state
+    // Updates form state when an input field changes.
+    const handleInputChange = 
+        (field: keyof typeof form, value: string) => {
+            setForm((prev) => ({ ...prev, [field]: value }));
+        };
 
-    /**
-     * Updates form state when an input field changes.
-     */
-    const handleInputChange = (field: keyof typeof form, value: string) => {
-        setForm((prev) => ({ ...prev, [field]: value }));
-    };
-
-    /**
-     * Navigates the user back to the previous screen.
-     */
+    // Navigates the user back to the previous screen.
     const handleGoBack = () => {
         console.log("Go Back Pressed From Create Account");
         router.replace("/(auth)/login");
     };
 
-    /**
-     * Handles user sign-up action using Amplify Auth.
-     */
+    // Handles user sign-up action
     const handleSignUp = async () => {
         if (!isLoaded || !signUp) return;
 
@@ -106,7 +98,6 @@ export default function CreateAccountScreen() {
                 },
             });
 
-            // If sign-up completes without verification required
             if (result.status === "complete") {
                 await setActive({ session: result.createdSessionId });
 
@@ -148,7 +139,7 @@ export default function CreateAccountScreen() {
                     locations={[0, 0.5, 0.9]}
                 />
 
-                {/* Logo Section */}
+                {/* Logo Header Section */}
                 <View
                     style={[styles.logoContainer, { paddingTop: insets.top }]}
                 >
@@ -156,7 +147,7 @@ export default function CreateAccountScreen() {
                     <Text style={styles.subtitle}>Find Nearby Food Trucks</Text>
                 </View>
 
-                {/* Blurred Background for Form */}
+                {/* Form Container using BlurView */}
                 <BlurView
                     intensity={8}
                     style={[
@@ -218,7 +209,7 @@ export default function CreateAccountScreen() {
                         />
                         <TextInputFancy
                             label="Date of Birth"
-                            placeholder="YYYY-MM-DD"
+                            placeholder="DD/MM/YYYY"
                             onChangeText={(value) =>
                                 handleInputChange("dob", value)
                             }
@@ -240,7 +231,7 @@ export default function CreateAccountScreen() {
                         fontSize={theme.fontSize.md}
                         text={isLoading ? "Signing Up..." : "Sign Up"}
                         onPress={handleSignUp}
-                        disabled={isLoading} // Disable button when signing up
+                        disabled={isLoading}
                     />
                 </BlurView>
             </ImageBackground>
@@ -248,9 +239,6 @@ export default function CreateAccountScreen() {
     );
 }
 
-/**
- * Styles for CreateAccountScreen
- */
 const styles = ScaledSheet.create({
     rootContainer: {
         flex: 1,

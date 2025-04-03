@@ -1,85 +1,94 @@
 /**
- * **TabsLayout Component**
+ * VendorLayout
  *
- * This component manages bottom tab navigation.
- * - Redirects unauthenticated users to the sign-in screen.
- * - Uses Expo Router's `<Tabs />` for tabbed navigation.
- * - Applies consistent styling to the tab bar.
+ * Tab layout for vendor users. Renders the main vendor navigation tabs:
+ * - Home (`index`) with store icon
+ * - Users management (`users`) with cog icon
+ * - Settings (`settings`) with WHMCS icon
+ *
+ * Uses custom icons from `react-icons/lia` for a unique vendor interface.
  */
 
-// Expo Router & Navigation
 import { Tabs } from "expo-router";
-
-// Theme & Icons
-import theme from "@/assets/theme";
-import { Ionicons } from "@expo/vector-icons";
 import { ms } from "react-native-size-matters";
 
-// Context & State Management
+// Theme
+import theme from "@/assets/theme";
 
-// Type for icon props
+// Icons (React Native compatible)
+import { FontAwesome6, Ionicons, FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+
+// Types
 type TabIconProps = {
     color: string;
-    name: keyof typeof Ionicons.glyphMap;
+    name: "store" | "users" | "settings" | "test";
 };
 
-/**
- * Renders the tab bar icon for each tab.
- *
- * This function is moved outside of the component to avoid re-creating it
- * on every render, which improves performance.
- */
-const renderTabIcon = ({ color, name }: TabIconProps) => (
-    <Ionicons name={name} size={ms(25)} color={color} />
-);
+// Render tab icons by name
+const renderTabIcon = ({ color, name }: TabIconProps) => {
+    const size = ms(20);
+
+    switch (name) {
+        case "store":
+            return <FontAwesome5 name="store" size={size} color={color} />;
+        case "users":
+            return <FontAwesome6 name="users-gear" size={size} color={color} />;
+        case "settings":
+            return <Ionicons name="settings" size={size} color={color} />;
+        case "test":
+            return <MaterialCommunityIcons name="test-tube" size={size} color={color} />;
+        default:
+            return null;
+    }
+};
 
 export default function VendorLayout() {
-
     return (
         <Tabs
             screenOptions={{
                 tabBarStyle: {
-                    backgroundColor: theme.colors.primary, // Tab bar background color
-                    elevation: 0, // Remove shadow on Android
+                    backgroundColor: theme.colors.primary,
+                    elevation: 0,
                 },
                 tabBarItemStyle: {
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
                 },
-                headerShown: false, // Hide the header
-                tabBarShowLabel: false, // Hide text labels
-                tabBarActiveTintColor: theme.colors.white, // Active tab icon color
-                tabBarInactiveTintColor: theme.colors.whiteInactive, // Inactive tab icon color
+                headerShown: false,
+                tabBarShowLabel: false,
+                tabBarActiveTintColor: theme.colors.white,
+                tabBarInactiveTintColor: theme.colors.whiteInactive,
             }}
         >
-            {/* Home Tab */}
             <Tabs.Screen
                 name="index"
                 options={{
-                    tabBarIcon: (props) =>
-                        renderTabIcon({ ...props, name: "home" }),
+                    tabBarIcon: ({ color }) =>
+                        renderTabIcon({ color, name: "store" }),
                 }}
             />
-
-            {/* Search Tab */}
             <Tabs.Screen
                 name="users"
                 options={{
-                    tabBarIcon: (props) =>
-                        renderTabIcon({ ...props, name: "search" }),
+                    tabBarIcon: ({ color }) =>
+                        renderTabIcon({ color, name: "users" }),
                 }}
             />
-
-            {/* Profile Tab */}
             <Tabs.Screen
                 name="settings"
                 options={{
-                    tabBarIcon: (props) =>
-                        renderTabIcon({ ...props, name: "person" }),
+                    tabBarIcon: ({ color }) =>
+                        renderTabIcon({ color, name: "settings" }),
                 }}
             />
-
+            <Tabs.Screen
+                name="test"
+                options={{
+                    tabBarIcon: ({ color }) =>
+                        renderTabIcon({ color, name: "test" }),
+                }}
+            />
         </Tabs>
     );
 }
