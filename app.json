@@ -1,47 +1,47 @@
 {
-  "expo": {
-    "name": "foodtruck-app",
-    "slug": "foodtruck-app",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.foodtruckapp"
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "experiments": {
-      "typedRoutes": true
-    },
-    "plugins": [
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+    "expo": {
+        "name": "foodtruck-app",
+        "slug": "foodtruck-app",
+        "version": "1.0.0",
+        "orientation": "portrait",
+        "icon": "./assets/images/icon.png",
+        "scheme": "myapp",
+        "userInterfaceStyle": "automatic",
+        "newArchEnabled": true,
+        "ios": {
+            "supportsTablet": true,
+            "bundleIdentifier": "com.anonymous.foodtruckapp"
+        },
+        "web": {
+            "bundler": "metro",
+            "output": "static",
+            "favicon": "./assets/images/favicon.png"
+        },
+        "experiments": {
+            "typedRoutes": true
+        },
+        "plugins": [
+            "expo-router",
+            [
+                "expo-splash-screen",
+                {
+                    "image": "./assets/images/icon.png",
+                    "imageWidth": 200,
+                    "resizeMode": "contain",
+                    "backgroundColor": "#ffffff"
+                }
+            ],
+            "expo-secure-store",
+            [
+                "@rnmapbox/maps",
+                {
+                    "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiZm9vZC10cnVjay1kZXYiLCJhIjoiY203YmZha2tpMGQzZTJqcTg4emM2aWpsayJ9.2yd1CRfy0_pCHE6GiylMeA",
+                    "RNMapboxMapsVersion": "11.6.0"
+                }
+            ]
+        ],
+        "android": {
+            "package": "com.anonymous.foodtruckapp"
         }
-      ],
-      "expo-secure-store",
-      [
-        "@rnmapbox/maps",
-        {
-          "RNMapboxMapsDownloadToken": "sk.eyJ1IjoiZm9vZC10cnVjay1kZXYiLCJhIjoiY203YmZha2tpMGQzZTJqcTg4emM2aWpsayJ9.2yd1CRfy0_pCHE6GiylMeA",
-          "RNMapboxMapsVersion": "11.6.0"
-        }
-      ]
-    ],
-    "android": {
-      "package": "com.anonymous.foodtruckapp"
     }
-  }
 }
