@@ -22,13 +22,14 @@ export default function SideBySideRow({leftComponent,rightComponent}: SideBySide
 
 const styles = ScaledSheet.create({
   container: {
-    marginVertical: "10@ms",
+    marginVertical: "7@ms",
     gap: "10@ms",
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginBottom: "5@ms"
   },
   left: {
     alignItems: "flex-start",

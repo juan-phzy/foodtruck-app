@@ -181,7 +181,7 @@ const styles = ScaledSheet.create({
     paddingHorizontal: "20@ms",
   },
   header: {
-    marginTop: "10@ms",
+    marginTop: "5@ms",
   },
   goBack: {
     flexDirection: "row",
@@ -201,6 +201,7 @@ const styles = ScaledSheet.create({
   },
   truckImageAndText: {
     alignItems: "center",
+    justifyContent: "center"
   },
   truckLogo: {
     width: "125@ms",
