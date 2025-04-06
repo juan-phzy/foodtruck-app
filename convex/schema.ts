@@ -12,7 +12,9 @@ export default defineSchema({
     password: v.string(), // Hashed password
     dob: v.optional(v.string()), // Optional
     primary_city: v.string(),
-  }).index("by_email", ["email"])
+    clerkId: v.string() // will connect clerk and convewx
+  }).index("by_clerk_id", ["clerkId"])
+    .index("by_email", ["email"]) // indexes used for querying 
     .index("by_phone", ["phone_number"]),
 
   // Vendors Table
@@ -116,3 +118,7 @@ export default defineSchema({
   }).index("by_stand", ["stand_id"])
     .index("by_user", ["user_id"]),
 });
+
+// webhooks - automated message that are sent when something happens.
+// user.created - event in clerk
+// we listen to the event once 
