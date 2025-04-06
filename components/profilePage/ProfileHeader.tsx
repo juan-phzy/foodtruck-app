@@ -1,34 +1,16 @@
-import { View, Text, Dimensions, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
 import { MunchUser } from "@/constants";
-import { useClerk } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 
 interface ProfileHeaderProps {
   user: MunchUser;
 }
 
-const { width } = Dimensions.get("window");
-
 const ProfileHeader = ({ user }: ProfileHeaderProps) => {
-  const { signOut } = useClerk();
   const router = useRouter();
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      router.replace("/(auth)/login");
-
-      // Redirect to your desired page
-      //   Linking.openURL(Linking.createURL('/'))
-    } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error(JSON.stringify(err, null, 2));
-    }
-  };
 
   return (
     <View style={styles.rootContainer}>
@@ -41,7 +23,7 @@ const ProfileHeader = ({ user }: ProfileHeaderProps) => {
           <Text style={styles.text}>{`Munch Level: ${user.munchLevel}`}</Text>
         </View>
         <TouchableOpacity
-          onPress={handleSignOut}
+          onPress={() => router.push("/(public)/profile/settings")}
           style={styles.settingsContainer}
         >
           <Text style={styles.settingsText}>Settings</Text>
