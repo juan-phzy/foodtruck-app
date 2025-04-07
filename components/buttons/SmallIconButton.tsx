@@ -7,12 +7,13 @@ import theme from "@/assets/theme";
 
 interface SmallIconButtonProps{
     iconName: keyof typeof Ionicons.glyphMap,
-    text: string
+    text: string,
+    fontSize: number
 }
-export default function SmallIconButton({iconName,text} : SmallIconButtonProps) {
+export default function SmallIconButton({iconName,text,fontSize} : SmallIconButtonProps) {
   return (
     <TouchableOpacity style = {styles.container}>
-      <Ionicons name = {iconName} size = {theme.fontSize.lg} color = {theme.colors.primary}/>
+      <Ionicons name = {iconName} size = {fontSize} color = {theme.colors.primary}/>
       <Text style = {styles.text}> {text}</Text>
     </TouchableOpacity>
   )

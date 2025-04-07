@@ -52,9 +52,9 @@ export default function ManageTruck() {
       <View>
         <SideBySideRow
           leftComponent={
-            <SmallIconButton iconName="bar-chart" text="View Insights" />
+            <SmallIconButton iconName="bar-chart" text="View Insights" fontSize = {theme.fontSize.lg} />
           }
-          rightComponent={<SmallIconButton iconName="list" text="Edit Menu" />}
+          rightComponent={<SmallIconButton iconName="list" text="Edit Menu" fontSize = {theme.fontSize.lg}/>}
         />
       </View>
       <View>
