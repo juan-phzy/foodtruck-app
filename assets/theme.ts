@@ -36,11 +36,13 @@ const theme = {
         xs: ms(8),
         sm: ms(10),
         md: ms(12),
+        mmd: ms(15),
         lg: ms(16),
         xl: ms(20),
         xxl: ms(24),
         xxxl: ms(28),
-        xxxxl: ms(35),
+        xxxxl: ms(30),
+        xxxxxl: ms(35),
     },
 };
 
