@@ -120,12 +120,12 @@ export default function ManageTruck() {
             </Text>
           }
           rightComponent={
-              <TouchableOpacity style={{ flexDirection: "row", alignItems: "center" }} disabled={!useLiveLocation}>
+              <TouchableOpacity style={{ flexDirection: "row", alignItems: "center" }} disabled={useLiveLocation}>
                 <Text
                   style={[
                     styles.settingValue,
                     {
-                      color: useLiveLocation
+                      color: !useLiveLocation
                         ? theme.colors.black
                         : theme.colors.gray,
                     },
