@@ -201,7 +201,8 @@ const styles = ScaledSheet.create({
   },
   truckImageAndText: {
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    marginBottom: "10@ms"
   },
   truckLogo: {
     width: "125@ms",
