@@ -31,15 +31,15 @@ export default function ManageTruck() {
           <View style={styles.arrowButton}>
             <Ionicons
               name="arrow-back"
-              size={theme.fontSize.xxl}
-              color={theme.colors.white}
+              style = {styles.arrowIcon}
+             
             />
           </View>
           <Text style={styles.goBackText}>Go Back</Text>
         </TouchableOpacity>
         <View style={styles.truckImageAndText}>
           <Image source={icon} style={styles.truckLogo} />
-          <Text style={{ fontSize: theme.fontSize.xxl, fontWeight: "bold" }}>
+          <Text style={styles.truckTitle}>
             Tasty Tacos
           </Text>
         </View>
@@ -135,7 +135,7 @@ export default function ManageTruck() {
                 </Text>
                 <Ionicons
                   name="pencil"
-                  size={theme.fontSize.xxl}
+                  style = {styles.ioniconFontSize}
                   color={!useLiveLocation? theme.colors.black : theme.colors.gray}
                 />
               </TouchableOpacity> 
@@ -149,7 +149,7 @@ export default function ManageTruck() {
             <TouchableOpacity onPress = {() => console.log("Set Schedule Pressed")}>
                 <Ionicons
                     name="caret-forward-outline"
-                    size={theme.fontSize.xxl}
+                    style = {styles.ioniconFontSize}
                     
                     />
             </TouchableOpacity>
@@ -163,7 +163,7 @@ export default function ManageTruck() {
             <TouchableOpacity onPress = {() => console.log("Set Unique Images Pressed")}>
                 <Ionicons
                     name="caret-forward-outline"
-                    size={theme.fontSize.xxl}
+                    style = {styles.ioniconFontSize}
                     />
             </TouchableOpacity>
           }
@@ -196,6 +196,10 @@ const styles = ScaledSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  arrowIcon:{
+    fontSize: theme.fontSize.xxl,
+    color: theme.colors.white
+  },
   goBackText: {
     fontSize: theme.fontSize.lg,
   },
@@ -207,6 +211,10 @@ const styles = ScaledSheet.create({
   truckLogo: {
     width: "125@ms",
     height: "125@ms",
+  },
+  truckTitle:{
+    fontSize: theme.fontSize.xxl, 
+    fontWeight: "bold" 
   },
   settingText: {
     fontSize: "15@ms",
@@ -220,4 +228,7 @@ const styles = ScaledSheet.create({
   switchStyle: {
     transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
   },
+  ioniconFontSize:{
+    fontSize: theme.fontSize.xxl
+  }
 });
