@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image, Switch } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ScaledSheet } from "react-native-size-matters";
+import { ms, ScaledSheet } from "react-native-size-matters";
 import SmallIconButton from "@/components/buttons/SmallIconButton";
 import SideBySideRow from "@/components/vendor/SideBySideRow";
 
@@ -52,9 +52,9 @@ export default function ManageTruck() {
       <View>
         <SideBySideRow
           leftComponent={
-            <SmallIconButton iconName="bar-chart" text="View Insights" fontSize = {theme.fontSize.lg} />
+            <SmallIconButton iconName="bar-chart" text="View Insights" fontSize = {ms(theme.fontSize.lg)} />
           }
-          rightComponent={<SmallIconButton iconName="list" text="Edit Menu" fontSize = {theme.fontSize.lg}/>}
+          rightComponent={<SmallIconButton iconName="list" text="Edit Menu" fontSize = {ms(theme.fontSize.lg)}/>}
         />
       </View>
       <View>
@@ -229,6 +229,6 @@ const styles = ScaledSheet.create({
     transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
   },
   ioniconFontSize:{
-    fontSize: theme.fontSize.xxl
+    fontSize: ms(theme.fontSize.xxl)
   }
 });
