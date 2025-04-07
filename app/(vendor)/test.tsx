@@ -110,7 +110,7 @@ export default function ManageTruck() {
               style={[
                 styles.settingText,
                 {
-                  color: useLiveLocation
+                  color: !useLiveLocation
                     ? theme.colors.black
                     : theme.colors.gray,
                 },
@@ -136,7 +136,7 @@ export default function ManageTruck() {
                 <Ionicons
                   name="pencil"
                   size={theme.fontSize.xxl}
-                  color={useLiveLocation? theme.colors.black : theme.colors.gray}
+                  color={!useLiveLocation? theme.colors.black : theme.colors.gray}
                 />
               </TouchableOpacity> 
           }
