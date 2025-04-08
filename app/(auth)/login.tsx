@@ -107,7 +107,7 @@ export default function SignIn() {
                     style={[styles.logoContainer, { paddingTop: insets.top }]}
                 >
                     <Text style={styles.title}>MunchMap</Text>
-                    <Text style={styles.subtitle}>Find Nearby FoodTrucks</Text>
+                    <Text style={styles.subtitle}>{isVendor ? `Business` : `Find Nearby FoodTrucks`}</Text>
                 </View>
                 {/* Blurred Body Container for Form */}
                 <BlurView

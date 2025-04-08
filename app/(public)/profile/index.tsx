@@ -1,5 +1,11 @@
 // app/(tabs)/profile.tsx
-import { View, StyleSheet, FlatList, Text, TouchableOpacity } from "react-native";
+import {
+    View,
+    StyleSheet,
+    FlatList,
+    Text,
+    TouchableOpacity,
+} from "react-native";
 import ProfileHeader from "@/components/profilePage/ProfileHeader";
 import { LinearGradient } from "expo-linear-gradient";
 import theme from "@/assets/theme";
@@ -10,15 +16,17 @@ import LargeIconButton from "@/components/buttons/LargeIconButton";
 import AchievementSection from "@/components/profilePage/AchievementSection";
 import { router } from "expo-router";
 
+import { useInitUserProfile, useUserStore } from "@/store/useUserStore";
 import { useClerk, useUser } from "@clerk/clerk-expo";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
 
 export default function Profile() {
     const { user } = useUser();
+    console.log("Clerk user:", user?.id);
+
+    useInitUserProfile();
+    const { profile: munchUser, isLoading } = useUserStore();
 
     const { signOut } = useClerk();
-
     const handleSignOut = async () => {
         try {
             await signOut();
@@ -33,20 +41,12 @@ export default function Profile() {
         }
     };
 
-    const clerkId = user?.id;
-    const munchUser = useQuery(
-        api.getUserProfile.getUserProfile,
-        clerkId ? { userId: clerkId } : "skip"
-    );
-
-    if (munchUser === undefined) {
+    if (isLoading) {
         return (
             <View style={styles.rootContainer}>
                 <Text>Loading profile...</Text>
-                <TouchableOpacity onPress={()=> handleSignOut()}>
-                    <Text>
-                        Log Out
-                    </Text>
+                <TouchableOpacity onPress={() => handleSignOut()}>
+                    <Text>Log Out</Text>
                 </TouchableOpacity>
             </View>
         );

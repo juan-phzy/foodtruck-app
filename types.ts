@@ -74,3 +74,16 @@ export interface User {
   ratings: Rating[]; // List of ratings and reviews the user has given
   favoriteCategories: string[]; // List of favorite food categories (e.g., Burgers, Pizza)
 }
+
+export type UserProfile = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  munchLevel: number;
+  favoriteTrucks: string[];
+  reviews: string[];
+  recentlyViewed: string[];
+  favoriteCategories: string[];
+};

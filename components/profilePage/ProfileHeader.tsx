@@ -2,11 +2,11 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
-import { MunchUser } from "@/constants";
 import { useRouter } from "expo-router";
+import { UserProfile } from "@/types";
 
 interface ProfileHeaderProps {
-  user: MunchUser;
+  user: UserProfile;
 }
 
 const ProfileHeader = ({ user }: ProfileHeaderProps) => {
