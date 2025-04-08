@@ -35,20 +35,21 @@ export type MunchUser = {
     reviews: number[];
     recentlyViewed: number[];
     favoriteCategories: string[];
+    //clerkId: string[];
 }
 
-export const USER: MunchUser = {
-    id: "1",
-    name: "Juan Hernandez",
-    email: "juanhernandez@munchmap.com",
-    phone: "(123)-456-7890",
-    password: "password123",
-    munchLevel: 3,
-    favoriteTrucks: [],
-    reviews: [],
-    recentlyViewed: [],
-    favoriteCategories: [],
-}
+// export const USER: MunchUser = {
+//     id: "1",
+//     name: "Juan Hernandez",
+//     email: "juanhernandez@munchmap.com",
+//     phone: "(123)-456-7890",
+//     password: "password123",
+//     munchLevel: 3,
+//     favoriteTrucks: [],
+//     reviews: [],
+//     recentlyViewed: [],
+//     favoriteCategories: [],
+// }
 
 type SearchSection = {
     name: string;

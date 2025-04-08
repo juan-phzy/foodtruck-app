@@ -1,3 +1,4 @@
+// users.ts
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 
@@ -30,6 +31,7 @@ export const createUser = mutation({
       clerkId: args.clerkId,
       user_id: "",
       primary_city: "",
+      munchLevel: 0,
     });
   },
-});
+}); 
