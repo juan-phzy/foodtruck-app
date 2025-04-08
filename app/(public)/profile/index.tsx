@@ -1,17 +1,44 @@
 // app/(tabs)/profile.tsx
-import React from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, Text } from "react-native";
 import ProfileHeader from "@/components/profilePage/ProfileHeader";
 import { LinearGradient } from "expo-linear-gradient";
 import theme from "@/assets/theme";
 import { ScaledSheet } from "react-native-size-matters";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { PROFILE_SECTIONS, USER } from "@/constants";
+import { PROFILE_SECTIONS } from "@/constants";
 import LargeIconButton from "@/components/buttons/LargeIconButton";
 import AchievementSection from "@/components/profilePage/AchievementSection";
 import { router } from "expo-router";
 
+import { useUser } from "@clerk/clerk-expo";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+
 export default function Profile() {
+    const { user } = useUser();
+
+    const clerkId = user?.id;
+    const munchUser = useQuery(
+        api.getUserProfile.getUserProfile,
+        clerkId ? { userId: clerkId } : "skip"
+    );
+
+    if (munchUser === undefined) {
+        return (
+            <View style={styles.rootContainer}>
+                <Text>Loading profile...</Text>
+            </View>
+        );
+    }
+
+    if (munchUser === null) {
+        return (
+            <View style={styles.rootContainer}>
+                <Text>No profile found for this user.</Text>
+            </View>
+        );
+    }
+
     return (
         <View style={styles.rootContainer}>
             <LinearGradient
@@ -20,7 +47,7 @@ export default function Profile() {
                 locations={[0.01, 0.09]}
             />
             <SafeAreaView style={styles.safeAreaView}>
-                <ProfileHeader user={USER} />
+                <ProfileHeader user={munchUser} />
                 <View style={styles.sections}>
                     <FlatList
                         data={PROFILE_SECTIONS}
