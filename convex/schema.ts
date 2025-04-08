@@ -13,9 +13,7 @@ export default defineSchema({
         primary_city: v.string(),
         clerkId: v.string(),
     })
-        .index("by_clerk_id", ["clerkId"])
-        .index("by_email", ["email"])
-        .index("by_phone", ["phone_number"]),
+        .index("by_clerk_id", ["clerkId"]),
 
     // Vendors Table
     vendors: defineTable({
