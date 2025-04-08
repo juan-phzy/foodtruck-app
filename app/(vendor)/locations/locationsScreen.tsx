@@ -10,7 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 // Sample Data
 const sampleLocationScreenTrucks = LOCATION_SCREEN_TRUCKS;
 
-export default function Locations() {
+export default function LocationsScreen() {
     const insets = useSafeAreaInsets();
 
     return (
