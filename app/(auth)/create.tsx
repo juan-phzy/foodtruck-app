@@ -21,6 +21,7 @@ import {
     Pressable,
     Dimensions,
     ScrollView,
+    TouchableOpacity,
 } from "react-native";
 
 // Expo Libraries
@@ -42,6 +43,9 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 const { height } = Dimensions.get("window"); // Get the height of the device screen
 
 export default function CreateAccountScreen() {
+
+    const [ isVendor, setIsVendor ] = useState(false); // State to determine if the user is a vendor or public user
+
     const insets = useSafeAreaInsets(); // Safe area insets for top and bottom padding
     const { isLoaded, signUp, setActive } = useSignUp(); // Clerk sign-up hook for user authentication
     const [isLoading, setIsLoading] = useState(false); // Loading state for the sign-up process
@@ -102,7 +106,7 @@ export default function CreateAccountScreen() {
                 await setActive({ session: result.createdSessionId });
 
                 if (role === "vendor") {
-                    router.replace("/(vendor)");
+                    router.replace("/(vendor)/locations/");
                 } else {
                     router.replace("/(public)");
                 }
@@ -166,6 +170,17 @@ export default function CreateAccountScreen() {
                             color={theme.colors.white}
                         />
                         <Text style={styles.goBackText}>Go Back</Text>
+                        <Text style={{color:"white", fontSize:20}}>{isVendor ? `Vendor SignUp`: `UserSignUp`}</Text>
+                        <TouchableOpacity
+                            onPress={() => setIsVendor((prev) => !prev)}
+                            style={{
+                                backgroundColor: "white",
+                                padding: 10,
+                                borderRadius: 20,
+                            }}
+                        >
+                            <Text style={{color:"black"}}>{isVendor ? `User SignUp` : `Vendor SignUp`}</Text>
+                        </TouchableOpacity>
                     </Pressable>
 
                     {/* Form Header */}
