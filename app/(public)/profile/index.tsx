@@ -1,5 +1,5 @@
 // app/(tabs)/profile.tsx
-import { View, StyleSheet, FlatList, Text } from "react-native";
+import { View, StyleSheet, FlatList, Text, TouchableOpacity } from "react-native";
 import ProfileHeader from "@/components/profilePage/ProfileHeader";
 import { LinearGradient } from "expo-linear-gradient";
 import theme from "@/assets/theme";
@@ -10,12 +10,28 @@ import LargeIconButton from "@/components/buttons/LargeIconButton";
 import AchievementSection from "@/components/profilePage/AchievementSection";
 import { router } from "expo-router";
 
-import { useUser } from "@clerk/clerk-expo";
+import { useClerk, useUser } from "@clerk/clerk-expo";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
 export default function Profile() {
     const { user } = useUser();
+
+    const { signOut } = useClerk();
+
+    const handleSignOut = async () => {
+        try {
+            await signOut();
+            router.replace("/(auth)/login");
+
+            // Redirect to your desired page
+            //   Linking.openURL(Linking.createURL('/'))
+        } catch (err) {
+            // See https://clerk.com/docs/custom-flows/error-handling
+            // for more info on error handling
+            console.error(JSON.stringify(err, null, 2));
+        }
+    };
 
     const clerkId = user?.id;
     const munchUser = useQuery(
@@ -27,6 +43,11 @@ export default function Profile() {
         return (
             <View style={styles.rootContainer}>
                 <Text>Loading profile...</Text>
+                <TouchableOpacity onPress={()=> handleSignOut()}>
+                    <Text>
+                        Log Out
+                    </Text>
+                </TouchableOpacity>
             </View>
         );
     }
@@ -78,6 +99,8 @@ const styles = ScaledSheet.create({
     rootContainer: {
         flex: 1,
         backgroundColor: theme.colors.white,
+        justifyContent: "center",
+        alignItems: "center",
     },
     gradient: {
         ...StyleSheet.absoluteFillObject,

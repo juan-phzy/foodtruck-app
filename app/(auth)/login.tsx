@@ -45,10 +45,10 @@ export default function SignIn() {
     useEffect(() => {
         if (isVendor) {
             setEmailAddress("vendor@email.com");
-            setPassword("vendor");
+            setPassword("vendor123");
         } else {
             setEmailAddress("public@email.com");
-            setPassword("public");
+            setPassword("public123");
         }
     }, [isVendor]);
 
@@ -66,7 +66,7 @@ export default function SignIn() {
                 await setActive({ session: signInAttempt.createdSessionId });
                 setLoading(false);
                 if (isVendor) {
-                    router.replace("/(vendor)");
+                    router.replace("/(vendor)/locations/");
                 } else {
                     router.replace("/(public)");
                 }
