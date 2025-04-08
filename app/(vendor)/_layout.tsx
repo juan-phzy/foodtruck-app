@@ -16,7 +16,12 @@ import { ms } from "react-native-size-matters";
 import theme from "@/assets/theme";
 
 // Icons (React Native compatible)
-import { FontAwesome6, Ionicons, FontAwesome5, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+    FontAwesome6,
+    Ionicons,
+    FontAwesome5,
+    MaterialCommunityIcons,
+} from "@expo/vector-icons";
 
 // Types
 type TabIconProps = {
@@ -36,7 +41,13 @@ const renderTabIcon = ({ color, name }: TabIconProps) => {
         case "settings":
             return <Ionicons name="settings" size={size} color={color} />;
         case "test":
-            return <MaterialCommunityIcons name="test-tube" size={size} color={color} />;
+            return (
+                <MaterialCommunityIcons
+                    name="test-tube"
+                    size={size}
+                    color={color}
+                />
+            );
         default:
             return null;
     }
@@ -62,7 +73,7 @@ export default function VendorLayout() {
             }}
         >
             <Tabs.Screen
-                name="index"
+                name="locations"
                 options={{
                     tabBarIcon: ({ color }) =>
                         renderTabIcon({ color, name: "store" }),

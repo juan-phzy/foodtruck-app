@@ -39,7 +39,7 @@ export default function InitialLayout() {
       console.log(`Signed in as ${role}, redirecting...`);
 
       if (role === "vendor") {
-        router.replace("/(vendor)");
+        router.replace("/");
       } else {
         router.replace("/(public)");
       }

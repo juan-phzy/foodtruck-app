@@ -14,7 +14,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 // Sample Data
 const sampleSettings = VENDOR_SETTINGS;
 
-export default function Index() {
+export default function settingsScreen() {
     const insets = useSafeAreaInsets();
     const { signOut } = useClerk();
     const handleSignOut = async () => {
