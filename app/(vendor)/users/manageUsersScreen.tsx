@@ -6,6 +6,7 @@ import IconButton from "@/components/buttons/IconButton";
 import { MANAGE_SCREEN_USERS } from "@/constants";
 import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 // Sample Data
 const sampleUsers = MANAGE_SCREEN_USERS;
@@ -38,7 +39,9 @@ export default function ManageUsersScreen() {
                         }
                         text={user.name}
                         showManage={true}
-                        onPress={() => console.log("Clicked Manage User")}
+                        onPress={() => {
+                            router.push(`/users/${user.name}/manageUser`);
+                        }}
                     />
                 ))}
             </ScrollView>

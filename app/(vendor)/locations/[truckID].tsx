@@ -28,7 +28,10 @@ export default function ManageTruckScreen() {
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
             <View style={styles.header}>
-                <TouchableOpacity style={styles.goBack}>
+                <TouchableOpacity
+                    style={styles.goBack}
+                    onPress={() => router.back()}
+                >
                     <View style={styles.arrowButton}>
                         <Ionicons
                             name="arrow-back"
