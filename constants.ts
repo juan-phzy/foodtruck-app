@@ -15,13 +15,14 @@ export const FORM_FIELDS = [
 export type ProfileSection = {
     name: string;
     icon: keyof typeof Ionicons.glyphMap;
+    link: string;
 };
 
 export const PROFILE_SECTIONS: ProfileSection[] = [
-    { name: "Favorites", icon: "bookmark-outline" },
-    { name: "Recently Viewed", icon: "time-outline" },
-    { name: "Your Ratings", icon: "star-outline" },
-    { name: "Favorite Caegories", icon: "fast-food-outline" },
+    { name: "Favorites", icon: "bookmark-outline", link: "favorites" },
+    { name: "Recently Viewed", icon: "time-outline", link: "recent" },
+    { name: "Your Ratings", icon: "star-outline", link: "ratings" },
+    { name: "Favorite Caegories", icon: "fast-food-outline", link: "categories" },
 ]
 
 export type MunchUser = {

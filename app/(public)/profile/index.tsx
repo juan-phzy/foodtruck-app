@@ -9,6 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { PROFILE_SECTIONS, USER } from "@/constants";
 import LargeIconButton from "@/components/buttons/LargeIconButton";
 import AchievementSection from "@/components/profilePage/AchievementSection";
+import { router } from "expo-router";
 
 export default function Profile() {
     return (
@@ -30,6 +31,11 @@ export default function Profile() {
                             <LargeIconButton
                                 text={item.name}
                                 icon={item.icon}
+                                onPress={() => {
+                                    router.push(
+                                        `/(public)/profile/${item.link}`
+                                    );
+                                }}
                             />
                         )}
                         numColumns={2}
