@@ -99,8 +99,6 @@ const styles = ScaledSheet.create({
     rootContainer: {
         flex: 1,
         backgroundColor: theme.colors.white,
-        justifyContent: "center",
-        alignItems: "center",
     },
     gradient: {
         ...StyleSheet.absoluteFillObject,
