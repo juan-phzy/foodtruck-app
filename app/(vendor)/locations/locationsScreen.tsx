@@ -6,6 +6,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { LOCATION_SCREEN_TRUCKS } from "@/constants";
 import IconButton from "@/components/buttons/IconButton";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 
 // Sample Data
 const sampleLocationScreenTrucks = LOCATION_SCREEN_TRUCKS;
@@ -37,7 +38,9 @@ export default function LocationsScreen() {
                         text={truck.name}
                         status={truck.status}
                         showManage={true}
-                        onPress={() => console.log("Clicked Manage Truck")}
+                        onPress={() => {
+                            router.push(`/locations/${truck.name}`);
+                        }}
                     />
                 ))}
             </ScrollView>

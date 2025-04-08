@@ -50,31 +50,37 @@ export const MANAGE_SCREEN_USERS = [
 
 export const LOCATION_SCREEN_TRUCKS = [
     {
+        id: 1,
         name: "Taco Truck 1",
         status: true,
         type: "Truck",
     },
     {
+        id: 2,
         name: "Taco Truck 2",
         status: false,
         type: "Truck",
     },
     {
+        id: 3,
         name: "Taco Stand 1",
         status: true,
         type: "Stand",
     },
     {
+        id: 4,
         name: "Taco Truck 3",
         status: false,
         type: "Truck",
     },
     {
+        id: 5,
         name: "Taco Stand 2",
         status: true,
         type: "Stand",
     },
     {
+        id: 6,
         name: "Taco Truck 4",
         status: false,
         type: "Truck",
