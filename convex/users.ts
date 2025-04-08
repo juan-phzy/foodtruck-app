@@ -8,7 +8,6 @@ export const createUser = mutation({
     last_name: v.string(),
     phone_number: v.string(), // Optional
     email: v.string(),
-    password: v.string(),     // Hashed password
     dob: v.optional(v.string()),
     clerkId: v.string(),      // Connects Clerk and Convex
   },
@@ -26,7 +25,6 @@ export const createUser = mutation({
       last_name: args.last_name,
       phone_number: args.phone_number,
       email: args.email,
-      password: args.password,
       dob: args.dob,
       clerkId: args.clerkId,
       user_id: "",

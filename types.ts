@@ -62,25 +62,11 @@ export interface Rating {
   review?: string; // Optional review text
 }
 
-export interface User {
-  phoneNumber: string; // User's phone number
-  firstName: string; // User's first name
-  lastName: string; // User's last name
-  dateOfBirth: Date; // User's date of birth
-  password: string; // User's password (hashed ideally)
-  username: string; // Unique username for the user
-  favoriteTrucks: FoodTruck[]; // List of favorite food trucks
-  recentlyViewedTrucks: FoodTruck[]; // List of recently viewed food trucks
-  ratings: Rating[]; // List of ratings and reviews the user has given
-  favoriteCategories: string[]; // List of favorite food categories (e.g., Burgers, Pizza)
-}
-
 export type UserProfile = {
   id: string;
   name: string;
   email: string;
   phone: string;
-  password: string;
   munchLevel: number;
   favoriteTrucks: string[];
   reviews: string[];

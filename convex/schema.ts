@@ -8,7 +8,6 @@ export default defineSchema({
         last_name: v.string(),
         phone_number: v.string(),
         email: v.string(),
-        password: v.string(),
         dob: v.optional(v.string()),
         munchLevel: v.optional(v.float64()), // Make it optional
         primary_city: v.string(),
