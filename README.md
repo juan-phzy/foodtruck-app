@@ -40,12 +40,12 @@ FOODTRUCK-APP
 │── ios                      	# This folder automatically appears when an ios prebuild is created
 │
 ├── app
-|   ├── (auth)               	# Tab layout and related screens
+|   ├── (auth)               	# Root Authentication Route
 │   │   ├── _layout.tsx      	    # Auth layout file
 │   │   ├── create.tsx       	    # Create Account screen
 |	|	└── login.tsx         	    # Login Screen
 |   |
-|   ├── (public)               	# Tab layout and related screens
+|   ├── (public)               	# Public Tabs Route
 │   │   ├── profile      	        # Public User Profile Route
 │   |   │   ├── _layout.tsx             # Profile Tab Inner Stack Layout
 │   |   │   ├── [subsection].tsx        # Profile Tab Subsection For Truck Lists
@@ -58,7 +58,7 @@ FOODTRUCK-APP
 │   │   ├── search.tsx       	    # Public User Search Page
 |	|	└── test.tsx         	    # Public Side Test Page
 |   |
-│   ├── (vendor)               	# Tab layout and related screens
+│   ├── (vendor)               	# Vendor Tabs Route
 │   │   ├── locations      	        # Vendor Home Page - Manage Locations
 │   |   │   ├── _layout.tsx             # Locations Tab Inner Stack Layout
 │   |   │   ├── [truckID].tsx           # Manage Truck/Stand Page
