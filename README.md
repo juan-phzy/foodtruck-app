@@ -41,16 +41,42 @@ FOODTRUCK-APP
 │
 ├── app
 |   ├── (auth)               	# Tab layout and related screens
-│   │   ├── _layout.tsx      	# Auth layout file
-│   │   ├── create.tsx       	# Create Account screen
-|	|	└── login.tsx         	# Login Screen
-│   ├── (tabs)               	# Tab layout and related screens
-│   │   ├── _layout.tsx      	# Tab layout file
-│   │   ├── index.tsx        	# Home screen
-│   │   ├── profile.tsx      	# Profile screen
-│   │   ├── search.tsx       	# Search screen
-|	|	└── test.tsx         	# Test Screen
-│   ├── _layout.tsx          	# Root layout
+│   │   ├── _layout.tsx      	    # Auth layout file
+│   │   ├── create.tsx       	    # Create Account screen
+|	|	└── login.tsx         	    # Login Screen
+|   |
+|   ├── (public)               	# Tab layout and related screens
+│   │   ├── profile      	        # Public User Profile Route
+│   |   │   ├── _layout.tsx             # Profile Tab Inner Stack Layout
+│   |   │   ├── [subsection].tsx        # Profile Tab Subsection For Truck Lists
+│   |   │   ├── categories.tsx          # User Favorite Categories Page
+│   |   │   ├── profilePage.tsx         # Profile Tab Main Index Page
+│   |   │   └── settings.tsx            # User Profile Settings Page
+|   |   |
+│   │   ├── _layout.tsx      	    # Public Side Root Layout - Defines Tabs
+│   │   ├── index.tsx      	        # Public User Home Page - Main Map
+│   │   ├── search.tsx       	    # Public User Search Page
+|	|	└── test.tsx         	    # Public Side Test Page
+|   |
+│   ├── (vendor)               	# Tab layout and related screens
+│   │   ├── locations      	        # Vendor Home Page - Manage Locations
+│   |   │   ├── _layout.tsx             # Locations Tab Inner Stack Layout
+│   |   │   ├── [truckID].tsx           # Manage Truck/Stand Page
+│   |   │   └── locationsPage.tsx       # Locations Tab Main Index Page
+|   |   |
+│   │   ├── settings      	        # Home screen
+│   |   │   ├── _layout.tsx             # Settings Tab Inner Stack Layout
+│   |   │   └── settingsPage.tsx        # Settings Tab Main Index Page
+|   |   |
+│   │   └── users      	            # Profile screen
+│   |       ├── [userID]                # Manage User Page Stack
+|   │       │   ├── _layout.tsx             # Manage User Page Inner Stack Layout
+|   │       │   ├── manageUser.tsx          # Manage User Screen
+|   │       │   └── setAccess.tsx           # Set User Access Page
+│   |       ├── _layout.tsx             # Vendor Users Tab Inner Stack Layout
+│   |       └── usersPage.tsx           # Users Tab Main Index Page
+|   |
+│   ├── _layout.tsx          	# Root App layout
 │   └── index.tsx          	    # Root Screen (just for navigation)
 │
 ├── assets                   	# Static assets
@@ -60,43 +86,62 @@ FOODTRUCK-APP
 |
 ├── components               	# Reusable UI components
 │   ├── buttons
-│   |   ├── LargeIconButton.tsx	# Renders the large buttons in profile page
-|	|	└── StandardButton.tsx	# Standard Button component with preset styles
+│   |   ├── IconButton.tsx	        # Renders the icon buttons in vendor pages
+│   |   ├── LargeIconButton.tsx	    # Renders the large buttons in profile page
+│   |   ├── SmallIconButton.tsx	    # Renders the small buttons in vendor manage truck page
+|	|	└── StandardButton.tsx	    # Standard Button component with preset styles
 │   ├── cards
-│   |   ├── FlatListCard.tsx	# White labeled card with box shadow, takes in a title and children
-│   |   ├── ItemCard.tsx		# Renders a food item with name, price, description, and image
-│   |   ├── TruckCard.tsx		# Renders a fullsize food truck card
-│   |   └── TruckCardSmall.tsx	# Renders a small food truck card
+│   |   ├── FlatListCard.tsx	    # White labeled card with box shadow, takes in a title and children
+│   |   ├── ItemCard.tsx		    # Renders a food item with name, price, description, and image
+│   |   ├── TruckCard.tsx		    # Renders a fullsize food truck card
+│   |   └── TruckCardSmall.tsx	    # Renders a small food truck card
 │   ├── indexPage
-│   |   ├── NearbyTrucks.tsx	# Renders the nearby trucks expandable card
-│   |   └── SelectedTruck.tsx	# Renders the selected truck card
+│   |   ├── NearbyTrucks.tsx	    # Renders the nearby trucks expandable card
+│   |   └── SelectedTruck.tsx	    # Renders the selected truck card
 │   ├── inputs
 │   |   ├── TextInputFancy.tsx		# TextInput with our Signature Styling
 │   |   └── TextInputStandard.tsx	# General TextInput component
 │   ├── lists
-|	|	└── TruckCardList.tsx	# Renders a list of small truck cards
+|	|	└── TruckCardList.tsx	    # Renders a list of small truck cards
 │   ├── modals
-│   |   ├── CategoryModal.tsx	# Renders the category selection modal
-│   |   ├── MenuModal.tsx		# Renders the truck menu
-│   |   └── TruckModal.tsx		# Renders the full truck modal
-│   └── navigation
-│       └── InitialLayout.tsx	# Used for auth navigation handling throughout app
+│   |   ├── CategoryModal.tsx	    # Renders the category selection modal
+│   |   ├── MenuModal.tsx		    # Renders the truck menu
+│   |   └── TruckModal.tsx		    # Renders the full truck modal
+│   ├── navigation
+│   |   └── InitialLayout.tsx	    # Used for auth navigation handling throughout app
 │   ├── profilePage
 │   |   ├── AchievementSection.tsx	# Renders the achievement section
 │   |   └── ProfileHeader.tsx	    # Renders the profile header
+│   ├── rows
+│   |   └── SideBySideRow.tsx	    # Used for auth navigation handling throughout app
 │   └── search
-│       └── SearchBar.tsx		# Renders the google autocomplete map searchbar
+│       └── SearchBar.tsx		    # Renders the google autocomplete map searchbar
+|
+├── convex					 	# Convex Backend Folder
+│   ├── _generated   	            # Automatically Generated Server Files
+│   ├── auth.config.ts 	            # Auth configuration for convex
+│   ├── getUserProfile.ts           # User Read Function
+│   ├── http.ts        
+│   ├── README.md           
+│   ├── schema.ts                   # Database Table Schemas
+│   ├── tsconfig.json    	        # Backend TypeScript Configuration
+│   └── users.ts                    # User Create Functions
 |
 ├── docs					 	# Markdown Documentation
+│   ├── gitWorkflow.md    	    # Guide for GitHub Branch/Feature Workflow
 |   └── styling.md           	# Guide for styling
 │
 ├── node_modules             	# Automatically appears when npm and expo is initialized
+|
+├── providers             	    # Context Providers
+|   └── ClerkAndConvexProvider.tsx
 │
 ├── store                    	# Contains Zustand custom hooks
 │   ├── useFilterStore.tsx   	# State management for selected category filters
 │   ├── useMapLayerStore.tsx 	# State management for selected map layer style
 │   ├── useMenuModalStore.tsx   # State management for menu toggle
-│   └── useTruckStore.tsx    	# State management for selected truck on map
+│   ├── useTruckStore.tsx    	# State management for selected truck on map
+│   └── useUserStore.tsx    	# State management for convex user
 │
 ├── .env.local               # Local environment variables
 │

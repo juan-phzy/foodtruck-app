@@ -4,7 +4,7 @@ import { Stack } from "expo-router";
 export default function ManageTrucksScreenLayout() {
     return (
         <Stack
-            initialRouteName="locationsScreen"
+            initialRouteName="locationsPage"
             screenOptions={{ headerShown: false }}
         />
     );

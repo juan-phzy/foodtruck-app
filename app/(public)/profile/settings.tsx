@@ -4,7 +4,7 @@ import { router } from "expo-router";
 import { useClerk } from "@clerk/clerk-expo";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Settings() {
+export default function UserProfileSettingsPage() {
     const { signOut } = useClerk();
 
     const handleSignOut = async () => {

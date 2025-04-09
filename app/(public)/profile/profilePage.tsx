@@ -19,7 +19,7 @@ import { router } from "expo-router";
 import { useInitUserProfile, useUserStore } from "@/store/useUserStore";
 import { useClerk, useUser } from "@clerk/clerk-expo";
 
-export default function Profile() {
+export default function UserProfilePage() {
     const { user } = useUser();
     console.log("Clerk user:", user?.id);
 

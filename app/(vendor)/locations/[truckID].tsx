@@ -6,7 +6,7 @@ import { View, Text, TouchableOpacity, Image, Switch } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import SmallIconButton from "@/components/buttons/SmallIconButton";
-import SideBySideRow from "@/components/vendor/SideBySideRow";
+import SideBySideRow from "@/components/rows/SideBySideRow";
 import { router, useLocalSearchParams } from "expo-router";
 
 /* 

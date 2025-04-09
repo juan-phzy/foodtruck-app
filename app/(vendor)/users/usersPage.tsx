@@ -11,7 +11,7 @@ import { router } from "expo-router";
 // Sample Data
 const sampleUsers = MANAGE_SCREEN_USERS;
 
-export default function ManageUsersScreen() {
+export default function ManageUsersPage() {
     const insets = useSafeAreaInsets();
 
     return (

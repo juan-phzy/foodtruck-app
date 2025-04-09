@@ -7,11 +7,11 @@ const dummyFavorites = [3, 7, 2, 9];
 const dummyRecents = [5, 1, 8, 4, 6];
 
 export default function SectionScreen() {
-    const { section } = useLocalSearchParams();
+    const { subsection } = useLocalSearchParams();
 
     let data: number[] = [];
     let title: string = "";
-    switch (section) {
+    switch (subsection) {
         case "favorites":
             title = "Favorites";
             data = [4, 5, 10];

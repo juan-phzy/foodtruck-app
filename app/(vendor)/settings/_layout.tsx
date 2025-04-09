@@ -4,7 +4,7 @@ import { Stack } from "expo-router";
 export default function VendorSettingScreenLayout() {
     return (
         <Stack
-            initialRouteName="settingsScreen"
+            initialRouteName="settingsPage"
             screenOptions={{ headerShown: false }}
         />
     );
