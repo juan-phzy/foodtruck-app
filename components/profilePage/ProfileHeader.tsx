@@ -20,7 +20,6 @@ const ProfileHeader = ({ user }: ProfileHeaderProps) => {
         </View>
         <View style={styles.nameContainer}>
           <Text style={styles.name}>{user.name}</Text>
-          <Text style={styles.text}>{`Munch Level: ${user.munchLevel}`}</Text>
         </View>
         <TouchableOpacity
           onPress={() => router.push("/(public)/profile/settings")}

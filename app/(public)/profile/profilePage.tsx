@@ -89,7 +89,6 @@ export default function UserProfilePage() {
                         numColumns={2}
                     />
                 </View>
-                <AchievementSection />
             </SafeAreaView>
         </View>
     );
