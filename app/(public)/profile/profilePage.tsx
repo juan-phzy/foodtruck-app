@@ -13,7 +13,6 @@ import { ScaledSheet } from "react-native-size-matters";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PROFILE_SECTIONS } from "@/constants";
 import LargeIconButton from "@/components/buttons/LargeIconButton";
-import AchievementSection from "@/components/profilePage/AchievementSection";
 import { router } from "expo-router";
 
 import { useInitUserProfile, useUserStore } from "@/store/useUserStore";
