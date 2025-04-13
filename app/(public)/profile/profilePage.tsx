@@ -4,7 +4,6 @@ import {
     StyleSheet,
     FlatList,
     Text,
-    TouchableOpacity,
     ActivityIndicator,
 } from "react-native";
 import ProfileHeader from "@/components/profilePage/ProfileHeader";
