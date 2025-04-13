@@ -60,7 +60,7 @@ export default function CreateAccountScreen() {
         dob: "",
         primary_city: "",
         password: "",
-        role: "public",
+        role: "", // Set role based on isVendor state
     });
 
     // Updates form state when an input field changes.
@@ -88,7 +88,6 @@ export default function CreateAccountScreen() {
                 first_name,
                 last_name,
                 phone_number,
-                role,
             } = form;
 
             const result = await signUp.create({
@@ -98,14 +97,14 @@ export default function CreateAccountScreen() {
                 lastName: last_name,
                 phoneNumber: phone_number,
                 unsafeMetadata: {
-                    role,
+                    role: isVendor ? "vendor" : "public", // Set role based on isVendor state
                 },
             });
 
             if (result.status === "complete") {
                 await setActive({ session: result.createdSessionId });
 
-                if (role === "vendor") {
+                if (isVendor) {
                     router.replace("/(vendor)/locations/");
                 } else {
                     router.replace("/(public)");

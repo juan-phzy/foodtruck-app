@@ -11,25 +11,25 @@ export default defineSchema({
         munchLevel: v.optional(v.float64()), // Make it optional
         primary_city: v.string(),
         clerkId: v.string(),
-    })
-        .index("by_clerk_id", ["clerkId"]),
+    }).index("by_clerk_id", ["clerkId"]),
 
     // Vendors Table
     vendors: defineTable({
-        vendor_id: v.string(),
+        clerkId: v.string(),
         first_name: v.string(),
         last_name: v.string(),
         phone_number: v.string(),
         email: v.string(),
-        password: v.string(),
-        primary_city: v.string(),
-        business_name: v.string(),
-        business_certificates: v.array(v.string()), // Store file URLs
+        primary_city: v.optional(v.string()),
+        dob: v.optional(v.string()),
+        business_name: v.optional(v.string()),
+        business_certificates: v.optional(v.array(v.string())), // Store file URLs
         instagram_link: v.optional(v.string()),
         email_link: v.optional(v.string()), // public business email
         twitter_link: v.optional(v.string()),
         facebook_link: v.optional(v.string()),
     })
+        .index("by_clerk_id", ["clerkId"])
         .index("by_email", ["email"])
         .index("by_phone", ["phone_number"]),
 
