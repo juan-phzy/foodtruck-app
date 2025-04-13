@@ -53,6 +53,8 @@ type Coordinates = { latitude: number; longitude: number };
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY ?? "");
 
 export default function Index() {
+  console.log("____________________________________________")
+  console.log("(public)/index.tsx: Entered Public Home Page");
   // Zustand store for managing selected truck
   const {
     selectedTruck,
@@ -111,7 +113,7 @@ export default function Index() {
 
           if (location && isMounted.current) {
             const { latitude, longitude } = location.coords;
-            console.log("User Location:", { latitude, longitude });
+            console.log("(public)/index.tsx: User Location:", { latitude, longitude });
             setUserLocation({ latitude, longitude });
             moveCamera(longitude, latitude);
             setTimeout(() => setShowMap(true), 500);
@@ -147,7 +149,8 @@ export default function Index() {
    */
   const handleSearch = useCallback(
     ({ latitude, longitude }: Coordinates) => {
-      console.log("Handle Search called");
+      
+      console.log("(public)/index.tsx: Handle Search called");
       moveCamera(longitude, latitude);
       setSelectedTruckId(null);
     },
@@ -205,11 +208,11 @@ export default function Index() {
         scaleBarEnabled={false}
         logoEnabled={false}
         onDidFinishLoadingMap={() => {
-          console.log("Map Loaded");
+          console.log("(public)/index.tsx: Map Loaded");
           setMapLoaded(true);
         }}
         onDidFinishLoadingStyle={() => {
-          console.log("Style Loaded");
+          console.log("(public)/index.tsx: Map Style Loaded");
         }}
       >
         <Camera ref={cameraRef} />

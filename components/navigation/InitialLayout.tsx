@@ -26,20 +26,27 @@ export default function InitialLayout() {
     const segments = useSegments();
     const router = useRouter();
 
+    console.log("________________________________________");
+    console.log("InitialLayout.tsx: Checking Auth Logic");
+
     useEffect(() => {
         if (!isLoaded || !user) return;
 
         const inAuthScreen = segments[0] === "(auth)";
 
         if (!isSignedIn && !inAuthScreen) {
-            console.log("Not signed in, redirecting to login.");
+            console.log(
+                "InitialLayout.tsx: Not signed in, redirecting to login."
+            );
             router.replace("/(auth)/login");
         } else if (isSignedIn && inAuthScreen) {
-            const role = user.publicMetadata?.role;
-            console.log(`Signed in as ${role}, redirecting...`);
+            const role = user.unsafeMetadata?.role;
+            console.log(
+                `InitialLayout.tsx: Signed in as ${role}, redirecting...`
+            );
 
             if (role === "vendor") {
-                router.replace("/(vendor)/locations/locationsScreen");
+                router.replace("/(vendor)/locations/");
             } else {
                 router.replace("/(public)");
             }

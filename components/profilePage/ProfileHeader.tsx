@@ -3,10 +3,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
 import { useRouter } from "expo-router";
-import { UserProfile } from "@/types";
+import { PublicUserProfile } from "@/types";
 
 interface ProfileHeaderProps {
-  user: UserProfile;
+  user: PublicUserProfile;
 }
 
 const ProfileHeader = ({ user }: ProfileHeaderProps) => {
@@ -16,10 +16,10 @@ const ProfileHeader = ({ user }: ProfileHeaderProps) => {
     <View style={styles.rootContainer}>
       <View style={styles.mainRow}>
         <View style={styles.profilePicture}>
-          <Text style={styles.profilePictureText}>{user.name[0]}</Text>
+          <Text style={styles.profilePictureText}>{user.first_name[0]}</Text>
         </View>
         <View style={styles.nameContainer}>
-          <Text style={styles.name}>{user.name}</Text>
+          <Text style={styles.name}>{`${user.first_name} ${user.last_name}`}</Text>
         </View>
         <TouchableOpacity
           onPress={() => router.push("/(public)/profile/settings")}
@@ -35,7 +35,7 @@ const ProfileHeader = ({ user }: ProfileHeaderProps) => {
       </View>
       <View style={styles.textRow}>
         <Text style={styles.bold}>Phone Number</Text>
-        <Text style={styles.text}>{user.phone}</Text>
+        <Text style={styles.text}>{user.phone_number}</Text>
       </View>
       <View style={styles.textRow}>
         <Text style={styles.bold}>Email</Text>

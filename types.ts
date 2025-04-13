@@ -1,11 +1,13 @@
 // types.ts
 
+import { Id } from "./convex/_generated/dataModel";
+
 export interface Coordinates {
     latitude: number;
     longitude: number;
-  }
-  
-  export interface Hours {
+}
+
+export interface Hours {
     monday: string;
     tuesday: string;
     wednesday: string;
@@ -13,18 +15,18 @@ export interface Coordinates {
     friday: string;
     saturday: string;
     sunday: string;
-  }
-  
-  export interface Contact {
+}
+
+export interface Contact {
     email: string;
     social: {
-      instagram: string;
-      facebook: string;
-      twitter: string;
+        instagram: string;
+        facebook: string;
+        twitter: string;
     };
-  }
-  
-  export interface FoodTruck {
+}
+
+export interface FoodTruck {
     id: string;
     name: string;
     categories: string[];
@@ -40,36 +42,35 @@ export interface Coordinates {
     images: string[];
     distance: number;
     menu: ItemCategory[];
-  }
+}
 
-  export interface ItemCategory {
+export interface ItemCategory {
     category: string;
     items: Item[];
-  }
+}
 
-  export interface Item {
+export interface Item {
     name: string;
     description: string;
     price: number;
     imageUrl: string;
-  }
-  
-  // types.ts
-
-export interface Rating {
-  truckId: string; // ID of the food truck
-  rating: number; // Rating given by the user (e.g., 1-5 stars)
-  review?: string; // Optional review text
 }
 
-export type UserProfile = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  munchLevel: number;
-  favoriteTrucks: string[];
-  reviews: string[];
-  recentlyViewed: string[];
-  favoriteCategories: string[];
+export interface Rating {
+    truckId: string; // ID of the food truck
+    rating: number; // Rating given by the user (e.g., 1-5 stars)
+    review?: string; // Optional review text
+}
+
+export type PublicUserProfile = {
+    _id: Id<"users">;
+    _creationTime: number;
+    dob?: string | undefined;
+    munchLevel?: number | undefined;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    email: string;
+    primary_city: string;
+    clerkId: string;
 };

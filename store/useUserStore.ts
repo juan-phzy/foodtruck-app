@@ -3,35 +3,33 @@ import { useEffect } from "react";
 import { useUser } from "@clerk/clerk-expo";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { UserProfile } from "@/types"; // ✅ Use centralized type
+import { PublicUserProfile } from "@/types";
 
 type UserStore = {
-    profile: UserProfile | null;
+    currentUser: PublicUserProfile | null;
     isLoading: boolean;
-    setProfile: (profile: UserProfile) => void;
+    setProfile: (profile: PublicUserProfile) => void;
     setLoading: (loading: boolean) => void;
 };
 
 export const useUserStore = create<UserStore>((set) => ({
-    profile: null,
+    currentUser: null,
     isLoading: true,
-    setProfile: (profile) => {
-        console.log("✅ Zustand: setting user profile", profile);
-        set({ profile });
+    setProfile: (currentUser) => {
+        set({ currentUser });
     },
     setLoading: (isLoading) => set({ isLoading }),
 }));
 
 export const useInitUserProfile = () => {
-    const { user, isLoaded } = useUser();
-    console.log("Clerk status:", isLoaded, user?.id);
-    const { setProfile, setLoading, profile, isLoading } = useUserStore();
+    const { user } = useUser();
+    const { setProfile, setLoading } = useUserStore();
 
     const convexUser = useQuery(
-        api.getUserProfile.getUserProfile,
-        user?.id ? { userId: user.id } : "skip"
+        api.users.getUserByClerkId,
+        user ? { clerkId: user.id } : "skip"
     );
-
+    
     useEffect(() => {
         if (!user) return;
 
@@ -41,13 +39,9 @@ export const useInitUserProfile = () => {
             if (convexUser) {
                 setProfile(convexUser);
             } else {
-                console.warn("No user profile found");
+                console.warn("No public user profile found in Convex");
             }
             setLoading(false);
         }
     }, [user, convexUser]);
-
-    console.log("Clerk user:", user?.id); // Ensure user.id is there
-    console.log("Convex user profile:", convexUser); // See if it's ever returned
-    console.log("useUserStore state:", profile?.id, isLoading); // Zustand state sanity check
 };

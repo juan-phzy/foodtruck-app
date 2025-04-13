@@ -23,7 +23,9 @@ import ClerkAndConvexProvider from "@/providers/ClerkAndConvexProvider";
 import InitialLayout from "@/components/navigation/InitialLayout";
 
 export default function RootLayout() {
-  console.log("Entered RootLayout");
+  console.log("_______________________________");
+  console.log("_layout.tsx: Entered RootLayout");
+  console.log("_layout.tsx: Rendering InitialLayout Nav Logic");
   
   return (
     <ClerkAndConvexProvider>

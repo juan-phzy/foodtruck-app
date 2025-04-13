@@ -20,89 +20,83 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 const { width } = Dimensions.get("window");
 
 export default function Search() {
+    console.log("_______________________________________________");
+    console.log("(public)/search.tsx: Entered Public Search Page");
     const inset = useSafeAreaInsets();
     const handleCategoryPress = (category: string) => {
-        console.log(`Pressed Category: ${category}`);
+        console.log(`(public)/search.tsx: Pressed Category: ${category}`);
     };
 
     return (
-        <View style={[styles.rootContainer,{paddingTop:inset.top}]}>
-                {/* Header Section */}
-                <View style={[styles.header]}>
-                    <LinearGradient
-                        style={styles.gradient}
-                        colors={[
-                            "rgba(255, 132, 0, 1)",
-                            "rgba(255, 255, 255, 1)",
-                        ]}
-                        locations={[0.1, 0.95]}
-                    />
-                    <TextInputStandard
-                        radius="full"
-                        placeholder="Search Trucks"
-                        fontSize={ms(12)}
-                    />
+        <View style={[styles.rootContainer, { paddingTop: inset.top }]}>
+            {/* Header Section */}
+            <View style={[styles.header]}>
+                <LinearGradient
+                    style={styles.gradient}
+                    colors={["rgba(255, 132, 0, 1)", "rgba(255, 255, 255, 1)"]}
+                    locations={[0.1, 0.95]}
+                />
+                <TextInputStandard
+                    radius="full"
+                    placeholder="Search Trucks"
+                    fontSize={ms(12)}
+                />
+            </View>
+
+            <ScrollView style={styles.body}>
+                {/* Individual Search Categories Card */}
+                <View style={styles.cardContainer}>
+                    <FlatListCard title="Search Categories">
+                        <FlatList
+                            contentContainerStyle={styles.flatListGap}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            data={CATEGORIES}
+                            keyExtractor={(item, index) => item.name + index}
+                            renderItem={({ item }) => (
+                                <TouchableOpacity
+                                    style={styles.categoryButton}
+                                    onPress={() =>
+                                        handleCategoryPress(item.name)
+                                    }
+                                >
+                                    <Image
+                                        source={{ uri: item.url }}
+                                        style={styles.image}
+                                    />
+                                    <Text style={styles.buttonText}>
+                                        {item.name}
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+                        />
+                    </FlatListCard>
                 </View>
 
-                <ScrollView style={styles.body}>
-                    {/* Individual Search Categories Card */}
-                    <View style={styles.cardContainer}>
-                        <FlatListCard title="Search Categories">
+                {SEARCH_SECTIONS.map((section) => (
+                    <View key={section.name} style={styles.cardContainer}>
+                        <FlatListCard title={section.name}>
                             <FlatList
                                 contentContainerStyle={styles.flatListGap}
                                 horizontal={true}
                                 showsHorizontalScrollIndicator={false}
-                                data={CATEGORIES}
-                                keyExtractor={(item, index) =>
-                                    item.name + index
-                                }
-                                renderItem={({ item }) => (
-                                    <TouchableOpacity
-                                        style={styles.categoryButton}
-                                        onPress={() =>
-                                            handleCategoryPress(item.name)
-                                        }
-                                    >
-                                        <Image
-                                            source={{ uri: item.url }}
-                                            style={styles.image}
-                                        />
-                                        <Text style={styles.buttonText}>
-                                            {item.name}
-                                        </Text>
-                                    </TouchableOpacity>
-                                )}
+                                data={section.trucks}
+                                keyExtractor={(truckId) => truckId.toString()}
+                                renderItem={({ item: truckId }) => {
+                                    const truck =
+                                        FOOD_TRUCKS.find(
+                                            (truck) =>
+                                                truck.id == truckId.toString()
+                                        ) ?? null;
+                                    return truck ? (
+                                        <TruckCard truck={truck} />
+                                    ) : null;
+                                }}
                             />
                         </FlatListCard>
                     </View>
-
-                    {SEARCH_SECTIONS.map((section) => (
-                        <View key={section.name} style={styles.cardContainer}>
-                            <FlatListCard title={section.name}>
-                                <FlatList
-                                    contentContainerStyle={styles.flatListGap}
-                                    horizontal={true}
-                                    showsHorizontalScrollIndicator={false}
-                                    data={section.trucks}
-                                    keyExtractor={(truckId) =>
-                                        truckId.toString()
-                                    }
-                                    renderItem={({ item: truckId }) => {
-                                        const truck =
-                                            FOOD_TRUCKS.find(
-                                                (truck) =>
-                                                    truck.id ==
-                                                    truckId.toString()
-                                            ) ?? null;
-                                        return truck ? (
-                                            <TruckCard truck={truck} />
-                                        ) : null;
-                                    }}
-                                />
-                            </FlatListCard>
-                        </View>
-                    ))}
-                </ScrollView>
+                ))}
+            </ScrollView>
         </View>
     );
 }
