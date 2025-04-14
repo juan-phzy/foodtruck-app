@@ -20,7 +20,7 @@ import { View, Text, Pressable } from "react-native";
 
 // Expo & Third-Party Libraries
 import { BlurView } from "expo-blur";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Theme & Types
 import theme from "@/assets/theme";
@@ -67,7 +67,7 @@ const NearbyTrucks: React.FC<NearbyTrucksProps> = ({ trucks }) => {
                     onPress={() => setIsExpanded((prev) => !prev)}
                     style={styles.dropdownButton}
                 >
-                    <Ionicons
+                    <MaterialCommunityIcons
                         name={isExpanded ? "chevron-down" : "chevron-up"}
                         size={ms(30)}
                         color={theme.colors.primary}

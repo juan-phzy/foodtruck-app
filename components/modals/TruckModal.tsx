@@ -16,7 +16,7 @@ import { useState, useMemo, useCallback } from "react";
 import useTruckStore from "@/store/useTruckStore";
 
 // Expo Libraries
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
 // React Native Components
@@ -100,12 +100,12 @@ const TruckModal: React.FC<TruckModalProps> = ({ truck }) => {
                         <View style={styles.headerRow}>
                             {/* Back Button */}
                             <Pressable style={styles.backBtnContainer} onPress={toggleTruckModal}>
-                                <Ionicons name="arrow-back" size={30} color={theme.colors.white} />
+                                <MaterialCommunityIcons name="arrow-left" size={30} color={theme.colors.white} />
                             </Pressable>
 
                             {/* Favorite Button */}
                             <Pressable style={styles.bookmarkIcon} onPress={toggleFavorite}>
-                                <Ionicons name={isFavorite ? "bookmark" : "bookmark-outline"} size={30} color={theme.colors.primary} />
+                                <MaterialCommunityIcons name={isFavorite ? "bookmark" : "bookmark-outline"} size={30} color={theme.colors.primary} />
                             </Pressable>
                         </View>
 
@@ -145,7 +145,7 @@ const TruckModal: React.FC<TruckModalProps> = ({ truck }) => {
                     <View style={styles.hoursTitleRow}>
                         <Text style={styles.hoursTitleText}>Hours</Text>
                         <Pressable onPress={toggleShowHours} style={styles.dropdownButton}>
-                            <Ionicons name={showHours ? "chevron-down" : "chevron-up"} size={30} color={theme.colors.primary} />
+                            <MaterialCommunityIcons name={showHours ? "chevron-down" : "chevron-up"} size={30} color={theme.colors.primary} />
                         </Pressable>
                     </View>
                     <Text style={styles.contentRowBody}>{`Today: ${truck.hours[weekday]}`}</Text>
@@ -171,7 +171,7 @@ const TruckModal: React.FC<TruckModalProps> = ({ truck }) => {
                                 {truck.rating}
                             </Text>
                             {Array.from({ length: 5 }, (_, index) => (
-                                <Ionicons
+                                <MaterialCommunityIcons
                                     key={index}
                                     name={index < Math.floor(truck.rating) ? "star" : "star-outline"}
                                     size={16}
@@ -185,7 +185,7 @@ const TruckModal: React.FC<TruckModalProps> = ({ truck }) => {
                         <View style={styles.starContainer}>
                             {[1, 2, 3, 4, 5].map((star) => (
                                 <Pressable key={star} onPress={() => setUserRating(star)}>
-                                    <Ionicons
+                                    <MaterialCommunityIcons
                                         name={star <= userRating ? "star" : "star-outline"}
                                         size={30}
                                         color={theme.colors.primary}

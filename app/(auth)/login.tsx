@@ -169,7 +169,7 @@ export default function SignIn() {
                         }
                         onPress={() => {}}
                         disabled={loading}
-                        icon="logo-google"
+                        icon="google"
                     />
 
                     {/* New User Section */}

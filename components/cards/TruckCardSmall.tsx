@@ -15,7 +15,7 @@
 
 import React, { useState, useCallback, useMemo } from "react";
 import { View, Text, Image, Pressable, Dimensions } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import theme from "@/assets/theme";
 import { FoodTruck } from "@/types";
 import { ms, ScaledSheet } from "react-native-size-matters";
@@ -52,7 +52,7 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck, pressable }) => 
     const starIcons = useMemo(
         () =>
             Array.from({ length: 5 }, (_, index) => (
-                <Ionicons
+                <MaterialCommunityIcons
                     key={index}
                     name={
                         index < Math.floor(truck.rating)
@@ -121,7 +121,7 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck, pressable }) => 
 
                 {/* Favorite (Bookmark) Icon */}
                 <Pressable style={styles.bookmarkIcon} onPress={toggleFavorite}>
-                    <Ionicons
+                    <MaterialCommunityIcons
                         name={isFavorite ? "bookmark" : "bookmark-outline"}
                         size={ms(30)}
                         color={theme.colors.primary}

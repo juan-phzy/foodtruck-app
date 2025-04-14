@@ -7,11 +7,11 @@
  * - Profile (`profile`) with person icon
  * - Test/Dev tools (`test`) with build icon
  *
- * Uses Ionicons for consistent, mobile-friendly tab bar icons.
+ * Uses MaterialCommunityIcons for consistent, mobile-friendly tab bar icons.
  */
 
 import { Tabs } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ms } from "react-native-size-matters";
 
 // Theme
@@ -22,12 +22,12 @@ import { useInitUserProfile } from "@/store/useUserStore";
 // Types
 type TabIconProps = {
     color: string;
-    name: keyof typeof Ionicons.glyphMap;
+    name: keyof typeof MaterialCommunityIcons.glyphMap;
 };
 
 // Render Icon Helper
 const renderTabIcon = ({ color, name }: TabIconProps) => (
-    <Ionicons name={name} size={ms(25)} color={color} />
+    <MaterialCommunityIcons name={name} size={ms(25)} color={color} />
 );
 
 export default function PublicLayout() {
@@ -62,21 +62,21 @@ export default function PublicLayout() {
                 name="search"
                 options={{
                     tabBarIcon: (props) =>
-                        renderTabIcon({ ...props, name: "search" }),
+                        renderTabIcon({ ...props, name: "magnify" }),
                 }}
             />
             <Tabs.Screen
                 name="profile"
                 options={{
                     tabBarIcon: (props) =>
-                        renderTabIcon({ ...props, name: "person" }),
+                        renderTabIcon({ ...props, name: "account" }),
                 }}
             />
             <Tabs.Screen
                 name="test"
                 options={{
                     tabBarIcon: (props) =>
-                        renderTabIcon({ ...props, name: "build-outline" }),
+                        renderTabIcon({ ...props, name: "test-tube" }),
                 }}
             />
         </Tabs>

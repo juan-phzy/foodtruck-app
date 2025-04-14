@@ -5,7 +5,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import { ScrollView } from "react-native-gesture-handler";
 import { LOCATION_SCREEN_TRUCKS } from "@/constants";
 import IconButton from "@/components/buttons/IconButton";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
 // Sample Data
@@ -19,8 +19,8 @@ export default function LocationsScreen() {
             {/* Header */}
             <View style={styles.headerContainer}>
                 <Text style={styles.headerText}>Manage Trucks</Text>
-                <Ionicons
-                    name="add"
+                <MaterialCommunityIcons
+                    name="plus"
                     size={45}
                     color={theme.colors.primary}
                     onPress={() => console.log("Clicked Add Trucks")}

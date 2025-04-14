@@ -27,7 +27,7 @@ import {
 // Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import { Ionicons } from "@expo/vector-icons"; // For "Go Back" icon
+import { MaterialCommunityIcons } from "@expo/vector-icons"; // For "Go Back" icon
 import { useSignUp } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 
@@ -163,8 +163,8 @@ export default function CreateAccountScreen() {
                         style={styles.goBackContainer}
                         onPress={handleGoBack}
                     >
-                        <Ionicons
-                            name="arrow-back"
+                        <MaterialCommunityIcons
+                            name="arrow-left"
                             size={ms(24)}
                             color={theme.colors.white}
                         />

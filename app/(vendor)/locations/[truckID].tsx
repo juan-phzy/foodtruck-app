@@ -1,6 +1,6 @@
 import theme from "@/assets/theme";
 import icon from "@/assets/images/icon.png";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image, Switch } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -33,8 +33,8 @@ export default function ManageTruckScreen() {
                     onPress={() => router.back()}
                 >
                     <View style={styles.arrowButton}>
-                        <Ionicons
-                            name="arrow-back"
+                        <MaterialCommunityIcons
+                            name="arrow-left"
                             style={styles.arrowIcon}
                             onPress={() => router.back()}
                         />
@@ -55,14 +55,14 @@ export default function ManageTruckScreen() {
                 <SideBySideRow
                     leftComponent={
                         <SmallIconButton
-                            iconName="bar-chart"
+                            iconName="chart-bar"
                             text="View Insights"
                             fontSize={ms(theme.fontSize.lg)}
                         />
                     }
                     rightComponent={
                         <SmallIconButton
-                            iconName="list"
+                            iconName="menu"
                             text="Edit Menu"
                             fontSize={ms(theme.fontSize.lg)}
                         />
@@ -165,9 +165,9 @@ export default function ManageTruckScreen() {
                             >
                                 123 Main Street
                             </Text>
-                            <Ionicons
+                            <MaterialCommunityIcons
                                 name="pencil"
-                                style={styles.ioniconFontSize}
+                                style={styles.iconFontSize}
                                 color={
                                     !useLiveLocation
                                         ? theme.colors.black
@@ -187,9 +187,9 @@ export default function ManageTruckScreen() {
                         <TouchableOpacity
                             onPress={() => console.log("Set Schedule Pressed")}
                         >
-                            <Ionicons
-                                name="caret-forward-outline"
-                                style={styles.ioniconFontSize}
+                            <MaterialCommunityIcons
+                                name="menu-right"
+                                style={styles.iconFontSize}
                             />
                         </TouchableOpacity>
                     }
@@ -208,9 +208,9 @@ export default function ManageTruckScreen() {
                                 console.log("Set Unique Images Pressed")
                             }
                         >
-                            <Ionicons
-                                name="caret-forward-outline"
-                                style={styles.ioniconFontSize}
+                            <MaterialCommunityIcons
+                                name="menu-right"
+                                style={styles.iconFontSize}
                             />
                         </TouchableOpacity>
                     }
@@ -274,7 +274,7 @@ const styles = ScaledSheet.create({
     switchStyle: {
         transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
     },
-    ioniconFontSize: {
+    iconFontSize: {
         fontSize: ms(theme.fontSize.xxl),
     },
 });

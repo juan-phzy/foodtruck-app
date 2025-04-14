@@ -5,7 +5,7 @@ import { ScaledSheet } from "react-native-size-matters";
 import IconButton from "@/components/buttons/IconButton";
 import { MANAGE_SCREEN_USERS } from "@/constants";
 import { ScrollView } from "react-native-gesture-handler";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
 // Sample Data
@@ -19,8 +19,8 @@ export default function ManageUsersPage() {
             {/* Header */}
             <View style={styles.headerContainer}>
                 <Text style={styles.headerText}>Manage Users</Text>
-                <Ionicons
-                    name="add"
+                <MaterialCommunityIcons
+                    name="plus"
                     size={45}
                     color={theme.colors.primary}
                     onPress={() => console.log("Clicked Add User")}

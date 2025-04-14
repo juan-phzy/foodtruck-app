@@ -10,9 +10,7 @@ import {
 } from "react-native";
 import { BlurView } from "expo-blur";
 import {
-    Ionicons,
     MaterialCommunityIcons,
-    MaterialIcons,
 } from "@expo/vector-icons";
 import theme from "@/assets/theme";
 import { FoodTruck } from "@/types";
@@ -58,8 +56,8 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                     style={styles.backButtonContainer}
                     onPress={clearSelectedTruck}
                 >
-                    <Ionicons
-                        name="share-outline"
+                    <MaterialCommunityIcons
+                        name="share-variant"
                         size={ms(17)}
                         color={theme.colors.white}
                     />
@@ -69,8 +67,8 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                     style={styles.backButtonContainer}
                     onPress={clearSelectedTruck}
                 >
-                    <Ionicons
-                        name="close-outline"
+                    <MaterialCommunityIcons
+                        name="close"
                         size={ms(18)}
                         color={theme.colors.white}
                     />
@@ -82,19 +80,19 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                 <View style={styles.spaceBetweenRow}>
                     <View style={styles.distanceContainer}>
                         <View style={styles.detailsDistance}>
-                            <Ionicons name="walk" size={ms(15)} />
+                            <MaterialCommunityIcons name="walk" size={ms(15)} />
                             <Text style={styles.detailText}>
                                 {estimatedWalkTime}
                             </Text>
                         </View>
                         <View style={styles.detailsDistance}>
-                            <Ionicons name="bicycle" size={ms(15)} />
+                            <MaterialCommunityIcons name="bicycle" size={ms(15)} />
                             <Text style={styles.detailText}>
                                 {estimatedBikeTime}
                             </Text>
                         </View>
                         <View style={styles.detailsDistance}>
-                            <Ionicons name="car" size={ms(15)} />
+                            <MaterialCommunityIcons name="car" size={ms(15)} />
                             <Text style={styles.detailText}>
                                 {estimatedDriveTime}
                             </Text>
@@ -104,7 +102,7 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                     <View style={styles.detailsRow}>
                         <View style={styles.stars}>
                             {Array.from({ length: 5 }, (_, index) => (
-                                <Ionicons
+                                <MaterialCommunityIcons
                                     key={index}
                                     name={
                                         index < Math.floor(truck.rating)
@@ -161,8 +159,8 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                     style={styles.button}
                     onPress={toggleMenuModal}
                 >
-                    <MaterialIcons
-                        name="restaurant-menu"
+                    <MaterialCommunityIcons
+                        name="silverware"
                         size={ms(17)}
                         color={theme.colors.white}
                     />
@@ -173,7 +171,7 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                     style={styles.button}
                     onPress={handleToggleFavorite}
                 >
-                    <Ionicons
+                    <MaterialCommunityIcons
                         name={isFavorite ? "bookmark" : "bookmark-outline"}
                         size={ms(17)}
                         color={theme.colors.white}
@@ -198,16 +196,16 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
             {/* Navigation Buttons */}
             <View style={styles.navigationButtons}>
                 <Pressable onPress={previousTruck}>
-                    <Ionicons
-                        name="chevron-back"
+                    <MaterialCommunityIcons
+                        name="chevron-left"
                         size={ms(35)}
                         color={theme.colors.primary}
                         style={styles.navButton}
                     />
                 </Pressable>
                 <Pressable onPress={nextTruck}>
-                    <Ionicons
-                        name="chevron-forward"
+                    <MaterialCommunityIcons
+                        name="chevron-right"
                         size={ms(35)}
                         color={theme.colors.primary}
                         style={styles.navButton}

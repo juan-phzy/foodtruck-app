@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
 import { useRouter } from "expo-router";
@@ -26,8 +26,8 @@ const ProfileHeader = ({ user }: ProfileHeaderProps) => {
           style={styles.settingsContainer}
         >
           <Text style={styles.settingsText}>Settings</Text>
-          <Ionicons
-            name="settings"
+          <MaterialCommunityIcons
+            name="cog"
             size={ms(25)}
             color={theme.colors.primary}
           />

@@ -32,7 +32,7 @@ import {
 
 // Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // State Management (Zustand)
 import useFilterStore from "@/store/useFilterStore";
@@ -83,8 +83,8 @@ const CategoryModal: React.FC = () => {
                         style={styles.backButton}
                         onPress={toggleCategoryModal}
                     >
-                        <Ionicons
-                            name="arrow-back"
+                        <MaterialCommunityIcons
+                            name="arrow-left"
                             size={ms(20)}
                             color={theme.colors.white}
                         />

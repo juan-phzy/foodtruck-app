@@ -22,7 +22,7 @@ import { Text, TouchableOpacity } from "react-native";
 // Theme & Styles
 import theme from "@/assets/theme";
 import { ScaledSheet } from "react-native-size-matters";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Type Definition for Component Props
 type ButtonProps = Readonly<{
@@ -34,7 +34,7 @@ type ButtonProps = Readonly<{
     verticalPadding?: number; // Customizable vertical padding
     fontSize?: number; // Customizable font size
     disabled?: boolean; // If true, disables button interaction
-    icon?: keyof typeof Ionicons.glyphMap;
+    icon?: keyof typeof MaterialCommunityIcons.glyphMap; // Optional icon prop
 }>;
 
 /**
@@ -81,7 +81,7 @@ export default function StandardButton({
             ]}
         >
             {icon && (
-                <Ionicons
+                <MaterialCommunityIcons
                     name={icon}
                     size={fontSize + 5}
                     color={getTextColor(style)}

@@ -106,9 +106,6 @@ const styles = ScaledSheet.create({
         flex: 1,
         backgroundColor: theme.colors.primary,
     },
-    safeAreaView: {
-        flex: 1,
-    },
     testText: {
         flex: 1,
         fontSize: "20@s",

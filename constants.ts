@@ -1,6 +1,6 @@
 // constants.ts
 import { FoodTruck } from "@/types";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export const VENDOR_SETTINGS = [
     {
@@ -99,17 +99,17 @@ export const FORM_FIELDS = [
 
 export type ProfileSection = {
     name: string;
-    icon: keyof typeof Ionicons.glyphMap;
+    icon: keyof typeof MaterialCommunityIcons.glyphMap;
     link: string;
 };
 
 export const PROFILE_SECTIONS: ProfileSection[] = [
     { name: "Favorites", icon: "bookmark-outline", link: "favorites" },
-    { name: "Recently Viewed", icon: "time-outline", link: "recent" },
+    { name: "Recently Viewed", icon: "clock-time-three-outline", link: "recent" },
     { name: "Your Ratings", icon: "star-outline", link: "ratings" },
     {
         name: "Favorite Caegories",
-        icon: "fast-food-outline",
+        icon: "food",
         link: "categories",
     },
 ];

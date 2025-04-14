@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScaledSheet } from "react-native-size-matters";
-import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { MaterialCommunityIcons} from "@expo/vector-icons";
 import theme from "@/assets/theme";
 import { router, useSegments } from "expo-router";
 
@@ -40,8 +40,8 @@ export default function SetAccess() {
                         onPress={() => router.back()}
                     >
                         <View style={styles.arrowButton}>
-                            <Ionicons
-                                name="arrow-back"
+                            <MaterialCommunityIcons
+                                name="arrow-left"
                                 size={theme.fontSize.xxl}
                                 color={theme.colors.white}
                             />
@@ -52,7 +52,7 @@ export default function SetAccess() {
 
                 {/* User Info */}
                 <View style={styles.cardContainer}>
-                    <FontAwesome name="user" style={styles.userIcon} />
+                    <MaterialCommunityIcons name="account-circle" style={styles.userIcon} />
                     <Text style={styles.nameText}>Employee 1 Access</Text>
                 </View>
             </View>
@@ -67,11 +67,11 @@ export default function SetAccess() {
                         onPress={() => toggleAccess(item.id)}
                     >
                         <Text style={styles.label}>{item.name}</Text>
-                        <Ionicons
+                        <MaterialCommunityIcons
                             name={
                                 access.includes(item.id)
-                                    ? "checkmark-circle"
-                                    : "ellipse-outline"
+                                    ? "check-circle"
+                                    : "circle-outline"
                             }
                             size={theme.fontSize.xxl}
                             color={theme.colors.primary}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Switch } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
-import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import theme from "@/assets/theme";
 import { router, useLocalSearchParams, useSegments } from "expo-router";
 
@@ -25,8 +25,8 @@ export default function ManageUserScreen() {
                         onPress={() => router.back()}
                     >
                         <View style={styles.arrowButton}>
-                            <Ionicons
-                                name="arrow-back"
+                            <MaterialCommunityIcons
+                                name="arrow-left"
                                 size={theme.fontSize.xxl}
                                 color={theme.colors.white}
                             />
@@ -37,7 +37,7 @@ export default function ManageUserScreen() {
 
                 {/* User Info Card */}
                 <View style={styles.cardContainer}>
-                    <FontAwesome name="user" style={styles.userIcon} />
+                    <MaterialCommunityIcons name="account-circle" style={styles.userIcon} />
                     <Text style={styles.nameText}>{userID}</Text>
                 </View>
             </View>
@@ -97,8 +97,8 @@ function UserDetailRow({
                                 router.push(`/users/${value}/setAccess`);
                             }}
                         >
-                            <Ionicons
-                                name="caret-forward-outline"
+                            <MaterialCommunityIcons
+                                name="menu-right"
                                 size={theme.fontSize.xxl}
                                 color={theme.colors.black}
                             />

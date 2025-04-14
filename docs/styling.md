@@ -1655,7 +1655,7 @@ import React, { useMemo } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { FOOD_TRUCKS } from "@/constants";
 import theme from "@/assets/theme";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
@@ -1665,7 +1665,7 @@ export default function TruckCard() {
     const starIcons = useMemo(
         () =>
             Array.from({ length: 5 }, (_, index) => (
-                <Ionicons
+                <MaterialCommunityIcons
                     key={index}
                     name={
                         index < Math.floor(sampleTruck.rating)
@@ -1884,7 +1884,7 @@ import { View, Text, Image, Dimensions } from "react-native";
 import React, { useMemo } from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FoodTruck } from "@/types";
 
 const { width } = Dimensions.get("window");
@@ -1897,7 +1897,7 @@ export default function TruckCard({ truck }: TruckCardProps) {
     const starIcons = useMemo(
         () =>
             Array.from({ length: 5 }, (_, index) => (
-                <Ionicons
+                <MaterialCommunityIcons
                     key={index}
                     name={
                         index < Math.floor(truck.rating)

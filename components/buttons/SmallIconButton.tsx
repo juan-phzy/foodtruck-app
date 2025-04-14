@@ -1,19 +1,19 @@
 import { Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { ScaledSheet } from "react-native-size-matters"
-import { Ionicons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import theme from "@/assets/theme";
 
 
 interface SmallIconButtonProps{
-    iconName: keyof typeof Ionicons.glyphMap,
+    iconName: keyof typeof MaterialCommunityIcons.glyphMap,
     text: string,
     fontSize: number
 }
 export default function SmallIconButton({iconName,text,fontSize} : SmallIconButtonProps) {
   return (
     <TouchableOpacity style = {styles.container}>
-      <Ionicons name = {iconName} size = {fontSize} color = {theme.colors.primary}/>
+      <MaterialCommunityIcons name = {iconName} size = {fontSize} color = {theme.colors.primary}/>
       <Text style = {styles.text}> {text}</Text>
     </TouchableOpacity>
   )

@@ -32,7 +32,7 @@ import {
 
 // Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Constants & Theme
 import theme from "@/assets/theme";
@@ -78,8 +78,8 @@ const MenuModal: React.FC<MenuModalProps> = ({ truck }) => {
                         style={styles.backButton}
                         onPress={toggleMenuModal}
                     >
-                        <Ionicons
-                            name="arrow-back"
+                        <MaterialCommunityIcons
+                            name="arrow-left"
                             size={ms(20)}
                             color={theme.colors.white}
                         />

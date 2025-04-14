@@ -42,6 +42,12 @@ const theme = {
         xxxl: ms(28),
         xxxxl: ms(35),
     },
+    radius: {
+        sm: ms(5),
+        md: ms(10),
+        lg: ms(15),
+        full: ms(20),
+    }
 };
 
 export default theme;

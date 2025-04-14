@@ -2,17 +2,17 @@ import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 import React from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 interface LargeIconButtonProps extends TouchableOpacityProps {
     readonly text: string;
-    readonly icon: keyof typeof Ionicons.glyphMap;
+    readonly icon: keyof typeof MaterialCommunityIcons.glyphMap;
 }
 
 export default function LargeIconButton({ text, icon, onPress }: LargeIconButtonProps) {
     return (
         <TouchableOpacity style={styles.rootContainer} onPress={onPress}>
-            <Ionicons name={icon} size={ms(45)} color={theme.colors.primary} />
+            <MaterialCommunityIcons name={icon} size={ms(45)} color={theme.colors.primary} />
             <Text style={styles.text}>{text}</Text>
         </TouchableOpacity>
     );

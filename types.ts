@@ -2,11 +2,6 @@
 
 import { Id } from "./convex/_generated/dataModel";
 
-export interface Coordinates {
-    latitude: number;
-    longitude: number;
-}
-
 export interface Hours {
     monday: string;
     tuesday: string;
@@ -62,6 +57,44 @@ export interface Rating {
     review?: string; // Optional review text
 }
 
+//------------- FINAL PRODUCTION TYPES ------------------
+
+// Google Autocomplete Types
+export interface GoogleAutocompleteResponse {
+    suggestions: Suggestion[];
+}
+
+export interface Suggestion {
+    placePrediction: PlacePrediction;
+}
+
+export interface PlacePrediction {
+    placeId: string;
+    structuredFormat: StructuredFormat;
+}
+
+export interface StructuredFormat {
+    mainText: {
+        text: string;
+        matches: { endOffset: number }[];
+    };
+    secondaryText: {
+        text: string;
+    };
+}
+
+export interface ParsedSuggestion {
+    placeId: string;
+    mainText: string;
+    secondaryText: string;
+}
+
+export type Coordinates = {
+    latitude: number;
+    longitude: number;
+};
+
+// Convex Types
 export type PublicUserProfile = {
     _id: Id<"users">;
     _creationTime: number;
