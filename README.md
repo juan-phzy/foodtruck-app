@@ -98,6 +98,8 @@ FOODTRUCK-APP
 │   |   ├── TruckCard.tsx               # Renders a fullsize food truck card
 │   |   └── TruckCardSmall.tsx          # Renders a small food truck card
 │   ├── indexPage
+|   |   ├── MapHeader.tsx               # Renders Map Header with SearchBar and Toggles
+|   |   ├── MapToggleRow.tsx            # Renders Map Header Toggles
 │   |   ├── NearbyTrucks.tsx            # Renders the nearby trucks expandable card
 │   |   └── SelectedTruck.tsx           # Renders the selected truck card
 │   ├── inputs
@@ -143,7 +145,11 @@ FOODTRUCK-APP
 │   ├── useMapLayerStore.tsx            # State management for selected map layer style
 │   ├── useMenuModalStore.tsx           # State management for menu toggle
 │   ├── useTruckStore.tsx               # State management for selected truck on map
+│   ├── useUserLocationStore.tsx        # State management for user device location
 │   └── useUserStore.tsx                # State management for convex user
+|
+├── utils                           # Utility Folder
+│   └── loadFonts.ts                    # Preloads all MaterialCommunityIcons
 │
 ├── .env.local               # Local environment variables
 │
