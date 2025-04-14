@@ -108,7 +108,7 @@ export default function Index() {
         if (userLocation) {
             console.log("(public)/index.tsx: User Location Found, Moving Camera");
             moveCamera(userLocation.longitude, userLocation.latitude);
-            setTimeout(() => setShowMap(true), 100);
+            setTimeout(() => setShowMap(true), 300);
         }
     }, [userLocation]);
 
