@@ -37,7 +37,7 @@ export default function SetAccess() {
                 <View style={styles.headerContainer}>
                     <TouchableOpacity
                         style={styles.goBack}
-                        onPress={() => router.back()}
+                        onPress={router.back}
                     >
                         <View style={styles.arrowButton}>
                             <MaterialCommunityIcons

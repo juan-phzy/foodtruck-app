@@ -31,6 +31,9 @@ import theme from "@/assets/theme";
 import { useSignIn } from "@clerk/clerk-expo";
 
 export default function SignIn() {
+    console.log("");
+    console.log("___________________________________________")
+    console.log("app/(auth)/login.tsx: Entered SignIn Screen");
     const insets = useSafeAreaInsets(); // Safe area insets for top and bottom padding
     const [isVendor, setIsVendor] = useState(false); // State to toggle between Vendor and Public login
     const [loading, setLoading] = useState(false); // Loading state for sign-in process, purely for UI feedback, no backend logic
@@ -107,7 +110,7 @@ export default function SignIn() {
                     style={[styles.logoContainer, { paddingTop: insets.top }]}
                 >
                     <Text style={styles.title}>MunchMap</Text>
-                    <Text style={styles.subtitle}>{isVendor ? `Business` : `Find Nearby FoodTrucks`}</Text>
+                    {!isVendor && <Text style={styles.subtitle}>Find Nearby FoodTrucks</Text>}
                 </View>
                 {/* Blurred Body Container for Form */}
                 <BlurView
@@ -119,6 +122,7 @@ export default function SignIn() {
                 >
                     {/* Input Form */}
                     <View style={styles.signInForm}>
+                        {isVendor && <Text style={styles.vendorTitle}>Business Login</Text>}
                         <TextInputFancy
                             label="Email"
                             placeholder="you@email.com"
@@ -236,6 +240,13 @@ const styles = ScaledSheet.create({
     },
     signInForm: {
         gap: "15@ms",
+    },
+    vendorTitle: {
+        fontSize: theme.fontSize.xl,
+        color: theme.colors.white,
+        borderBottomColor: theme.colors.whiteInactive,
+        borderBottomWidth: 1,
+
     },
     dividerContainer: {
         flexDirection: "row",

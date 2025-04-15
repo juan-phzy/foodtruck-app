@@ -52,8 +52,9 @@ import useUserLocationStore from "@/store/useUserLocationStore";
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY ?? "");
 
 export default function Index() {
+    console.log("");
     console.log("____________________________________________");
-    console.log("(public)/index.tsx: Entered Public Home Page");
+    console.log("app/(public)/index.tsx: Entered Public Home Page");
 
     // Zustand store for managing selected truck
     const {
@@ -97,16 +98,16 @@ export default function Index() {
     // Fetches the user's location and sets it in the Zustand store.
     useEffect(() => {
         if (mapLoaded) {
-            console.log("(public)/index.tsx: Map Loaded, Fetching User Location");
+            console.log("app/(public)/index.tsx: MAP LOADED, FETCHING USER LOCATION");
             fetchUserLocation();
         }
     }, [mapLoaded]);
 
     // Activates the map once a user location is found.
     useEffect(() => {
-        console.log("(public)/index.tsx: User Location: ", userLocation);
+        console.log("app/(public)/index.tsx: USER LOCATION: ", userLocation);
         if (userLocation) {
-            console.log("(public)/index.tsx: User Location Found, Moving Camera");
+            console.log("app/(public)/index.tsx: USEER LOCATION FOUND, MOVING CAMERA");
             moveCamera(userLocation.longitude, userLocation.latitude);
             setTimeout(() => setShowMap(true), 300);
         }
@@ -128,7 +129,7 @@ export default function Index() {
     // Handles Map Search and moves the camera to searched location.
     const handleSearch = useCallback(
         ({ latitude, longitude }: Coordinates) => {
-            console.log("(public)/index.tsx: Handle Search called");
+            console.log("app/(public)/index.tsx: FUNCTION handleSearch CALLED");
             moveCamera(longitude, latitude);
             clearSelectedTruck();
         },
@@ -179,11 +180,11 @@ export default function Index() {
                 scaleBarEnabled={false}
                 logoEnabled={false}
                 onDidFinishLoadingMap={() => {
-                    console.log("(public)/index.tsx: Map Loaded");
+                    console.log("app/(public)/index.tsx: MAP LOADED");
                     setMapLoaded(true);
                 }}
                 onDidFinishLoadingStyle={() => {
-                    console.log("(public)/index.tsx: Map Style Loaded");
+                    console.log("app/(public)/index.tsx: MAP STYLE LOADED");
                 }}
             >
                 <Camera ref={cameraRef} />

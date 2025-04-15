@@ -16,6 +16,9 @@ import { useUserStore } from "@/store/useUserStore";
 const sampleSettings = VENDOR_SETTINGS;
 
 export default function UserSettings() {
+    console.log("");
+    console.log("____________________________________________________________");
+    console.log("app/(public)/profile/settings.tsx: Entered UserSettings Page");
     const insets = useSafeAreaInsets();
     const { signOut } = useClerk();
     const handleSignOut = async () => {
@@ -30,7 +33,7 @@ export default function UserSettings() {
 
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
-            <TouchableOpacity style={{marginVertical:theme.padding.xl}} onPress={() => router.back()}>
+            <TouchableOpacity style={{marginVertical:theme.padding.xl}} onPress={router.back}>
                 <Text style={{fontSize:theme.fontSize.md, fontWeight:"bold"}}>{`<-- Go Back`}</Text>
             </TouchableOpacity>
             {/* Profile Header */}

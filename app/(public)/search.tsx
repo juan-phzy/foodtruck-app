@@ -20,6 +20,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 const { width } = Dimensions.get("window");
 
 export default function Search() {
+    console.log("")
     console.log("_______________________________________________");
     console.log("(public)/search.tsx: Entered Public Search Page");
     const inset = useSafeAreaInsets();

@@ -4,9 +4,8 @@
  * Sign-up screen for new users. Collects personal info and creates an account using Clerk.
  * Behavior:
  * - Submits email, password, name, and phone to Clerk
- * - Adds "role" to Clerk's unsafe metadata (public or vendor)
  * - Redirects to appropriate layout based on role after sign-up
- * - Skips email verification for faster development iteration
+ * - Currently skips email verification for faster development iteration
  */
 
 // React & Hooks
@@ -27,7 +26,7 @@ import {
 // Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
-import { MaterialCommunityIcons } from "@expo/vector-icons"; // For "Go Back" icon
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useSignUp } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 
@@ -40,11 +39,13 @@ import theme from "@/assets/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
-const { height } = Dimensions.get("window"); // Get the height of the device screen
+const { height } = Dimensions.get("window");
 
 export default function CreateAccountScreen() {
-
-    const [ isVendor, setIsVendor ] = useState(false); // State to determine if the user is a vendor or public user
+    console.log("");
+    console.log("__________________________________________________")
+    console.log("app/(auth)/create.tsx: Entered CreateAccountScreen");
+    const [isVendor, setIsVendor] = useState(false); // State to determine if the user is a vendor or public user
 
     const insets = useSafeAreaInsets(); // Safe area insets for top and bottom padding
     const { isLoaded, signUp, setActive } = useSignUp(); // Clerk sign-up hook for user authentication
@@ -52,7 +53,6 @@ export default function CreateAccountScreen() {
     const router = useRouter(); // Router for navigation
 
     const [form, setForm] = useState({
-        // Form State
         first_name: "",
         last_name: "",
         phone_number: "",
@@ -60,14 +60,12 @@ export default function CreateAccountScreen() {
         dob: "",
         primary_city: "",
         password: "",
-        role: "", // Set role based on isVendor state
     });
 
     // Updates form state when an input field changes.
-    const handleInputChange = 
-        (field: keyof typeof form, value: string) => {
-            setForm((prev) => ({ ...prev, [field]: value }));
-        };
+    const handleInputChange = (field: keyof typeof form, value: string) => {
+        setForm((prev) => ({ ...prev, [field]: value }));
+    };
 
     // Navigates the user back to the previous screen.
     const handleGoBack = () => {
@@ -82,13 +80,8 @@ export default function CreateAccountScreen() {
         setIsLoading(true);
 
         try {
-            const {
-                email,
-                password,
-                first_name,
-                last_name,
-                phone_number,
-            } = form;
+            const { email, password, first_name, last_name, phone_number } =
+                form;
 
             const result = await signUp.create({
                 emailAddress: email,
@@ -97,7 +90,8 @@ export default function CreateAccountScreen() {
                 lastName: last_name,
                 phoneNumber: phone_number,
                 unsafeMetadata: {
-                    role: isVendor ? "vendor" : "public", // Set role based on isVendor state
+                    role: isVendor ? "vendor" : "public", // Temporary role assignment
+                    // In a production environment, roles should be managed securely and not hardcoded.
                 },
             });
 
@@ -169,7 +163,9 @@ export default function CreateAccountScreen() {
                             color={theme.colors.white}
                         />
                         <Text style={styles.goBackText}>Go Back</Text>
-                        <Text style={{color:"white", fontSize:20}}>{isVendor ? `Vendor SignUp`: `UserSignUp`}</Text>
+                        <Text style={{ color: "white", fontSize: 20 }}>
+                            {isVendor ? `Vendor SignUp` : `UserSignUp`}
+                        </Text>
                         <TouchableOpacity
                             onPress={() => setIsVendor((prev) => !prev)}
                             style={{
@@ -178,7 +174,9 @@ export default function CreateAccountScreen() {
                                 borderRadius: 20,
                             }}
                         >
-                            <Text style={{color:"black"}}>{isVendor ? `User SignUp` : `Vendor SignUp`}</Text>
+                            <Text style={{ color: "black" }}>
+                                {isVendor ? `User SignUp` : `Vendor SignUp`}
+                            </Text>
                         </TouchableOpacity>
                     </Pressable>
 

@@ -31,6 +31,10 @@ const renderTabIcon = ({ color, name }: TabIconProps) => (
 );
 
 export default function PublicLayout() {
+    console.log("");
+    console.log("______________________________________________");
+    console.log("app/(public)/_layout.tsx: Entered PublicLayout");
+
     useInitUserProfile();
 
     return (

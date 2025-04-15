@@ -7,6 +7,7 @@
 
 import { Redirect } from "expo-router";
 
+console.log("");
 console.log("___________________________________");
 console.log("index.tsx: Entered Root Index Route");
 

@@ -25,6 +25,7 @@ import InitialLayout from "@/components/navigation/InitialLayout";
 import { loadCustomFonts } from "@/utils/loadFonts";
 
 export default function RootLayout() {
+    console.log("");
     console.log("_______________________________");
     console.log("_layout.tsx: Entered RootLayout");
     console.log("_layout.tsx: Rendering InitialLayout Nav Logic");

@@ -30,13 +30,12 @@ export default function ManageTruckScreen() {
             <View style={styles.header}>
                 <TouchableOpacity
                     style={styles.goBack}
-                    onPress={() => router.back()}
+                    onPress={router.back}
                 >
                     <View style={styles.arrowButton}>
                         <MaterialCommunityIcons
                             name="arrow-left"
                             style={styles.arrowIcon}
-                            onPress={() => router.back()}
                         />
                     </View>
                     <Text style={styles.goBackText}>Go Back</Text>
