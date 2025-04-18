@@ -57,3 +57,47 @@ export async function getAuthenticatedUser(ctx: QueryCtx | MutationCtx) {
 
     return currentUser;
 }
+
+export const updateFirstAndLastName = mutation({
+    args: {
+        clerkId: v.string(),
+        first_name: v.string(),
+        last_name: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+            .unique();
+
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        await ctx.db.patch(user._id, {
+            first_name: args.first_name,
+            last_name: args.last_name,
+        });
+    },
+});
+
+export const updateDOB = mutation({
+    args: {
+        clerkId: v.string(),
+        dob: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+            .unique();
+
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        await ctx.db.patch(user._id, {
+            dob: args.dob,
+        });
+    },
+});

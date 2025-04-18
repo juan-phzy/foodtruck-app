@@ -2,6 +2,34 @@
 import { FoodTruck } from "@/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+export const USER_SETTINGS = [
+    {
+        iconName: "user-pen",
+        setting: "Edit Profile",
+        link: "edit",
+    },
+    {
+        iconName: "lock",
+        setting: "Security",
+        link: "edit",
+    },
+    {
+        iconName: "bell",
+        setting: "Notifications",
+        link: "edit",
+    },
+    {
+        iconName: "phone",
+        setting: "Contact",
+        link: "edit",
+    },
+    {
+        iconName: "arrow-right-from-bracket",
+        setting: "Log Out",
+        link: "edit",
+    },
+];
+
 export const VENDOR_SETTINGS = [
     {
         iconName: "user-pen",
@@ -105,7 +133,11 @@ export type ProfileSection = {
 
 export const PROFILE_SECTIONS: ProfileSection[] = [
     { name: "Favorites", icon: "bookmark-outline", link: "favorites" },
-    { name: "Recently Viewed", icon: "clock-time-three-outline", link: "recent" },
+    {
+        name: "Recently Viewed",
+        icon: "clock-time-three-outline",
+        link: "recent",
+    },
     { name: "Your Ratings", icon: "star-outline", link: "ratings" },
     {
         name: "Favorite Caegories",

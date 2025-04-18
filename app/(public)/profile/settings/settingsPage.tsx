@@ -1,24 +1,25 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { useClerk } from "@clerk/clerk-expo";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
-import { VENDOR_SETTINGS } from "@/constants";
+import { USER_SETTINGS } from "@/constants";
 
 // Theme & Styling
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
 import IconButton from "@/components/buttons/IconButton";
-import { FontAwesome6 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useUserStore } from "@/store/useUserStore";
 
 // Sample Data
-const sampleSettings = VENDOR_SETTINGS;
+const sampleSettings = USER_SETTINGS;
 
-export default function UserSettings() {
+export default function UserSettingsPage() {
     console.log("");
     console.log("____________________________________________________________");
     console.log("app/(public)/profile/settings.tsx: Entered UserSettings Page");
+    const router = useRouter();
     const insets = useSafeAreaInsets();
     const { signOut } = useClerk();
     const handleSignOut = async () => {
@@ -33,13 +34,22 @@ export default function UserSettings() {
 
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
-            <TouchableOpacity style={{marginVertical:theme.padding.xl}} onPress={router.back}>
-                <Text style={{fontSize:theme.fontSize.md, fontWeight:"bold"}}>{`<-- Go Back`}</Text>
+            <TouchableOpacity
+                style={styles.goBackContainer}
+                onPress={router.back}
+            >
+                <View style={styles.arrowButton}>
+                    <MaterialCommunityIcons
+                        name="arrow-left"
+                        style={styles.arrowIcon}
+                    />
+                </View>
+                <Text style={styles.goBackText}>Go Back</Text>
             </TouchableOpacity>
             {/* Profile Header */}
             <View style={styles.headerContainer}>
-                <FontAwesome6
-                    name="user-circle"
+                <MaterialCommunityIcons
+                    name="account-circle"
                     size={70}
                     color={theme.colors.primary}
                     onPress={() => console.log("Clicked Settings")}
@@ -63,10 +73,12 @@ export default function UserSettings() {
                         onPress={
                             setting.setting === "Log Out"
                                 ? handleSignOut
-                                : () =>
+                                : () => {
                                       console.log(
                                           `Clicked on ${setting.setting}`
-                                      )
+                                      );
+                                      router.push("/profile/settings/edit/");
+                                  }
                         }
                     />
                 ))}
@@ -81,8 +93,29 @@ const styles = ScaledSheet.create({
         backgroundColor: theme.colors.primaryLight,
         paddingHorizontal: theme.padding.xl,
     },
+    goBackContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: theme.padding.md,
+        gap: "5@ms",
+    },
+    arrowButton: {
+        borderRadius: "20@ms",
+        width: "30@ms",
+        height: "30@ms",
+        backgroundColor: theme.colors.primary,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    arrowIcon: {
+        fontSize: theme.fontSize.xl,
+        color: theme.colors.white,
+    },
+    goBackText: {
+        fontSize: theme.fontSize.md,
+    },
     headerContainer: {
-        padding: theme.padding.lg,
+        paddingBottom: theme.padding.lg,
         alignItems: "center",
         gap: "5@ms",
     },
@@ -96,6 +129,7 @@ const styles = ScaledSheet.create({
         color: theme.colors.black,
     },
     scrollView: {
+        paddingVertical: theme.padding.sm,
         gap: "10@ms",
     },
 });

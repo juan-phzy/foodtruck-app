@@ -8,7 +8,7 @@ export default defineSchema({
         phone_number: v.string(),
         email: v.string(),
         dob: v.optional(v.string()),
-        munchLevel: v.optional(v.float64()), // Make it optional
+        munchLevel: v.optional(v.float64()),
         primary_city: v.string(),
         clerkId: v.string(),
     }).index("by_clerk_id", ["clerkId"]),

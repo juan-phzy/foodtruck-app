@@ -32,6 +32,11 @@ http.route({
             const response = await handleUserCreated(ctx, evt.data);
             if (response) return response;
         }
+        
+        if (evt.type === "user.updated") {
+            const response = await handleUserUpdated(ctx, evt.data);
+            if (response) return response;
+        }
 
         return new Response("Webhook processed successfully", { status: 200 });
     }),
@@ -128,5 +133,23 @@ async function handleUserCreated(ctx: any, data: any) {
 
     return null;
 }
+
+async function handleUserUpdated(ctx: any, data: any) {
+    const { id, first_name, last_name } = data;
+
+    try {
+        await ctx.runMutation(api.users.updateFirstAndLastName, {
+            clerkId: id,
+            first_name: first_name ?? "",
+            last_name: last_name ?? "",
+        });
+    } catch (err) {
+        console.error("Error updating user in Convex:", err);
+        return new Response("Error updating user", { status: 500 });
+    }
+
+    return null;
+}
+
 
 export default http;

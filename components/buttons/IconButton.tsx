@@ -59,6 +59,7 @@ const styles = ScaledSheet.create({
         backgroundColor: theme.colors.white,
         paddingHorizontal: theme.padding.md,
         paddingVertical: theme.padding.xl,
+        boxShadow: "0 0px 10px rgba(0, 0, 0, 0.05)",
         alignItems: "center",
         gap: "5@ms",
     },
