@@ -1,24 +1,24 @@
 import theme from "@/assets/theme";
 import EditInfoCard from "@/components/cards/EditInfoCard";
+import { MERGED_SETTINGS_CONFIG } from "@/constants";
 import { useUserStore } from "@/store/useUserStore";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { router } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
-export default function EditProfilePage() {
-    console.log("");
-    console.log(
-        "______________________________________________________________________"
-    );
-    console.log(
-        "(public)/profile/settings/edit/editPage.tsx: Entered Edit Profile Page"
-    );
+export default function SettingsSectionIndex() {
     const insets = useSafeAreaInsets();
-
+    const router = useRouter();
     const { currentUser } = useUserStore();
+    const { section } = useLocalSearchParams();
+    const key = Array.isArray(section) ? section[0] : section;
+
+    const config =
+        MERGED_SETTINGS_CONFIG[key as keyof typeof MERGED_SETTINGS_CONFIG];
+    if (!config) throw new Error("Invalid settings section");
 
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
@@ -28,10 +28,8 @@ export default function EditProfilePage() {
                 locations={[0.02, 0.12]}
             />
 
-            {/* Header with Back Button and Title */}
+            {/* Header */}
             <View style={styles.header}>
-                {/* Gradient Background */}
-
                 <TouchableOpacity
                     style={styles.backButton}
                     onPress={router.back}
@@ -42,42 +40,34 @@ export default function EditProfilePage() {
                         color={theme.colors.white}
                     />
                 </TouchableOpacity>
-                <Text style={styles.title}>Edit Profile</Text>
+                <Text style={styles.title}>{config.title}</Text>
             </View>
 
-            {/* Body Container */}
+            {/* Body */}
             <View style={styles.bodyContainer}>
-                {/* Profile Photo Section */}
-                <View style={styles.editPhotoContainer}>
-                    <View style={styles.photoContainer}>
-                        <Text style={styles.photoLetter}>
-                            {currentUser?.first_name[0].toLocaleUpperCase()}
-                        </Text>
+                {key === "personal" && (
+                    <View style={styles.editPhotoContainer}>
+                        <View style={styles.photoContainer}>
+                            <Text style={styles.photoLetter}>
+                                {currentUser?.first_name[0].toUpperCase()}
+                            </Text>
+                        </View>
+                        <TouchableOpacity>
+                            <Text style={styles.editPhotoText}>
+                                Edit Profile Photo
+                            </Text>
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity>
-                        <Text style={styles.editPhotoText}>
-                            Edit Profile Photo
-                        </Text>
-                    </TouchableOpacity>
-                </View>
+                )}
 
-                {/* User Information Section */}
-
-                <EditInfoCard
-                    title="Name"
-                    text={`${currentUser!.first_name} ${currentUser!.last_name}`}
-                    link="name"
-                />
-                <EditInfoCard
-                    title="Date Of Birth"
-                    text={currentUser!.dob ?? "Not Set"}
-                    link="dob"
-                />
-                <EditInfoCard
-                    title="Primary City"
-                    text={currentUser!.primary_city ?? "Not Set"}
-                    link="city"
-                />
+                {config.fields.map((field) => (
+                    <EditInfoCard
+                        key={field.link}
+                        title={field.label}
+                        text={field.displayValue(currentUser!)}
+                        link={`${key}/${field.link}`}
+                    />
+                ))}
             </View>
         </View>
     );

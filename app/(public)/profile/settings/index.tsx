@@ -1,8 +1,8 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { useClerk } from "@clerk/clerk-expo";
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
-import { USER_SETTINGS } from "@/constants";
+import { MERGED_SETTINGS_CONFIG } from "@/constants";
 
 // Theme & Styling
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -12,16 +12,14 @@ import IconButton from "@/components/buttons/IconButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useUserStore } from "@/store/useUserStore";
 
-// Sample Data
-const sampleSettings = USER_SETTINGS;
-
-export default function UserSettingsPage() {
+export default function SettingsIndex() {
     console.log("");
-    console.log("____________________________________________________________");
-    console.log("app/(public)/profile/settings.tsx: Entered UserSettings Page");
+    console.log("_____________________________________________________");
+    console.log("app/(public)/profile/settings/index.tsx: Entered File");
     const router = useRouter();
     const insets = useSafeAreaInsets();
     const { signOut } = useClerk();
+
     const handleSignOut = async () => {
         try {
             await signOut();
@@ -31,6 +29,14 @@ export default function UserSettingsPage() {
         }
     };
     const { currentUser } = useUserStore();
+
+    const handleSettingPress = (link: string) => {
+        if (link in MERGED_SETTINGS_CONFIG) {
+            router.push(`/profile/settings/${link}`);
+        } else {
+            console.warn("Invalid settings link:", link);
+        }
+    };
 
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
@@ -52,7 +58,6 @@ export default function UserSettingsPage() {
                     name="account-circle"
                     size={70}
                     color={theme.colors.primary}
-                    onPress={() => console.log("Clicked Settings")}
                 />
                 <Text
                     style={styles.headerNameText}
@@ -64,24 +69,22 @@ export default function UserSettingsPage() {
                 contentContainerStyle={styles.scrollView}
                 showsVerticalScrollIndicator={false}
             >
-                {sampleSettings.map((setting, index) => (
+                {Object.entries(MERGED_SETTINGS_CONFIG).map(([key, config]) => (
                     <IconButton
-                        key={setting.setting + index}
-                        iconName={setting.iconName}
-                        text={setting.setting}
+                        key={config.link}
+                        iconName={config.iconName}
+                        text={config.setting}
                         showManage={false}
-                        onPress={
-                            setting.setting === "Log Out"
-                                ? handleSignOut
-                                : () => {
-                                      console.log(
-                                          `Clicked on ${setting.setting}`
-                                      );
-                                      router.push("/profile/settings/edit/");
-                                  }
-                        }
+                        onPress={() => handleSettingPress(config.link)}
                     />
                 ))}
+
+                <IconButton
+                    iconName="arrow-right-from-bracket"
+                    text="Log Out"
+                    showManage={false}
+                    onPress={handleSignOut}
+                />
             </ScrollView>
         </View>
     );

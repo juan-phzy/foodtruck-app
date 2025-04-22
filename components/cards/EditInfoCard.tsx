@@ -22,7 +22,7 @@ export default function EditInfoCard({ title, text, link }: EditInfoCardProps) {
             <MaterialCommunityIcons
                 style={styles.infoIcon}
                 name="chevron-right"
-                onPress={()=> router.push(`/profile/settings/edit/${link}`)}
+                onPress={()=> router.push(`/profile/settings/${link}`)}
             />
         </View>
     );

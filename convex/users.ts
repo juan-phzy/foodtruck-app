@@ -58,11 +58,13 @@ export async function getAuthenticatedUser(ctx: QueryCtx | MutationCtx) {
     return currentUser;
 }
 
-export const updateFirstAndLastName = mutation({
+export const updateClerkInfo = mutation({
     args: {
         clerkId: v.string(),
         first_name: v.string(),
         last_name: v.string(),
+        phone_number: v.string(),
+        email: v.string(),
     },
     handler: async (ctx, args) => {
         const user = await ctx.db
@@ -77,6 +79,8 @@ export const updateFirstAndLastName = mutation({
         await ctx.db.patch(user._id, {
             first_name: args.first_name,
             last_name: args.last_name,
+            phone_number: args.phone_number,
+            email: args.email,
         });
     },
 });
@@ -101,3 +105,24 @@ export const updateDOB = mutation({
         });
     },
 });
+
+export const updatePrimaryCity = mutation({
+    args: {
+        clerkId: v.string(),
+        primary_city: v.optional(v.string()),
+    },
+    handler: async (ctx, args) => {
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+            .unique();
+
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        await ctx.db.patch(user._id, {
+            primary_city: args.primary_city,
+        });
+    }
+})

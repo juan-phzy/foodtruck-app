@@ -32,7 +32,7 @@ http.route({
             const response = await handleUserCreated(ctx, evt.data);
             if (response) return response;
         }
-        
+
         if (evt.type === "user.updated") {
             const response = await handleUserUpdated(ctx, evt.data);
             if (response) return response;
@@ -135,13 +135,15 @@ async function handleUserCreated(ctx: any, data: any) {
 }
 
 async function handleUserUpdated(ctx: any, data: any) {
-    const { id, first_name, last_name } = data;
+    const { id, first_name, last_name, phone_numbers, email_addresses } = data;
 
     try {
-        await ctx.runMutation(api.users.updateFirstAndLastName, {
+        await ctx.runMutation(api.users.updateClerkInfo, {
             clerkId: id,
             first_name: first_name ?? "",
             last_name: last_name ?? "",
+            phone_number: phone_numbers?.[0]?.phone_number ?? "",
+            email: email_addresses?.[0]?.email_address ?? "",
         });
     } catch (err) {
         console.error("Error updating user in Convex:", err);
@@ -150,6 +152,5 @@ async function handleUserUpdated(ctx: any, data: any) {
 
     return null;
 }
-
 
 export default http;

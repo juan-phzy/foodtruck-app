@@ -7,11 +7,13 @@ interface EditInfoInputProps {
     readonly value: string;
     readonly keyboardType: KeyboardTypeOptions;
     readonly onChangeText: (text: string) => void;
+    readonly placeholder: string;
 }
 
 export default function EditInfoInput({
     title,
     value,
+    placeholder,
     keyboardType,
     onChangeText,
 }: EditInfoInputProps) {
@@ -23,6 +25,7 @@ export default function EditInfoInput({
                 value={value}
                 onChangeText={onChangeText}
                 keyboardType={keyboardType}
+                placeholder={placeholder}
             />
         </View>
     );

@@ -1,34 +1,123 @@
 // constants.ts
-import { FoodTruck } from "@/types";
+import { FoodTruck, PublicUserProfile } from "@/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export const USER_SETTINGS = [
-    {
-        iconName: "user-pen",
-        setting: "Edit Profile",
-        link: "edit",
-    },
-    {
-        iconName: "lock",
-        setting: "Security",
-        link: "edit",
-    },
-    {
-        iconName: "bell",
-        setting: "Notifications",
-        link: "edit",
-    },
-    {
-        iconName: "phone",
-        setting: "Contact",
-        link: "edit",
-    },
-    {
-        iconName: "arrow-right-from-bracket",
-        setting: "Log Out",
-        link: "edit",
-    },
-];
+// types.ts (optional separation)
+export type SettingsSection = "personal" | "security" | "notifications" | "contact";
+
+export type SettingsField = {
+  label: string;
+  link: string;
+  displayValue: (user: any) => string;
+  inputs: {
+    title: string;
+    key: keyof PublicUserProfile | "password";
+    keyboardType: "default" | "numeric" | "email-address";
+  }[];
+};
+
+export type MergedSettingsConfigType = Record<
+  SettingsSection,
+  {
+    iconName: string;
+    setting: string;
+    link: SettingsSection;
+    title: string;
+    fields: SettingsField[];
+  }
+>;
+
+// mergedSettingsConfig.ts
+export const MERGED_SETTINGS_CONFIG: MergedSettingsConfigType = {
+  personal: {
+    iconName: "user-pen",
+    setting: "Edit Profile",
+    link: "personal",
+    title: "Edit Profile",
+    fields: [
+      {
+        label: "Name",
+        link: "name",
+        displayValue: (user) => `${user.first_name} ${user.last_name}`,
+        inputs: [
+          { title: "First Name", key: "first_name", keyboardType: "default" },
+          { title: "Last Name", key: "last_name", keyboardType: "default" },
+        ],
+      },
+      {
+        label: "Date of Birth",
+        link: "dob",
+        displayValue: (user) => user.dob ?? "Not Set",
+        inputs: [
+          { title: "Date of Birth", key: "dob", keyboardType: "numeric" },
+        ],
+      },
+      {
+        label: "Primary City",
+        link: "city",
+        displayValue: (user) => user.primary_city ?? "Not Set",
+        inputs: [
+          { title: "Primary City", key: "primary_city", keyboardType: "default" },
+        ],
+      },
+    ],
+  },
+  security: {
+    iconName: "lock",
+    setting: "Security",
+    link: "security",
+    title: "Security Settings",
+    fields: [
+      {
+        label: "Password",
+        link: "password",
+        displayValue: () => "********",
+        inputs: [
+          { title: "New Password", key: "password", keyboardType: "default" },
+        ],
+      },
+    ],
+  },
+  notifications: {
+    iconName: "bell",
+    setting: "Notifications",
+    link: "notifications",
+    title: "Notifications",
+    fields: [
+      {
+        label: "Notification Preferences",
+        link: "preferences",
+        displayValue: () => "Manage",
+        inputs: [], // e.g. toggle switches could be handled differently
+      },
+    ],
+  },
+  contact: {
+    iconName: "phone",
+    setting: "Contact",
+    link: "contact",
+    title: "Contact Information",
+    fields: [
+      {
+        label: "Email",
+        link: "email",
+        displayValue: (user) => user.email,
+        inputs: [
+          { title: "Email", key: "email", keyboardType: "email-address" },
+        ],
+      },
+      {
+        label: "Phone Number",
+        link: "phone",
+        displayValue: (user) => user.phone_number ?? "Not Set",
+        inputs: [
+          { title: "Phone Number", key: "phone_number", keyboardType: "numeric" },
+        ],
+      },
+    ],
+  },
+};
+
 
 export const VENDOR_SETTINGS = [
     {
