@@ -120,3 +120,17 @@ export type VendorProfile = {
     clerkId: string;
   };
   
+
+export type Trucks = {
+    truck_id: string;
+  truck_name: string;
+  vendor_id: string;
+  latitude: number;
+  longitude: number;
+  menu_id: string;
+  open_status: boolean;
+  schedule: {
+    days: string[];
+    times: string[];}
+  truck_type: string;
+}
