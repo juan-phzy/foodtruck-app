@@ -121,12 +121,11 @@ export type VendorProfile = {
 };
 
 export type Trucks = {
-    truck_id: string;
     truck_name: string;
     vendor_id: string;
     latitude: number;
     longitude: number;
-    menu_id: string;
+    menu_id?: string | undefined;
     open_status: boolean;
     schedule: {
         days: string[];
