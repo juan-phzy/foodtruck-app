@@ -135,22 +135,41 @@ async function handleUserCreated(ctx: any, data: any) {
 }
 
 async function handleUserUpdated(ctx: any, data: any) {
-    const { id, first_name, last_name, phone_numbers, email_addresses } = data;
+    const { id, first_name, last_name, unsafe_metadata } = data;
 
-    try {
-        await ctx.runMutation(api.users.updateClerkInfo, {
-            clerkId: id,
-            first_name: first_name ?? "",
-            last_name: last_name ?? "",
-            phone_number: phone_numbers?.[0]?.phone_number ?? "",
-            email: email_addresses?.[0]?.email_address ?? "",
-        });
-    } catch (err) {
-        console.error("Error updating user in Convex:", err);
-        return new Response("Error updating user", { status: 500 });
+    const role = unsafe_metadata?.role;
+    if (!role || (role !== "public" && role !== "vendor")) {
+        console.error("Invalid or missing user role:", unsafe_metadata);
+        return new Response("Invalid role in metadata", { status: 400 });
     }
 
-    return null;
+    if (role === "public") {
+        try {
+            await ctx.runMutation(api.users.updateClerkInfo, {
+                clerkId: id,
+                first_name: first_name ?? "",
+                last_name: last_name ?? "",
+            });
+        } catch (err) {
+            console.error("Error updating user in Convex:", err);
+            return new Response("Error updating user", { status: 500 });
+        }
+
+        return null;
+    } else if (role === "vendor") {
+        try {
+            await ctx.runMutation(api.vendors.updateClerkInfo, {
+                clerkId: id,
+                first_name: first_name ?? "",
+                last_name: last_name ?? "",
+            });
+        } catch (err) {
+            console.error("Error updating vendor in Convex:", err);
+            return new Response("Error updating vendor", { status: 500 });
+        }
+
+        return null;
+    }
 }
 
 export default http;

@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, ActivityIndicator } from "react-native";
 import { useClerk } from "@clerk/clerk-expo";
 import { router } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
@@ -10,12 +10,16 @@ import { ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
 import IconButton from "@/components/buttons/IconButton";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useVendorStore } from "@/store/useVendorStore";
+import StandardButton from "@/components/buttons/StandardButton";
 
 // Sample Data
 const sampleSettings = VENDOR_SETTINGS;
 
-export default function settingsScreen() {
+export default function SettingsScreen() {
     const insets = useSafeAreaInsets();
+    const { currentVendor, isLoading } = useVendorStore();
+
     const { signOut } = useClerk();
     const handleSignOut = async () => {
         try {
@@ -25,6 +29,35 @@ export default function settingsScreen() {
             console.error(JSON.stringify(err, null, 2));
         }
     };
+
+    if (isLoading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <Text>Loading profile</Text>
+                <ActivityIndicator size="large" color={theme.colors.primary} />
+                <StandardButton
+                    width="fit"
+                    onPress={handleSignOut}
+                    text="Sign Out"
+                />
+            </View>
+        );
+    }
+
+    if (currentVendor === null) {
+        return (
+            <View style={styles.loadingContainer}>
+                <Text style={{ fontWeight: "bold" }}>
+                    No User Found: Contact Support
+                </Text>
+                <StandardButton
+                    width="fit"
+                    onPress={handleSignOut}
+                    text="Sign Out"
+                />
+            </View>
+        );
+    }
 
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
@@ -36,9 +69,11 @@ export default function settingsScreen() {
                     color={theme.colors.primary}
                     onPress={() => console.log("Clicked Settings")}
                 />
-                <Text style={styles.headerNameText}>Sung Jinwoo</Text>
+                <Text style={styles.headerNameText}>
+                    {`${currentVendor.first_name} ${currentVendor.last_name}`}
+                </Text>
                 <Text style={styles.headerEmailText}>
-                    sololeveling@gmail.com
+                    {currentVendor.email}
                 </Text>
             </View>
             {/* Profile Options */}
@@ -68,6 +103,12 @@ export default function settingsScreen() {
 }
 
 const styles = ScaledSheet.create({
+    loadingContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        gap: "15@ms",
+    },
     rootContainer: {
         flex: 1,
         backgroundColor: theme.colors.primaryLight,

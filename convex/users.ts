@@ -63,8 +63,6 @@ export const updateClerkInfo = mutation({
         clerkId: v.string(),
         first_name: v.string(),
         last_name: v.string(),
-        phone_number: v.string(),
-        email: v.string(),
     },
     handler: async (ctx, args) => {
         const user = await ctx.db
@@ -79,8 +77,6 @@ export const updateClerkInfo = mutation({
         await ctx.db.patch(user._id, {
             first_name: args.first_name,
             last_name: args.last_name,
-            phone_number: args.phone_number,
-            email: args.email,
         });
     },
 });
@@ -126,3 +122,34 @@ export const updatePrimaryCity = mutation({
         });
     }
 })
+
+// ✅ New Mutation
+export const toggleCategory = mutation({
+    args: {
+      category: v.string(),
+    },
+    handler: async (ctx, args) => {
+      const user = await getAuthenticatedUser(ctx);
+  
+      const selected = user.selectedCategories || [];
+  
+      const updated = selected.includes(args.category)
+        ? selected.filter((c) => c !== args.category)
+        : [...selected, args.category];
+  
+      await ctx.db.patch(user._id, {
+        selectedCategories: updated,
+      });
+  
+      return updated;
+    },
+  });
+  
+  // ✅ New Query
+  export const getUserCategories = query({
+    handler: async (ctx) => {
+      const user = await getAuthenticatedUser(ctx);
+      return user.selectedCategories ?? [];
+    },
+  });
+  

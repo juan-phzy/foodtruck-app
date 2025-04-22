@@ -17,6 +17,7 @@ import theme from "@/assets/theme";
 
 // Icons (React Native compatible)
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useInitVendorProfile } from "@/store/useVendorStore";
 
 // Types
 type TabIconProps = {
@@ -63,6 +64,8 @@ const renderTabIcon = ({ color, name }: TabIconProps) => {
 };
 
 export default function VendorLayout() {
+    useInitVendorProfile();
+
     return (
         <Tabs
             screenOptions={{

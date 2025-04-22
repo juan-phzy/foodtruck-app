@@ -25,17 +25,29 @@ import theme from "@/assets/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import { useRouter } from "expo-router";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 // Get screen dimensions for responsive UI scaling
 const { width } = Dimensions.get("window");
 
 const UserFavoriteCategories: React.FC = () => {
     console.log("");
-    console.log("___________________________________________________________________");
-    console.log("app/(public)/profile/categories.tsx: Entered UserFavoriteCategories");
+    console.log(
+        "___________________________________________________________________"
+    );
+    console.log(
+        "app/(public)/profile/categories.tsx: Entered UserFavoriteCategories"
+    );
     const router = useRouter();
     const insets = useSafeAreaInsets();
     const renderSeparator = () => <View style={{ height: ms(12) }} />;
+
+    const selectedCategories = useQuery(api.users.getUserCategories) ?? [];
+    const toggleCategory = useMutation(api.users.toggleCategory);
+
+    const isCategorySelected = (category: string) =>
+        selectedCategories.includes(category);
 
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
@@ -74,9 +86,10 @@ const UserFavoriteCategories: React.FC = () => {
                     <Pressable
                         style={[
                             styles.categoryButton,
-                            // add selected style here when functionality is added
+                            isCategorySelected(item.name) &&
+                                styles.categorySelected,
                         ]}
-                        onPress={() => console.log("Pressed: ", item.name)}
+                        onPress={() => toggleCategory({ category: item.name })}
                     >
                         <Image
                             source={{ uri: item.url }}

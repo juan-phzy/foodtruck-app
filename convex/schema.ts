@@ -11,6 +11,7 @@ export default defineSchema({
         munchLevel: v.optional(v.float64()),
         primary_city: v.string(),
         clerkId: v.string(),
+        selectedCategories: v.optional(v.array(v.string())),
     }).index("by_clerk_id", ["clerkId"]),
 
     // Vendors Table

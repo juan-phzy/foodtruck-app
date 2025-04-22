@@ -55,3 +55,27 @@ export async function getAuthenticatedVendor(ctx: QueryCtx | MutationCtx) {
 
     return currentVendor;
 }
+
+
+export const updateClerkInfo = mutation({
+    args: {
+        clerkId: v.string(),
+        first_name: v.string(),
+        last_name: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const vendor = await ctx.db
+            .query("vendors")
+            .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+            .unique();
+
+        if (!vendor) {
+            throw new Error("Vendor not found");
+        }
+
+        await ctx.db.patch(vendor._id, {
+            first_name: args.first_name,
+            last_name: args.last_name,
+        });
+    },
+});

@@ -106,4 +106,17 @@ export type PublicUserProfile = {
     email: string;
     primary_city: string;
     clerkId: string;
+    selectedCategories?: string[] | undefined;
 };
+
+export type VendorProfile = {
+    _id: string;
+    _creationTime: number;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    email: string;
+    dob?: string;
+    clerkId: string;
+  };
+  
