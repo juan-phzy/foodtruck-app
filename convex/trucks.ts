@@ -4,12 +4,10 @@ import { v } from "convex/values";
 // Create Truck
 export const createTruck = mutation({
     args: {
-        truck_id: v.string(),
         truck_name: v.string(),
         vendor_id: v.string(),
         latitude: v.number(),
         longitude: v.number(),
-        menu_id: v.string(),
         open_status: v.boolean(),
         schedule: v.object({
             days: v.array(v.string()),
@@ -26,12 +24,10 @@ export const createTruck = mutation({
         if (existingTruck) return;
 
         await ctx.db.insert("trucks", {
-            truck_id: args.truck_id,
             truck_name: args.truck_name,
             vendor_id: args.vendor_id,
             latitude: args.latitude,
             longitude: args.longitude,
-            menu_id: args.menu_id,
             open_status: args.open_status,
             schedule: args.schedule,
             truck_type: args.truck_type,

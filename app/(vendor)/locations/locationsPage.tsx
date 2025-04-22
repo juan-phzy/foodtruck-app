@@ -6,13 +6,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import { LOCATION_SCREEN_TRUCKS } from "@/constants";
 import IconButton from "@/components/buttons/IconButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 
 // Sample Data
 const sampleLocationScreenTrucks = LOCATION_SCREEN_TRUCKS;
 
 export default function LocationsScreen() {
     const insets = useSafeAreaInsets();
+    const router = useRouter();
 
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
@@ -23,7 +24,9 @@ export default function LocationsScreen() {
                     name="plus"
                     size={45}
                     color={theme.colors.primary}
-                    onPress={() => console.log("Clicked Add Trucks")}
+                    onPress={() => {console.log("Clicked Add Trucks")
+                        router.push('/locations/addTruckPage') // Navigate to add truck page
+                    }}
                 />
             </View>
             {/* Manage Truck List */}

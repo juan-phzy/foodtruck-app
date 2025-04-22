@@ -46,12 +46,11 @@ export default defineSchema({
 
     // Trucks Table
     trucks: defineTable({
-        truck_id: v.string(),
         truck_name: v.string(),
         vendor_id: v.string(),
         latitude: v.number(),
         longitude: v.number(),
-        menu_id: v.string(),
+        menu_id: v.optional(v.string()),
         open_status: v.boolean(),
         schedule: v.object({
             days: v.array(v.string()),
