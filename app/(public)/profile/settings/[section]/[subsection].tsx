@@ -37,7 +37,6 @@ export default function EditProfileSubsection() {
     const { subsection, section } = useLocalSearchParams();
     const sectionKey = Array.isArray(section) ? section[0] : section;
     const subKey = Array.isArray(subsection) ? subsection[0] : subsection;
-    console.log("sectionKey", sectionKey, "subKey", subKey);
     const insets = useSafeAreaInsets();
 
     const { currentUser } = useUserStore();
@@ -65,6 +64,15 @@ export default function EditProfileSubsection() {
         )
     );
 
+    const [verifyingPhone, setVerifyingPhone] = useState(false);
+    const [verificationCode, setVerificationCode] = useState("");
+    const [verificationId, setVerificationId] = useState<string | null>(null);
+    const [verifyingEmail, setVerifyingEmail] = useState(false);
+    const [emailVerificationCode, setEmailVerificationCode] = useState("");
+    const [emailVerificationId, setEmailVerificationId] = useState<
+        string | null
+    >(null);
+
     const handleInputChange = (key: string, value: string) => {
         setForm((prev) => ({
             ...prev,
@@ -72,7 +80,20 @@ export default function EditProfileSubsection() {
         }));
     };
 
-    const handlers = useSettingsHandlers();
+    const handlers = useSettingsHandlers({
+        verifyingPhone,
+        setVerifyingPhone,
+        verificationCode,
+        setVerificationCode,
+        verificationId,
+        setVerificationId,
+        verifyingEmail,
+        setVerifyingEmail,
+        emailVerificationCode,
+        setEmailVerificationCode,
+        emailVerificationId,
+        setEmailVerificationId,
+    });
 
     const handleSaveChanges = async () => {
         try {
@@ -83,8 +104,8 @@ export default function EditProfileSubsection() {
             const handler = sectionHandlers?.[subKey];
 
             if (typeof handler === "function") {
-                await handler(user, form);
-                router.back();
+                const shouldProceed = await handler(user, form);
+                if (shouldProceed !== false) router.back();
             } else {
                 console.warn("No handler for:", sectionKey, subKey);
             }
@@ -122,18 +143,44 @@ export default function EditProfileSubsection() {
                         title={input.title}
                         value={form[input.key]}
                         keyboardType={input.keyboardType as KeyboardTypeOptions}
-                        placeholder={
-                            input.key === "password"
-                                ? "Enter New Password"
-                                : (currentUser![
-                                      input.key as keyof typeof currentUser
-                                  ] ?? "")
-                        }
+                        placeholder={(() => {
+                            switch (input.key) {
+                                case "password":
+                                    return "Enter New Password";
+                                case "current_password":
+                                    return "Enter Current Password";
+                                default:
+                                    return (
+                                        currentUser![
+                                            input.key as keyof typeof currentUser
+                                        ] ?? ""
+                                    );
+                            }
+                        })()}
                         onChangeText={(text) =>
                             handleInputChange(input.key, text)
                         }
                     />
                 ))}
+
+                {verifyingPhone && (
+                    <EditInfoInput
+                        title="Verification Code"
+                        value={verificationCode}
+                        keyboardType="numeric"
+                        placeholder="Enter verification code"
+                        onChangeText={setVerificationCode}
+                    />
+                )}
+                {verifyingEmail && (
+                    <EditInfoInput
+                        title="Verification Code"
+                        value={emailVerificationCode}
+                        keyboardType="numeric"
+                        placeholder="Enter verification code"
+                        onChangeText={setEmailVerificationCode}
+                    />
+                )}
 
                 <StandardButton
                     style="dark"

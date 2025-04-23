@@ -1,13 +1,3 @@
-/**
- * CreateAccountScreen
- *
- * Sign-up screen for new users. Collects personal info and creates an account using Clerk.
- * Behavior:
- * - Submits email, password, name, and phone to Clerk
- * - Redirects to appropriate layout based on role after sign-up
- * - Currently skips email verification for faster development iteration
- */
-
 // React & Hooks
 import { useState } from "react";
 
@@ -55,8 +45,6 @@ export default function CreateAccountScreen() {
         last_name: "",
         phone_number: "",
         email: "",
-        dob: "",
-        primary_city: "",
         password: "",
     });
 
@@ -88,7 +76,7 @@ export default function CreateAccountScreen() {
                 lastName: last_name,
                 phoneNumber: phone_number,
                 unsafeMetadata: {
-                    role: "public", // Temporary role assignment
+                    role: "vendor", // Temporary role assignment
                     // In a production environment, roles should be managed securely with public or private metadata.
                 },
             });
@@ -96,7 +84,7 @@ export default function CreateAccountScreen() {
             if (result.status === "complete") {
                 await setActive({ session: result.createdSessionId });
 
-                router.replace("/(public)");
+                router.replace("/(vendor)/locations/");
             } else {
                 console.warn(
                     "Signup not complete. Verification might be required."
@@ -135,6 +123,7 @@ export default function CreateAccountScreen() {
                     style={[styles.logoContainer, { paddingTop: insets.top }]}
                 >
                     <Text style={styles.title}>MunchMap</Text>
+                    <Text style={styles.subtitle}>For Business: Step 1 of 5</Text>
                 </View>
 
                 {/* Form Container using BlurView */}
@@ -159,7 +148,7 @@ export default function CreateAccountScreen() {
                     </Pressable>
 
                     {/* Form Header */}
-                    <Text style={styles.formHeader}>Account Information</Text>
+                    <Text style={styles.formHeader}>Personal Information</Text>
 
                     {/* User Input Form */}
                     <ScrollView
@@ -180,37 +169,6 @@ export default function CreateAccountScreen() {
                             onChangeText={(value) =>
                                 handleInputChange("last_name", value)
                             }
-                        />
-                        <TextInputFancy
-                            label="Email"
-                            placeholder="Enter your email"
-                            onChangeText={(value) =>
-                                handleInputChange("email", value)
-                            }
-                            keyboardType="email-address"
-                        />
-                        <TextInputFancy
-                            label="Phone Number"
-                            placeholder="Enter your phone number"
-                            onChangeText={(value) =>
-                                handleInputChange("phone_number", value)
-                            }
-                            keyboardType="phone-pad"
-                        />
-                        <TextInputFancy
-                            label="Date of Birth"
-                            placeholder="DD/MM/YYYY"
-                            onChangeText={(value) =>
-                                handleInputChange("dob", value)
-                            }
-                        />
-                        <TextInputFancy
-                            label="Password"
-                            placeholder="Enter a strong password"
-                            onChangeText={(value) =>
-                                handleInputChange("password", value)
-                            }
-                            secureTextEntry
                         />
                     </ScrollView>
 
@@ -253,10 +211,14 @@ const styles = ScaledSheet.create({
         fontSize: theme.fontSize.xxxxl,
         color: theme.colors.white,
     },
+    subtitle: {
+        fontSize: theme.fontSize.lg,
+        color: theme.colors.white,
+    },
     bodyContainer: {
         paddingHorizontal: theme.padding.xl,
         paddingVertical: theme.padding.xl,
-        maxHeight: height * 0.82,
+        maxHeight: height * 0.85,
         width: "100%",
         gap: "15@ms",
         borderTopLeftRadius: "40@s",

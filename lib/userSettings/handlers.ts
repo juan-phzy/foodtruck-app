@@ -1,16 +1,14 @@
 // lib/userSettings/handlers.ts
 import { UserResource } from "@clerk/types";
 import { useSettingsMutations } from "./mutations";
-import { PhoneNumberResource } from "@clerk/types";
 
 export type SettingsForm = Record<string, string>;
 
 export type SectionKey = "personal" | "security" | "contact" | "notifications";
-// Removed redundant type alias SubKey
 export type SettingsHandler = (
     user: UserResource,
     form: SettingsForm
-) => Promise<void>;
+) => Promise<boolean | void>;
 
 type SectionHandlerMap = {
     [section in SectionKey]: {
@@ -18,7 +16,35 @@ type SectionHandlerMap = {
     };
 };
 
-export const useSettingsHandlers = (): SectionHandlerMap => {
+type VerificationHandlerParams = {
+    verifyingPhone: boolean;
+    setVerifyingPhone: (v: boolean) => void;
+    verificationCode: string;
+    setVerificationCode: (v: string) => void;
+    verificationId: string | null;
+    setVerificationId: (id: string | null) => void;
+    verifyingEmail?: boolean;
+    setVerifyingEmail?: (v: boolean) => void;
+    emailVerificationCode?: string;
+    setEmailVerificationCode?: (v: string) => void;
+    emailVerificationId?: string | null;
+    setEmailVerificationId?: (id: string | null) => void;
+};
+
+export const useSettingsHandlers = ({
+    verifyingPhone,
+    setVerifyingPhone,
+    verificationCode,
+    setVerificationCode,
+    verificationId,
+    setVerificationId,
+    verifyingEmail = false,
+    setVerifyingEmail = () => {},
+    emailVerificationCode = "",
+    setEmailVerificationCode = () => {},
+    emailVerificationId = null,
+    setEmailVerificationId = () => {},
+}: VerificationHandlerParams): SectionHandlerMap => {
     const mutations = useSettingsMutations();
 
     return {
@@ -40,36 +66,92 @@ export const useSettingsHandlers = (): SectionHandlerMap => {
             },
         },
         security: {
-            password: async (_user, form) => {
+            password: async (user, form) => {
                 console.log("Update password to:", form.password);
+                await user.updatePassword({
+                    currentPassword: form.current_password,
+                    newPassword: form.password,
+                })
             },
         },
         contact: {
             email: async (user, form) => {
-                console.log("Update email to:", form.email);
-            },
-            phone: async (user, form) => {
-                console.log("Update phone to:", form.phone_number);
                 try {
-                    // Step 1: Create a new phone number
-                    const phoneObj = await user.createPhoneNumber({
-                        phoneNumber: form.phone_number,
-                    });
+                    if (!verifyingEmail) {
+                        const emailObj = await user.createEmailAddress({
+                            email: form.email,
+                        });
 
-                    // Step 2: Set it as the primary phone number
-                    await user.update({
-                        primaryPhoneNumberId: phoneObj.id,
-                    });
+                        setEmailVerificationId(emailObj.id);
+                        setVerifyingEmail(true); // move this BEFORE await
+                        await emailObj.prepareVerification({
+                            strategy: "email_code",
+                        });
 
-                    // Optional: Delete the old number
-                    const currentPhone = user.phoneNumbers.find(
-                        (p) => p.id !== phoneObj.id
-                    );
-                    if (currentPhone) {
-                        await currentPhone.destroy();
+                        return false;
                     }
 
-                    console.log("Phone number updated!");
+                    if (verifyingEmail && emailVerificationId) {
+                        const email = user.emailAddresses.find(
+                            (e) => e.id === emailVerificationId
+                        );
+                        if (email) {
+                            await email.attemptVerification({
+                                code: emailVerificationCode,
+                            });
+                            await user.update({
+                                primaryEmailAddressId: email.id,
+                            });
+
+                            const oldEmail = user.emailAddresses.find(
+                                (e) => e.id !== email.id
+                            );
+                            if (oldEmail) await oldEmail.destroy();
+
+                            setEmailVerificationId(null);
+                            setVerifyingEmail(false);
+                            setEmailVerificationCode("");
+                        }
+                    }
+                } catch (err) {
+                    console.error("Failed to update email:", err);
+                }
+            },
+            phone: async (user, form) => {
+                try {
+                    if (!verifyingPhone) {
+                        const phoneObj = await user.createPhoneNumber({
+                            phoneNumber: form.phone_number,
+                        });
+
+                        await phoneObj.prepareVerification();
+                        setVerificationId(phoneObj.id);
+                        setVerifyingPhone(true);
+                        return false;
+                    }
+
+                    if (verifyingPhone && verificationId) {
+                        const phone = user.phoneNumbers.find(
+                            (p) => p.id === verificationId
+                        );
+                        if (phone) {
+                            await phone.attemptVerification({
+                                code: verificationCode,
+                            });
+                            await user.update({
+                                primaryPhoneNumberId: phone.id,
+                            });
+
+                            const oldPhone = user.phoneNumbers.find(
+                                (p) => p.id !== phone.id
+                            );
+                            if (oldPhone) await oldPhone.destroy();
+
+                            setVerificationId(null);
+                            setVerifyingPhone(false);
+                            setVerificationCode("");
+                        }
+                    }
                 } catch (err) {
                     console.error("Failed to update phone number:", err);
                 }

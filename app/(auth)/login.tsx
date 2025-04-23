@@ -32,7 +32,7 @@ import { useSignIn } from "@clerk/clerk-expo";
 
 export default function SignIn() {
     console.log("");
-    console.log("___________________________________________")
+    console.log("___________________________________________");
     console.log("app/(auth)/login.tsx: Entered SignIn Screen");
     const insets = useSafeAreaInsets(); // Safe area insets for top and bottom padding
     const [isVendor, setIsVendor] = useState(false); // State to toggle between Vendor and Public login
@@ -41,19 +41,8 @@ export default function SignIn() {
     const router = useRouter(); // Router for navigation between screens
 
     // Temporary variables for email and password inputs, default values based on user type (Vendor/Public)
-    const [emailAddress, setEmailAddress] = useState(
-        isVendor ? "vendor@email.com" : "public@email.com"
-    );
-    const [password, setPassword] = useState(isVendor ? "vendor" : "public");
-    useEffect(() => {
-        if (isVendor) {
-            setEmailAddress("vendor@email.com");
-            setPassword("vendor123");
-        } else {
-            setEmailAddress("public@email.com");
-            setPassword("public123");
-        }
-    }, [isVendor]);
+    const [emailAddress, setEmailAddress] = useState("");
+    const [password, setPassword] = useState("");
 
     // Function to handle sign-in process
     const onSignInPress = async () => {
@@ -85,7 +74,11 @@ export default function SignIn() {
 
     // Function to navigate to the Create Account screen
     const goToCreateAccount = () => {
-        router.replace("/(auth)/create");
+        if (isVendor) {
+            router.push("/(auth)/createBusiness");
+        } else {
+            router.push("/(auth)/create");
+        }
     };
 
     return (
@@ -110,7 +103,11 @@ export default function SignIn() {
                     style={[styles.logoContainer, { paddingTop: insets.top }]}
                 >
                     <Text style={styles.title}>MunchMap</Text>
-                    {!isVendor && <Text style={styles.subtitle}>Find Nearby FoodTrucks</Text>}
+                    {!isVendor && (
+                        <Text style={styles.subtitle}>
+                            Find Nearby FoodTrucks
+                        </Text>
+                    )}
                 </View>
                 {/* Blurred Body Container for Form */}
                 <BlurView
@@ -122,7 +119,11 @@ export default function SignIn() {
                 >
                     {/* Input Form */}
                     <View style={styles.signInForm}>
-                        {isVendor && <Text style={styles.vendorTitle}>Business Login</Text>}
+                        {isVendor && (
+                            <Text style={styles.vendorTitle}>
+                                Business Login
+                            </Text>
+                        )}
                         <TextInputFancy
                             label="Email"
                             placeholder="you@email.com"
@@ -178,12 +179,18 @@ export default function SignIn() {
 
                     {/* New User Section */}
                     <View style={styles.newUserContainer}>
-                        <Text style={styles.newUserLabel}>New User?</Text>
+                        <Text style={styles.newUserLabel}>
+                            {isVendor ? "New Business?" : "New User?"}
+                        </Text>
                         <StandardButton
                             style="outlineLight"
                             verticalPadding={theme.padding.xs}
                             fontSize={theme.fontSize.sm}
-                            text="Create Account Here"
+                            text={
+                                isVendor
+                                    ? "Create New Business"
+                                    : "Create Account Here"
+                            }
                             onPress={goToCreateAccount}
                             disabled={loading}
                         />
@@ -246,7 +253,6 @@ const styles = ScaledSheet.create({
         color: theme.colors.white,
         borderBottomColor: theme.colors.whiteInactive,
         borderBottomWidth: 1,
-
     },
     dividerContainer: {
         flexDirection: "row",

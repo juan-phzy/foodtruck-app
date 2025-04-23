@@ -63,6 +63,8 @@ export const updateClerkInfo = mutation({
         clerkId: v.string(),
         first_name: v.string(),
         last_name: v.string(),
+        phone_number: v.string(),
+        email: v.string(),
     },
     handler: async (ctx, args) => {
         const user = await ctx.db
@@ -77,6 +79,8 @@ export const updateClerkInfo = mutation({
         await ctx.db.patch(user._id, {
             first_name: args.first_name,
             last_name: args.last_name,
+            phone_number: args.phone_number,
+            email: args.email,
         });
     },
 });

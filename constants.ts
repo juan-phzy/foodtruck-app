@@ -11,7 +11,7 @@ export type SettingsField = {
   displayValue: (user: any) => string;
   inputs: {
     title: string;
-    key: keyof PublicUserProfile | "password";
+    key: keyof PublicUserProfile | "password" | "current_password";
     keyboardType: "default" | "numeric" | "email-address";
   }[];
 };
@@ -73,6 +73,7 @@ export const MERGED_SETTINGS_CONFIG: MergedSettingsConfigType = {
         link: "password",
         displayValue: () => "********",
         inputs: [
+          { title: "Current Password", key: "current_password", keyboardType: "default" },
           { title: "New Password", key: "password", keyboardType: "default" },
         ],
       },

@@ -3,12 +3,16 @@ import { Text, TextInput, Switch, Button, ScrollView } from "react-native";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useVendorStore } from "@/store/useVendorStore";
+import { useRouter } from "expo-router";
 
 export default function AddTruckPage() {
+    const router = useRouter();
+    const { currentVendor } = useVendorStore(); // Assuming you have a hook to get the current vendor
     const createTruck = useMutation(api.trucks.createTruck);
 
     const [truckName, setTruckName] = useState("");
-    const [vendorId, setVendorId] = useState(""); // Replace this with actual vendor ID from auth/store
+    const [vendorId, setVendorId] = useState(currentVendor!._id); // Replace this with actual vendor ID from auth/store
     const [latitude, setLatitude] = useState("");
     const [longitude, setLongitude] = useState("");
     const [truckType, setTruckType] = useState("Stationary");
@@ -31,6 +35,7 @@ export default function AddTruckPage() {
                 truck_type: truckType,
             });
             alert("Truck created!");
+            router.back();
         } catch (err) {
             console.error("Failed to create truck:", err);
         }
@@ -44,13 +49,6 @@ export default function AddTruckPage() {
                     value={truckName}
                     onChangeText={setTruckName}
                     placeholder="Taco Fiesta"
-                />
-
-                <Text>Vendor ID</Text>
-                <TextInput
-                    value={vendorId}
-                    onChangeText={setVendorId}
-                    placeholder="vendor_123"
                 />
 
                 <Text>Latitude</Text>

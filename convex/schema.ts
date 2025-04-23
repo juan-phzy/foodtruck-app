@@ -21,28 +21,39 @@ export default defineSchema({
         last_name: v.string(),
         phone_number: v.string(),
         email: v.string(),
-        primary_city: v.optional(v.string()),
         dob: v.optional(v.string()),
-        business_name: v.optional(v.string()),
-        business_certificates: v.optional(v.array(v.string())), // Store file URLs
-        instagram_link: v.optional(v.string()),
-        email_link: v.optional(v.string()), // public business email
-        twitter_link: v.optional(v.string()),
-        facebook_link: v.optional(v.string()),
+        business_Id: v.optional(v.string()),
     })
         .index("by_clerk_id", ["clerkId"])
         .index("by_email", ["email"])
         .index("by_phone", ["phone_number"]),
 
-    // Vendor Subaccounts
-    vendor_subaccounts: defineTable({
-        subaccount_id: v.string(),
-        vendor_id: v.string(),
-        first_name: v.string(),
-        last_name: v.string(),
-        email: v.string(),
-        password: v.string(),
-    }).index("by_vendor", ["vendor_id"]),
+    businesses: defineTable({
+        business_name: v.string(),
+
+        // Owner (creator) of the business
+        vendor_id: v.string(), // or v.id("vendors") if you want to enforce ref integrity
+
+        // Optional contact & branding
+        description: v.optional(v.string()),
+        email: v.optional(v.string()),
+        phone_number: v.optional(v.string()),
+        website: v.optional(v.string()),
+        logo_url: v.optional(v.string()), // could be used for branding
+        cover_photo_url: v.optional(v.string()), // optional banner/hero image
+
+        // Social media
+        instagram_link: v.optional(v.string()),
+        twitter_link: v.optional(v.string()),
+        facebook_link: v.optional(v.string()),
+        email_link: v.optional(v.string()),
+
+        // Location
+        primary_city: v.optional(v.string()),
+    })
+        .index("by_vendor", ["vendor_id"])
+        .index("by_city", ["primary_city"])
+        .index("by_business_name", ["business_name"]),
 
     // Trucks Table
     trucks: defineTable({
