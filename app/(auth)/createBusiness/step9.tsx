@@ -6,8 +6,8 @@ import {
     ImageBackground,
     Pressable,
     Dimensions,
-    ScrollView,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 // Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
@@ -16,55 +16,60 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 // Custom Components
-import TextInputFancy from "@/components/inputs/TextInputFancy";
 import StandardButton from "@/components/buttons/StandardButton";
+import TextInputFancy from "@/components/inputs/TextInputFancy";
 
 // Theme & Constants
 import theme from "@/assets/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
-// Vendor Store
-import { useVendorOnboardingStore } from "@/store/useVendorOnboardingStore";
+// State Management & Backend
 import Toast from "react-native-toast-message";
+import { useVendorOnboardingStore } from "@/store/useVendorOnboardingStore";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 const { height } = Dimensions.get("window");
 
-export default function CreateBusinessStep1() {
+export default function Step9() {
     console.log("");
     console.log("_________________________________________________");
-    console.log("app/(auth)/createBusiness/step2.tsx: Entered Page");
+    console.log("app/(auth)/createBusiness/step9.tsx: Entered Page");
+
+    const { data, updateField } = useVendorOnboardingStore();
 
     const insets = useSafeAreaInsets();
     const router = useRouter();
 
-    const { data, updateField } = useVendorOnboardingStore();
+    const updateSocials = useMutation(api.businesses.updateSocials);
 
     const handleGoBack = () => {
         console.log("Go Back Pressed");
         router.back();
     };
 
-    const handleNextStep = () => {
-        if (!data.email) {
-            Toast.show({
-                visibilityTime: 10000,
-                type: "error",
-                text1: "Missing Information",
-                text2: "Please enter a valid email address",
-                text1Style: {
-                    color: theme.colors.red,
-                    fontSize: theme.fontSize.sm,
-                },
-                text2Style: {
-                    color: theme.colors.black,
-                    fontSize: theme.fontSize.xs,
-                },
+    const saveSocialLinks = async () => {
+        console.log("Saving Business Info...");
+        try {
+            await updateSocials({
+                clerkId: data.business_id!,
+                website: data.website,
+                instagram_link: data.instagram_link,
+                twitter_link: data.twitter_link,
+                facebook_link: data.facebook_link,
+                email_link: data.business_email,
             });
-            return;
+            console.log("Social Links Saved Successfully!");
+            router.replace("/(vendor)/locations/");
+        } catch (error) {
+            console.error("Error saving social links:", error);
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: "Failed to save social links.",
+            });
         }
-
-        router.push("/(auth)/createBusiness/step3");
     };
 
     return (
@@ -88,7 +93,7 @@ export default function CreateBusinessStep1() {
                     style={[styles.logoContainer, { paddingTop: insets.top }]}
                 >
                     <Text style={styles.title}>MunchMap</Text>
-                    <Text style={styles.subtitle}>Create Account</Text>
+                    <Text style={styles.subtitle}>Register Business</Text>
                 </View>
 
                 <BlurView
@@ -110,7 +115,7 @@ export default function CreateBusinessStep1() {
                         <Text style={styles.goBackText}>Go Back</Text>
                     </Pressable>
 
-                    <Text style={styles.formHeader}>Contact Information</Text>
+                    <Text style={styles.formHeader}>Add Socials</Text>
 
                     <ScrollView
                         showsVerticalScrollIndicator={false}
@@ -118,22 +123,40 @@ export default function CreateBusinessStep1() {
                         keyboardShouldPersistTaps="handled"
                     >
                         <TextInputFancy
-                            label="Email"
-                            required={true}
-                            placeholder="vendor@email.com"
-                            value={data.email}
-                            onChangeText={(value) =>
-                                updateField("email", value)
-                            }
+                            label="Website"
+                            placeholder="yourwebsite.com"
+                            value={data.website}
+                            onChangeText={(text) => {
+                                updateField("website", text);
+                            }}
+                            keyboardType="default"
                         />
                         <TextInputFancy
-                            label="Phone Number"
-                            required={false}
-                            placeholder="(123)-456-7890"
-                            value={data.phone_number}
-                            onChangeText={(value) =>
-                                updateField("phone_number", value)
-                            }
+                            label="Instagram"
+                            placeholder="@yourinstagram"
+                            value={data.instagram_link}
+                            onChangeText={(text) => {
+                                updateField("instagram_link", text);
+                            }}
+                            keyboardType="default"
+                        />
+                        <TextInputFancy
+                            label="Facebook"
+                            placeholder="@yourfacebook"
+                            value={data.facebook_link}
+                            onChangeText={(text) => {
+                                updateField("facebook_link", text);
+                            }}
+                            keyboardType="default"
+                        />
+                        <TextInputFancy
+                            label="Twitter"
+                            placeholder="@yourtwitter"
+                            value={data.twitter_link}
+                            onChangeText={(text) => {
+                                updateField("twitter_link", text);
+                            }}
+                            keyboardType="default"
                         />
                     </ScrollView>
 
@@ -142,7 +165,7 @@ export default function CreateBusinessStep1() {
                         verticalPadding={theme.padding.sm}
                         fontSize={theme.fontSize.md}
                         text={"Next Step"}
-                        onPress={handleNextStep}
+                        onPress={saveSocialLinks}
                     />
                 </BlurView>
             </ImageBackground>
@@ -181,7 +204,7 @@ const styles = ScaledSheet.create({
     bodyContainer: {
         paddingHorizontal: theme.padding.xl,
         paddingVertical: theme.padding.xl,
-        maxHeight: height * 0.85,
+        maxHeight: height * 0.7,
         width: "100%",
         gap: "15@ms",
         borderTopLeftRadius: "40@s",

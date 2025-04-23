@@ -6,7 +6,6 @@ import {
     ImageBackground,
     Pressable,
     Dimensions,
-    ScrollView,
 } from "react-native";
 
 // Expo Libraries
@@ -16,55 +15,51 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 // Custom Components
-import TextInputFancy from "@/components/inputs/TextInputFancy";
 import StandardButton from "@/components/buttons/StandardButton";
+import TextInputFancy from "@/components/inputs/TextInputFancy";
 
 // Theme & Constants
 import theme from "@/assets/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
-// Vendor Store
+// State Management & Backend
 import { useVendorOnboardingStore } from "@/store/useVendorOnboardingStore";
-import Toast from "react-native-toast-message";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 const { height } = Dimensions.get("window");
 
-export default function CreateBusinessStep1() {
+export default function Step7() {
     console.log("");
     console.log("_________________________________________________");
-    console.log("app/(auth)/createBusiness/step2.tsx: Entered Page");
+    console.log("app/(auth)/createBusiness/step7.tsx: Entered Page");
+
+    const { data, updateField } = useVendorOnboardingStore();
 
     const insets = useSafeAreaInsets();
     const router = useRouter();
-
-    const { data, updateField } = useVendorOnboardingStore();
+    const updateBusinessInfo = useMutation(api.businesses.updatePublicInfo);
 
     const handleGoBack = () => {
         console.log("Go Back Pressed");
         router.back();
     };
 
-    const handleNextStep = () => {
-        if (!data.email) {
-            Toast.show({
-                visibilityTime: 10000,
-                type: "error",
-                text1: "Missing Information",
-                text2: "Please enter a valid email address",
-                text1Style: {
-                    color: theme.colors.red,
-                    fontSize: theme.fontSize.sm,
-                },
-                text2Style: {
-                    color: theme.colors.black,
-                    fontSize: theme.fontSize.xs,
-                },
+    const saveBusinessInfo = async () => {
+        console.log("Saving Business Info...");
+        try {
+            await updateBusinessInfo({
+                clerkId: data.business_id!,
+                description: data.description,
+                phone_number: data.business_phone_number,
+                email_link: data.business_email,
             });
-            return;
+            console.log("Business Info Saved Successfully!");
+            router.push("/createBusiness/step8");
+        } catch (error) {
+            console.error("Error saving business info:", error);
         }
-
-        router.push("/(auth)/createBusiness/step3");
     };
 
     return (
@@ -88,7 +83,7 @@ export default function CreateBusinessStep1() {
                     style={[styles.logoContainer, { paddingTop: insets.top }]}
                 >
                     <Text style={styles.title}>MunchMap</Text>
-                    <Text style={styles.subtitle}>Create Account</Text>
+                    <Text style={styles.subtitle}>Register Business</Text>
                 </View>
 
                 <BlurView
@@ -110,39 +105,44 @@ export default function CreateBusinessStep1() {
                         <Text style={styles.goBackText}>Go Back</Text>
                     </Pressable>
 
-                    <Text style={styles.formHeader}>Contact Information</Text>
+                    <Text style={styles.formHeader}>Public Business Info</Text>
 
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={styles.formContainer}
-                        keyboardShouldPersistTaps="handled"
-                    >
-                        <TextInputFancy
-                            label="Email"
-                            required={true}
-                            placeholder="vendor@email.com"
-                            value={data.email}
-                            onChangeText={(value) =>
-                                updateField("email", value)
-                            }
-                        />
-                        <TextInputFancy
-                            label="Phone Number"
-                            required={false}
-                            placeholder="(123)-456-7890"
-                            value={data.phone_number}
-                            onChangeText={(value) =>
-                                updateField("phone_number", value)
-                            }
-                        />
-                    </ScrollView>
+                    <TextInputFancy
+                        label="Add Description"
+                        placeholder="Business Description"
+                        value={data.description}
+                        onChangeText={(text) => {
+                            updateField("description", text);
+                        }}
+                        keyboardType="default"
+                    />
+
+                    <TextInputFancy
+                        label="Business Phone Number"
+                        placeholder="(555) 555-5555"
+                        value={data.business_phone_number}
+                        onChangeText={(text) => {
+                            updateField("business_phone_number", text);
+                        }}
+                        keyboardType="default"
+                    />
+
+                    <TextInputFancy
+                        label="Business Email"
+                        placeholder="customerservice@email.com"
+                        value={data.business_email}
+                        onChangeText={(text) => {
+                            updateField("business_email", text);
+                        }}
+                        keyboardType="default"
+                    />
 
                     <StandardButton
                         style="light"
                         verticalPadding={theme.padding.sm}
                         fontSize={theme.fontSize.md}
                         text={"Next Step"}
-                        onPress={handleNextStep}
+                        onPress={saveBusinessInfo}
                     />
                 </BlurView>
             </ImageBackground>

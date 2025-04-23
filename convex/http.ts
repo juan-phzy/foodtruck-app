@@ -38,6 +38,11 @@ http.route({
             if (response) return response;
         }
 
+        if (evt.type === "organization.created") {
+            const response = await handleOrganizationCreated(ctx, evt.data);
+            if (response) return response;
+        }
+
         return new Response("Webhook processed successfully", { status: 200 });
     }),
 });
@@ -135,7 +140,14 @@ async function handleUserCreated(ctx: any, data: any) {
 }
 
 async function handleUserUpdated(ctx: any, data: any) {
-    const { id, first_name, last_name, phone_numbers, email_addresses, unsafe_metadata } = data;
+    const {
+        id,
+        first_name,
+        last_name,
+        phone_numbers,
+        email_addresses,
+        unsafe_metadata,
+    } = data;
 
     const role = unsafe_metadata?.role;
     if (!role || (role !== "public" && role !== "vendor")) {
@@ -172,6 +184,32 @@ async function handleUserUpdated(ctx: any, data: any) {
 
         return null;
     }
+}
+
+async function handleOrganizationCreated(ctx: any, data: any) {
+    const { id, name, created_by } = data;
+
+    if (!id || !name || !created_by) {
+        console.error("Missing fields in organization.created payload", data);
+        return new Response("Missing required fields", { status: 400 });
+    }
+
+    try {
+        // Insert business into Convex businesses table
+        await ctx.runMutation(api.businesses.createBusiness, {
+            business_name: name,
+            vendor_clerk_id: created_by,
+            clerkId: id,
+        });
+    } catch (err) {
+        console.error(
+            "Error creating business from organization webhook:",
+            err
+        );
+        return new Response("Error creating business", { status: 500 });
+    }
+
+    return null;
 }
 
 export default http;

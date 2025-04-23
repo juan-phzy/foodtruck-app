@@ -30,27 +30,27 @@ export default function InitialLayout() {
     console.log("______________________________________");
     console.log("InitialLayout.tsx: Checking Auth Logic");
 
-    useEffect(() => {
-        if (!isLoaded || !user) return;
+    // useEffect(() => {
+    //     if (!isLoaded || !user) return;
 
-        const inAuthScreen = segments[0] === "(auth)";
+    //     const inAuthScreen = segments[0] === "(auth)";
 
-        if (!isSignedIn && !inAuthScreen) {
-            console.log("_______________________________________________________")
-            console.log("InitialLayout.tsx: Not signed in, redirecting to login.");
-            router.replace("/(auth)/login");
-        } else if (isSignedIn && inAuthScreen) {
-            const role = user.unsafeMetadata?.role;
-            console.log("_______________________________________________________")
-            console.log(`InitialLayout.tsx: Signed in as ${role}, redirecting...`);
+    //     if (!isSignedIn && !inAuthScreen) {
+    //         console.log("_______________________________________________________")
+    //         console.log("InitialLayout.tsx: Not signed in, redirecting to login.");
+    //         // router.replace("/(auth)/login");
+    //     } else if (isSignedIn && inAuthScreen) {
+    //         const role = user.unsafeMetadata?.role;
+    //         console.log("_______________________________________________________")
+    //         console.log(`InitialLayout.tsx: Signed in as ${role}, redirecting...`);
 
-            if (role === "vendor") {
-                router.replace("/(vendor)/locations/");
-            } else {
-                router.replace("/(public)");
-            }
-        }
-    }, [isLoaded, isSignedIn, segments, user]);
+    //         if (role === "vendor") {
+    //             // router.replace("/(vendor)/locations/");
+    //         } else {
+    //             // router.replace("/(public)");
+    //         }
+    //     }
+    // }, [isLoaded, isSignedIn, segments, user]);
 
     if (!isLoaded) {
         return null; // You can replace this with a splash screen or loader

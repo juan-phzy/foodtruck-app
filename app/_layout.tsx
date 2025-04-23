@@ -23,6 +23,8 @@ import "react-native-get-random-values";
 import ClerkAndConvexProvider from "@/providers/ClerkAndConvexProvider";
 import InitialLayout from "@/components/navigation/InitialLayout";
 import { loadCustomFonts } from "@/utils/loadFonts";
+import Toast from "react-native-toast-message";
+
 
 export default function RootLayout() {
     console.log("");
@@ -51,6 +53,7 @@ export default function RootLayout() {
                 <GestureHandlerRootView style={{ flex: 1 }}>
                     <StatusBar style="light" />
                     <InitialLayout />
+                    <Toast />
                 </GestureHandlerRootView>
             </SafeAreaProvider>
         </ClerkAndConvexProvider>

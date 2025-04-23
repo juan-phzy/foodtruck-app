@@ -120,6 +120,25 @@ export type VendorProfile = {
     clerkId: string;
 };
 
+export type Business = {
+    _id: Id<"businesses">;
+    _creationTime: number;
+    business_name: string;
+    vendor_clerk_id: string;
+    clerkId: string;
+    categories?: string[] | undefined;
+    description?: string | undefined;
+    phone_number?: string | undefined;
+    logo_url?: string | undefined;
+    cover_photo_url?: string | undefined;
+    primary_city?: string | undefined;
+    website?: string | undefined;
+    instagram_link?: string | undefined;
+    twitter_link?: string | undefined;
+    facebook_link?: string | undefined;
+    email_link?: string | undefined;
+}
+
 export type Trucks = {
     truck_name: string;
     vendor_id: string;

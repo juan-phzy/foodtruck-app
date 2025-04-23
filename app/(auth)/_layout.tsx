@@ -19,10 +19,10 @@ export default function AuthRoutesLayout() {
   console.log("________________________________________________")
   console.log("app/(auth)/_layout.tsx: Entered AuthRoutesLayout");
 
-  if (isSignedIn) {
-    console.log("app/(auth)/_layout.tsx: User is signed in, redirecting to root");
-    return <Redirect href="/" />;
-  }
+  // if (isSignedIn) {
+  //   console.log("app/(auth)/_layout.tsx: User is signed in, redirecting to root");
+  //   return <Redirect href="/" />;
+  // }
 
   return <Stack screenOptions={{ headerShown: false }} />;
 }

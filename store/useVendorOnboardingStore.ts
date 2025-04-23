@@ -10,18 +10,21 @@ type VendorOnboardingData = {
     primary_city?: string;
     dob?: string;
     business_name?: string;
+    business_id?: string;
     instagram_link?: string;
     twitter_link?: string;
     facebook_link?: string;
-    email_link?: string;
     website?: string;
     business_primary_city?: string;
     description?: string;
+    business_phone_number?: string;
+    business_email?: string;
+    categories?: string[];
 };
 
 type VendorOnboardingStore = {
     data: Partial<VendorOnboardingData>;
-    updateField: (field: keyof VendorOnboardingData, value: string) => void;
+    updateField: (field: keyof VendorOnboardingData, value: string | string[]) => void;
     reset: () => void;
 };
 

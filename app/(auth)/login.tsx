@@ -75,7 +75,7 @@ export default function SignIn() {
     // Function to navigate to the Create Account screen
     const goToCreateAccount = () => {
         if (isVendor) {
-            router.push("/(auth)/createBusiness");
+            router.push("/(auth)/createBusiness/step1");
         } else {
             router.push("/(auth)/create");
         }
@@ -103,11 +103,7 @@ export default function SignIn() {
                     style={[styles.logoContainer, { paddingTop: insets.top }]}
                 >
                     <Text style={styles.title}>MunchMap</Text>
-                    {!isVendor && (
-                        <Text style={styles.subtitle}>
-                            Find Nearby FoodTrucks
-                        </Text>
-                    )}
+                    <Text style={styles.subtitle}>Find Nearby FoodTrucks</Text>
                 </View>
                 {/* Blurred Body Container for Form */}
                 <BlurView
@@ -158,24 +154,30 @@ export default function SignIn() {
                     )}
 
                     {/* Divider Line For Future Sign In Options */}
-                    <View style={styles.dividerContainer}>
-                        <View style={styles.dividerLine} />
-                        <Text style={styles.dividerText}>OR</Text>
-                        <View style={styles.dividerLine} />
-                    </View>
+                    {!isVendor && (
+                        <View style={styles.dividerContainer}>
+                            <View style={styles.dividerLine} />
+                            <Text style={styles.dividerText}>OR</Text>
+                            <View style={styles.dividerLine} />
+                        </View>
+                    )}
 
                     {/* Google Sign In Button */}
-                    <StandardButton
-                        style="dark"
-                        verticalPadding={theme.padding.xs}
-                        fontSize={theme.fontSize.sm}
-                        text={
-                            loading ? "Signing In..." : "Continue With Google"
-                        }
-                        onPress={() => {}}
-                        disabled={loading}
-                        icon="google"
-                    />
+                    {!isVendor && (
+                        <StandardButton
+                            style="dark"
+                            verticalPadding={theme.padding.xs}
+                            fontSize={theme.fontSize.sm}
+                            text={
+                                loading
+                                    ? "Signing In..."
+                                    : "Continue With Google"
+                            }
+                            onPress={() => {}}
+                            disabled={loading}
+                            icon="google"
+                        />
+                    )}
 
                     {/* New User Section */}
                     <View style={styles.newUserContainer}>
@@ -205,6 +207,9 @@ export default function SignIn() {
                                 ? "Switch to Public Login"
                                 : "Switch to Vendor Login"}
                         </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=> router.push("/(auth)/createBusiness/step9")}>
+                        <Text style={{color:"white", fontSize:15}}>Temp Link</Text>
                     </TouchableOpacity>
                 </BlurView>
             </ImageBackground>

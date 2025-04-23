@@ -29,31 +29,33 @@ export default defineSchema({
         .index("by_phone", ["phone_number"]),
 
     businesses: defineTable({
+        
+        // Identifiers
         business_name: v.string(),
-
-        // Owner (creator) of the business
-        vendor_id: v.string(), // or v.id("vendors") if you want to enforce ref integrity
-
-        // Optional contact & branding
+        clerkId: v.string(), // Clerk ID of the organization
+        vendor_clerk_id: v.string(), // or v.id("vendors") if you want to enforce ref integrity
+        
+        // About the business
+        categories: v.optional(v.array(v.string())), // Categories of the business
         description: v.optional(v.string()),
-        email: v.optional(v.string()),
         phone_number: v.optional(v.string()),
-        website: v.optional(v.string()),
         logo_url: v.optional(v.string()), // could be used for branding
         cover_photo_url: v.optional(v.string()), // optional banner/hero image
-
+        primary_city: v.optional(v.string()),
+        
         // Social media
+        website: v.optional(v.string()),
         instagram_link: v.optional(v.string()),
         twitter_link: v.optional(v.string()),
         facebook_link: v.optional(v.string()),
         email_link: v.optional(v.string()),
 
-        // Location
-        primary_city: v.optional(v.string()),
     })
-        .index("by_vendor", ["vendor_id"])
+        .index("by_vendor", ["vendor_clerk_id"])
         .index("by_city", ["primary_city"])
-        .index("by_business_name", ["business_name"]),
+        .index("by_business_name", ["business_name"])
+        .index("by_clerk_id", ["clerkId"]),
+
 
     // Trucks Table
     trucks: defineTable({

@@ -16,42 +16,80 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 // Custom Components
-import TextInputFancy from "@/components/inputs/TextInputFancy";
 import StandardButton from "@/components/buttons/StandardButton";
+import TextWithLabel from "@/components/cards/TextWithLabel";
 
 // Theme & Constants
 import theme from "@/assets/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
-// Vendor Store
+// State Management
 import { useVendorOnboardingStore } from "@/store/useVendorOnboardingStore";
 import Toast from "react-native-toast-message";
+import { useSignUp } from "@clerk/clerk-expo";
+import { useState } from "react";
 
 const { height } = Dimensions.get("window");
 
-export default function CreateBusinessStep1() {
+export default function CreateBusinessStep4() {
     console.log("");
     console.log("_________________________________________________");
-    console.log("app/(auth)/createBusiness/step2.tsx: Entered Page");
+    console.log("app/(auth)/createBusiness/step4.tsx: Entered Page");
+
+    const { isLoaded, signUp } = useSignUp(); // Clerk sign-up hook for user authentication
+    const [isLoading, setIsLoading] = useState(false); // Loading state for the sign-up process
 
     const insets = useSafeAreaInsets();
     const router = useRouter();
 
-    const { data, updateField } = useVendorOnboardingStore();
+    const { data } = useVendorOnboardingStore();
 
     const handleGoBack = () => {
         console.log("Go Back Pressed");
         router.back();
     };
 
-    const handleNextStep = () => {
-        if (!data.email) {
+    // Handles user sign-up action
+    const handleSignUp = async () => {
+        if (!isLoaded || !signUp) return;
+
+        setIsLoading(true);
+
+        try {
+            const result = await signUp.create({
+                emailAddress: data.email,
+                password: data.password,
+                firstName: data.first_name,
+                lastName: data.last_name,
+                phoneNumber: data.phone_number,
+                unsafeMetadata: {
+                    role: "vendor",
+                },
+            });
+
+            // Check if email needs verification
+            const needsEmailVerification =
+                result.unverifiedFields.includes("email_address");
+
+            if (
+                result.status === "missing_requirements" &&
+                needsEmailVerification
+            ) {
+                await signUp.prepareEmailAddressVerification({
+                    strategy: "email_code",
+                });
+
+                setIsLoading(false);
+                router.push("/createBusiness/step5");
+                return;
+            }
+        } catch (err) {
+            console.error("Sign-up error:", JSON.stringify(err, null, 2));
             Toast.show({
-                visibilityTime: 10000,
                 type: "error",
-                text1: "Missing Information",
-                text2: "Please enter a valid email address",
+                text1: "Sign-up Error",
+                text2: "Please try again or check your input.",
                 text1Style: {
                     color: theme.colors.red,
                     fontSize: theme.fontSize.sm,
@@ -61,10 +99,9 @@ export default function CreateBusinessStep1() {
                     fontSize: theme.fontSize.xs,
                 },
             });
-            return;
+        } finally {
+            setIsLoading(false);
         }
-
-        router.push("/(auth)/createBusiness/step3");
     };
 
     return (
@@ -110,30 +147,25 @@ export default function CreateBusinessStep1() {
                         <Text style={styles.goBackText}>Go Back</Text>
                     </Pressable>
 
-                    <Text style={styles.formHeader}>Contact Information</Text>
+                    <Text style={styles.formHeader}>Review Account</Text>
 
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={styles.formContainer}
                         keyboardShouldPersistTaps="handled"
                     >
-                        <TextInputFancy
-                            label="Email"
-                            required={true}
-                            placeholder="vendor@email.com"
-                            value={data.email}
-                            onChangeText={(value) =>
-                                updateField("email", value)
-                            }
+                        <TextWithLabel
+                            label="First Name"
+                            value={data.first_name}
                         />
-                        <TextInputFancy
-                            label="Phone Number"
-                            required={false}
-                            placeholder="(123)-456-7890"
+                        <TextWithLabel
+                            label="Last Name"
+                            value={data.last_name}
+                        />
+                        <TextWithLabel label="Email" value={data.email} />
+                        <TextWithLabel
+                            label="Phone"
                             value={data.phone_number}
-                            onChangeText={(value) =>
-                                updateField("phone_number", value)
-                            }
                         />
                     </ScrollView>
 
@@ -141,8 +173,9 @@ export default function CreateBusinessStep1() {
                         style="light"
                         verticalPadding={theme.padding.sm}
                         fontSize={theme.fontSize.md}
-                        text={"Next Step"}
-                        onPress={handleNextStep}
+                        text={"Create Account"}
+                        onPress={handleSignUp}
+                        disabled={isLoading}
                     />
                 </BlurView>
             </ImageBackground>

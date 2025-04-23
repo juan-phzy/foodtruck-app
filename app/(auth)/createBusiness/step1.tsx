@@ -26,6 +26,7 @@ import { ms, ScaledSheet } from "react-native-size-matters";
 
 // Vendor Store
 import { useVendorOnboardingStore } from "@/store/useVendorOnboardingStore";
+import Toast from "react-native-toast-message";
 
 const { height } = Dimensions.get("window");
 
@@ -45,11 +46,24 @@ export default function CreateBusinessStep1() {
     };
 
     const handleNextStep = () => {
-        console.log("Next Step Pressed");
         if (!data.first_name || !data.last_name) {
-            console.log("First name and last name are required.");
+            Toast.show({
+                visibilityTime: 10000,
+                type: "error",
+                text1: "Missing Information",
+                text2: "Please enter both first and last name",
+                text1Style: {
+                    color: theme.colors.red,
+                    fontSize: theme.fontSize.sm,
+                },
+                text2Style: {
+                    color: theme.colors.black,
+                    fontSize: theme.fontSize.xs,
+                },
+            });
             return;
         }
+
         router.push("/(auth)/createBusiness/step2");
     };
 
@@ -75,7 +89,7 @@ export default function CreateBusinessStep1() {
                 >
                     <Text style={styles.title}>MunchMap</Text>
                     <Text style={styles.subtitle}>
-                        For Business: Step 1 of 5
+                        Create Account
                     </Text>
                 </View>
 

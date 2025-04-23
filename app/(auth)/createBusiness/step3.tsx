@@ -24,21 +24,24 @@ import theme from "@/assets/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
-// Vendor Store
+// State Management
 import { useVendorOnboardingStore } from "@/store/useVendorOnboardingStore";
 import Toast from "react-native-toast-message";
+import { useState } from "react";
 
 const { height } = Dimensions.get("window");
 
-export default function CreateBusinessStep1() {
+export default function CreateBusinessStep3() {
     console.log("");
     console.log("_________________________________________________");
-    console.log("app/(auth)/createBusiness/step2.tsx: Entered Page");
+    console.log("app/(auth)/createBusiness/step3.tsx: Entered Page");
 
     const insets = useSafeAreaInsets();
     const router = useRouter();
 
     const { data, updateField } = useVendorOnboardingStore();
+
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
 
     const handleGoBack = () => {
         console.log("Go Back Pressed");
@@ -46,12 +49,28 @@ export default function CreateBusinessStep1() {
     };
 
     const handleNextStep = () => {
-        if (!data.email) {
+        if (!data.password) {
             Toast.show({
                 visibilityTime: 10000,
                 type: "error",
                 text1: "Missing Information",
-                text2: "Please enter a valid email address",
+                text2: "Please enter a valid password",
+                text1Style: {
+                    color: theme.colors.red,
+                    fontSize: theme.fontSize.sm,
+                },
+                text2Style: {
+                    color: theme.colors.black,
+                    fontSize: theme.fontSize.xs,
+                },
+            });
+            return;
+        } else if (data.password !== confirmPassword) {
+            Toast.show({
+                visibilityTime: 10000,
+                type: "error",
+                text1: "Password Mismatch",
+                text2: "Please ensure both passwords match",
                 text1Style: {
                     color: theme.colors.red,
                     fontSize: theme.fontSize.sm,
@@ -64,7 +83,7 @@ export default function CreateBusinessStep1() {
             return;
         }
 
-        router.push("/(auth)/createBusiness/step3");
+        router.push("/(auth)/createBusiness/step4");
     };
 
     return (
@@ -110,7 +129,7 @@ export default function CreateBusinessStep1() {
                         <Text style={styles.goBackText}>Go Back</Text>
                     </Pressable>
 
-                    <Text style={styles.formHeader}>Contact Information</Text>
+                    <Text style={styles.formHeader}>Security</Text>
 
                     <ScrollView
                         showsVerticalScrollIndicator={false}
@@ -118,22 +137,22 @@ export default function CreateBusinessStep1() {
                         keyboardShouldPersistTaps="handled"
                     >
                         <TextInputFancy
-                            label="Email"
+                            label="Password"
                             required={true}
-                            placeholder="vendor@email.com"
-                            value={data.email}
+                            placeholder="Enter Password"
+                            value={data.password}
+                            secureTextEntry={true}
                             onChangeText={(value) =>
-                                updateField("email", value)
+                                updateField("password", value)
                             }
                         />
                         <TextInputFancy
-                            label="Phone Number"
-                            required={false}
-                            placeholder="(123)-456-7890"
-                            value={data.phone_number}
-                            onChangeText={(value) =>
-                                updateField("phone_number", value)
-                            }
+                            label="Confirm Password"
+                            required={true}
+                            value={confirmPassword}
+                            onChangeText={(value) => setConfirmPassword(value)}
+                            placeholder="Confirm Password"
+                            secureTextEntry={true}
                         />
                     </ScrollView>
 

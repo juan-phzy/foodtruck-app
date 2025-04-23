@@ -6,8 +6,8 @@ import {
     ImageBackground,
     Pressable,
     Dimensions,
-    ScrollView,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
 // Expo Libraries
 import { LinearGradient } from "expo-linear-gradient";
@@ -16,55 +16,56 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 // Custom Components
-import TextInputFancy from "@/components/inputs/TextInputFancy";
 import StandardButton from "@/components/buttons/StandardButton";
 
 // Theme & Constants
 import theme from "@/assets/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
+import { CATEGORIES } from "@/constants";
 
-// Vendor Store
-import { useVendorOnboardingStore } from "@/store/useVendorOnboardingStore";
+// State Management & Backend
 import Toast from "react-native-toast-message";
+import { useVendorOnboardingStore } from "@/store/useVendorOnboardingStore";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 const { height } = Dimensions.get("window");
 
-export default function CreateBusinessStep1() {
+export default function Step8() {
     console.log("");
     console.log("_________________________________________________");
-    console.log("app/(auth)/createBusiness/step2.tsx: Entered Page");
+    console.log("app/(auth)/createBusiness/step8.tsx: Entered Page");
+
+    const { data, updateField } = useVendorOnboardingStore();
 
     const insets = useSafeAreaInsets();
     const router = useRouter();
 
-    const { data, updateField } = useVendorOnboardingStore();
+    const updateCategories = useMutation(api.businesses.updateCategories);
 
     const handleGoBack = () => {
         console.log("Go Back Pressed");
         router.back();
     };
 
-    const handleNextStep = () => {
-        if (!data.email) {
-            Toast.show({
-                visibilityTime: 10000,
-                type: "error",
-                text1: "Missing Information",
-                text2: "Please enter a valid email address",
-                text1Style: {
-                    color: theme.colors.red,
-                    fontSize: theme.fontSize.sm,
-                },
-                text2Style: {
-                    color: theme.colors.black,
-                    fontSize: theme.fontSize.xs,
-                },
+    const saveBusinessCategories = async () => {
+        console.log("Saving Business Info...");
+        try {
+            await updateCategories({
+                clerkId: data.business_id!,
+                categories: data.categories,
             });
-            return;
+            console.log("Business Info Saved Successfully!");
+            router.push("/createBusiness/step9");
+        } catch (error) {
+            console.error("Error saving business info:", error);
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: "Failed to save business info.",
+            });
         }
-
-        router.push("/(auth)/createBusiness/step3");
     };
 
     return (
@@ -88,7 +89,7 @@ export default function CreateBusinessStep1() {
                     style={[styles.logoContainer, { paddingTop: insets.top }]}
                 >
                     <Text style={styles.title}>MunchMap</Text>
-                    <Text style={styles.subtitle}>Create Account</Text>
+                    <Text style={styles.subtitle}>Register Business</Text>
                 </View>
 
                 <BlurView
@@ -110,31 +111,70 @@ export default function CreateBusinessStep1() {
                         <Text style={styles.goBackText}>Go Back</Text>
                     </Pressable>
 
-                    <Text style={styles.formHeader}>Contact Information</Text>
+                    <Text style={styles.formHeader}>Your Categories</Text>
 
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={styles.formContainer}
                         keyboardShouldPersistTaps="handled"
                     >
-                        <TextInputFancy
-                            label="Email"
-                            required={true}
-                            placeholder="vendor@email.com"
-                            value={data.email}
-                            onChangeText={(value) =>
-                                updateField("email", value)
-                            }
-                        />
-                        <TextInputFancy
-                            label="Phone Number"
-                            required={false}
-                            placeholder="(123)-456-7890"
-                            value={data.phone_number}
-                            onChangeText={(value) =>
-                                updateField("phone_number", value)
-                            }
-                        />
+                        {CATEGORIES.map((category) => (
+                            <Pressable
+                                key={category.name}
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    borderColor: theme.colors.white,
+                                    borderWidth: 1,
+                                    borderRadius: 10,
+                                    paddingHorizontal: theme.padding.sm,
+                                    paddingVertical: theme.padding.xs,
+                                    gap: theme.padding.sm,
+                                }}
+                                onPress={() => {
+                                    const updatedCategories =
+                                        data.categories || [];
+
+                                    if (
+                                        updatedCategories.includes(
+                                            category.name
+                                        )
+                                    ) {
+                                        // Remove category
+                                        updateField(
+                                            "categories",
+                                            updatedCategories.filter(
+                                                (c) => c !== category.name
+                                            )
+                                        );
+                                    } else {
+                                        // Add category
+                                        updateField("categories", [
+                                            ...updatedCategories,
+                                            category.name,
+                                        ]);
+                                    }
+                                }}
+                            >
+                                <MaterialCommunityIcons
+                                    name={
+                                        data.categories?.includes(category.name)
+                                            ? "check-circle"
+                                            : "circle-outline"
+                                    }
+                                    size={ms(15)}
+                                    color={theme.colors.primary}
+                                />
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.sm,
+                                        color: theme.colors.white,
+                                    }}
+                                >
+                                    {category.name}
+                                </Text>
+                            </Pressable>
+                        ))}
                     </ScrollView>
 
                     <StandardButton
@@ -142,7 +182,7 @@ export default function CreateBusinessStep1() {
                         verticalPadding={theme.padding.sm}
                         fontSize={theme.fontSize.md}
                         text={"Next Step"}
-                        onPress={handleNextStep}
+                        onPress={saveBusinessCategories}
                     />
                 </BlurView>
             </ImageBackground>
@@ -181,7 +221,7 @@ const styles = ScaledSheet.create({
     bodyContainer: {
         paddingHorizontal: theme.padding.xl,
         paddingVertical: theme.padding.xl,
-        maxHeight: height * 0.85,
+        maxHeight: height * 0.7,
         width: "100%",
         gap: "15@ms",
         borderTopLeftRadius: "40@s",
