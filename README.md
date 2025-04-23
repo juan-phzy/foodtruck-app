@@ -41,17 +41,34 @@ FOODTRUCK-APP
 │
 ├── app
 |   ├── (auth)                  # Root Authentication Route
+│   │   ├── createBusiness.tsx      # Vendor Account Creation & Business Onboarding
+│   |   │   ├── _layout.tsx             # Create Business Stack Layout
+│   |   │   ├── step1.tsx               # Step 1: Vendor Name
+│   |   │   ├── step2.tsx               # Step 2: Vendor Contact Info
+│   |   │   ├── step3.tsx               # Step 3: Vendor Password
+│   |   │   ├── step4.tsx               # Step 4: Review & Create Vendor Account
+│   |   │   ├── step5.tsx               # Step 5: Verify Account Email With Code
+│   |   │   ├── step6.tsx               # Step 6: Register Business Name
+│   |   │   ├── step7.tsx               # Step 7: Set Public Business Info
+│   |   │   ├── step8.tsx               # Step 8: Set Business Categories
+│   |   │   └── step9.tsx               # Step 9: Set Business Socials
 │   │   ├── _layout.tsx             # Auth layout file
 │   │   ├── create.tsx              # Create Account screen
 |   |	└── login.tsx               # Login Screen
 |   |
 |   ├── (public)                # Public Tabs Route
 │   │   ├── profile                 # Public User Profile Route
+│   |   │   ├── settings.tsx            # User Profile Settings Page
+|   │   |   │   ├── [section].tsx           # Settings Section (profile, security, notifs...)
+|   |   │   |   │   ├── _layout.tsx             # Settings Section Layout
+|   |   │   |   │   ├── [subsection].tsx        # Edit Settings Input Page
+|   |   │   |   │   └── index.tsx               # Edit Section Settings
+|   │   |   │   ├── _layout.tsx             # Settings Stack Layout
+|   │   |   │   └── index.tsx               # User Profile Settings Index
 │   |   │   ├── _layout.tsx             # Profile Tab Inner Stack Layout
 │   |   │   ├── [subsection].tsx        # Profile Tab Subsection For Truck Lists
 │   |   │   ├── categories.tsx          # User Favorite Categories Page
-│   |   │   ├── profilePage.tsx         # Profile Tab Main Index Page
-│   |   │   └── settings.tsx            # User Profile Settings Page
+│   |   │   └── profilePage.tsx         # Profile Tab Main Index Page
 |   |   |
 │   │   ├── _layout.tsx             # Public Side Root Layout - Defines Tabs
 │   │   ├── index.tsx               # Public User Home Page - Main Map
@@ -59,24 +76,29 @@ FOODTRUCK-APP
 |   |	└── test.tsx                # Public Side Test Page
 |   |
 │   ├── (vendor)                # Vendor Tabs Route
-│   │   ├── locations               # Vendor Home Page - Manage Locations
-│   |   │   ├── _layout.tsx             # Locations Tab Inner Stack Layout
-│   |   │   ├── [truckID].tsx           # Manage Truck/Stand Page
-│   |   │   └── locationsPage.tsx       # Locations Tab Main Index Page
+│   │   ├── account                 # Account Tab
+│   |   │   ├── settings.tsx            # Account Settings Route
+|   │   |   │   ├── _layout.tsx             # Account Settings Stack Layout
+|   │   |   │   └── index.tsx               # Account Settings Index
+│   |   │   ├── _layout.tsx             # Account Stack Layout
+│   |   │   └── index.tsx               # Account Index
 |   |   |
-│   │   ├── settings                # Home screen
-│   |   │   ├── _layout.tsx             # Settings Tab Inner Stack Layout
-│   |   │   └── settingsPage.tsx        # Settings Tab Main Index Page
-|   |   |
-│   │   ├── users                   # Profile screen
-│   |   |   ├── [userID]                # Manage User Page Stack
+│   │   ├── employees               # Employees Tab
+│   |   |   ├── [userID]                # Manage Employee Stack
 |   │   |   │   ├── _layout.tsx             # Manage User Page Inner Stack Layout
 |   │   |   │   ├── manageUser.tsx          # Manage User Screen
 |   │   |   │   └── setAccess.tsx           # Set User Access Page
 │   |   |   ├── _layout.tsx             # Vendor Users Tab Inner Stack Layout
-│   |   |   └── usersPage.tsx           # Users Tab Main Index Page
-│   │   ├── _layout.tsx_            # Vendor Side Root Layout - Defines Tabs
-│   │   └── test.tsx_               # Vendor Test Page
+│   |   |   └── index.tsx               # Employees Tab Index
+|   |   |
+│   │   ├── locations               # Vendor Home Tab - Manage Locations (Trucks & Stands)
+│   |   │   ├── _layout.tsx             # Locations Tab Inner Stack Layout
+│   |   │   ├── [truckID].tsx           # Manage Truck/Stand Page
+│   |   │   ├── addTruckPage.tsx        # Add Truck Page
+│   |   │   └── index.tsx               # Locations Tab Main Index Page
+|   |   |
+│   │   ├── _layout.tsx_        # Vendor Side Root Layout - Defines Tabs
+│   │   └── test.tsx_           # Vendor Test Page
 |   |
 │   ├── _layout.tsx             # Root App layout
 │   └── index.tsx               # Root Screen (just for navigation)
@@ -93,6 +115,7 @@ FOODTRUCK-APP
 │   |   ├── SmallIconButton.tsx         # Renders the small buttons in vendor manage truck page
 |   |	└── StandardButton.tsx          # Standard Button component with preset styles
 │   ├── cards
+│   |   ├── EditInfoCard.tsx            # Used for showing account settings. Has simple label and text
 │   |   ├── FlatListCard.tsx            # White labeled card with box shadow, takes in a title and children
 │   |   ├── ItemCard.tsx                # Renders a food item with name, price, description, and image
 │   |   ├── TruckCard.tsx               # Renders a fullsize food truck card
@@ -103,6 +126,7 @@ FOODTRUCK-APP
 │   |   ├── NearbyTrucks.tsx            # Renders the nearby trucks expandable card
 │   |   └── SelectedTruck.tsx           # Renders the selected truck card
 │   ├── inputs
+│   |   ├── EditInfoInput.tsx           # Used for editing account settings. Has simple label and text input
 │   |   ├── TextInputFancy.tsx          # TextInput with our Signature Styling
 │   |   └── TextInputStandard.tsx       # General TextInput component
 │   ├── lists
@@ -121,12 +145,17 @@ FOODTRUCK-APP
 │   └── search
 │       └── MapSearchBar.tsx            # Renders the autocomplete map searchbar
 |
+├── constants                       # Constants Folder
+│   └── settingsConfig.ts               # Used for rendering public user profile settings
+|
 ├── convex                          # Convex Backend Folder
 │   ├── _generated                      # Automatically Generated Server Files
 │   ├── auth.config.ts                  # Auth configuration for convex
+│   ├── businesses.ts                   # Business Mutations / Queries
 │   ├── http.ts
 │   ├── README.md
 │   ├── schema.ts                       # Database Table Schemas
+│   ├── trucks.ts                       # Truck Mutations / Queries
 │   ├── tsconfig.json                   # Backend TypeScript Configuration
 │   ├── users.ts                        # User Mutations / Queries
 │   └── vendors.ts                      # Vendor Mutations / Queries
@@ -134,6 +163,11 @@ FOODTRUCK-APP
 ├── docs                            # Markdown Documentation
 │   ├── gitWorkflow.md                  # Guide for GitHub Branch/Feature Workflow
 |   └── styling.md                      # Guide for styling
+|
+├── lib                             # Logic Handling
+│   └── userSettings                    # User Profile Settings Handling
+|       ├── handlers.ts                     
+|       └── mutations.ts                   
 │
 ├── node_modules                    # Automatically appears when npm and expo is initialized
 |
@@ -141,14 +175,17 @@ FOODTRUCK-APP
 |   └── ClerkAndConvexProvider.tsx
 │
 ├── store                           # Contains Zustand custom hooks
-│   ├── useFilterStore.tsx              # State management for selected category filters
-│   ├── useMapLayerStore.tsx            # State management for selected map layer style
-│   ├── useMenuModalStore.tsx           # State management for menu toggle
-│   ├── useTruckStore.tsx               # State management for selected truck on map
-│   ├── useUserLocationStore.tsx        # State management for user device location
-│   └── useUserStore.tsx                # State management for convex user
+│   ├── useFilterStore.ts               # State management for selected category filters
+│   ├── useMapLayerStore.ts             # State management for selected map layer style
+│   ├── useMenuModalStore.ts            # State management for menu toggle
+│   ├── useTruckStore.ts                # State management for selected truck on map
+│   ├── useUserLocationStore.ts         # State management for user device location
+│   ├── useUserStore.ts                 # State management for convex user
+│   ├── useVendorOnboardingStore.ts     # State management for vendor creation & onboarding
+│   └── useVendorStore.ts               # State management for vendor
 |
 ├── utils                           # Utility Folder
+│   ├── helperFunctions.ts              # Utility Functions
 │   └── loadFonts.ts                    # Preloads all MaterialCommunityIcons
 │
 ├── .env.local               # Local environment variables

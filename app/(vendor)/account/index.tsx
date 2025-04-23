@@ -1,4 +1,3 @@
-// app/(tabs)/profile.tsx
 import {
     View,
     StyleSheet,
@@ -14,7 +13,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PROFILE_SECTIONS } from "@/constants";
 import LargeIconButton from "@/components/buttons/LargeIconButton";
 import { router } from "expo-router";
-
 import { useUserStore } from "@/store/useUserStore";
 import { useClerk } from "@clerk/clerk-expo";
 import StandardButton from "@/components/buttons/StandardButton";
@@ -77,7 +75,7 @@ export default function UserProfilePage() {
                 colors={["rgba(255, 132, 0, 1)", "rgba(255, 132, 0, 0)"]}
                 locations={[0.01, 0.09]}
             />
-            <ProfileHeader user={currentUser} link="/(public)/profile/settings" />
+            <ProfileHeader user={currentUser} link="/account/account-settings/" />
             <View style={styles.sections}>
                 <FlatList
                     data={PROFILE_SECTIONS}
@@ -89,7 +87,8 @@ export default function UserProfilePage() {
                             text={item.name}
                             icon={item.icon}
                             onPress={() => {
-                                router.push(`/(public)/profile/${item.link}`);
+                                console.log(
+                                    `Clicked ${item.name} button`)
                             }}
                         />
                     )}

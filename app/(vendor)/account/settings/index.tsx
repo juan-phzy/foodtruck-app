@@ -16,7 +16,7 @@ import StandardButton from "@/components/buttons/StandardButton";
 // Sample Data
 const sampleSettings = VENDOR_SETTINGS;
 
-export default function SettingsScreen() {
+export default function AccountSettings() {
     const insets = useSafeAreaInsets();
     const { currentVendor, isLoading } = useVendorStore();
 

@@ -22,7 +22,7 @@ import { useInitVendorProfile } from "@/store/useVendorStore";
 // Types
 type TabIconProps = {
     color: string;
-    name: "store" | "users" | "settings" | "test";
+    name: "locations" | "employees" | "account" | "test";
 };
 
 // Render tab icons by name
@@ -30,7 +30,7 @@ const renderTabIcon = ({ color, name }: TabIconProps) => {
     const size = ms(25);
 
     switch (name) {
-        case "store":
+        case "locations":
             return (
                 <MaterialCommunityIcons
                     name="store"
@@ -38,17 +38,21 @@ const renderTabIcon = ({ color, name }: TabIconProps) => {
                     color={color}
                 />
             );
-        case "users":
+        case "employees":
+            return (
+                <MaterialCommunityIcons
+                    name="account-group"
+                    size={size}
+                    color={color}
+                />
+            );
+        case "account":
             return (
                 <MaterialCommunityIcons
                     name="account-cog"
                     size={size}
                     color={color}
                 />
-            );
-        case "settings":
-            return (
-                <MaterialCommunityIcons name="cog" size={size} color={color} />
             );
         case "test":
             return (
@@ -88,21 +92,21 @@ export default function VendorLayout() {
                 name="locations"
                 options={{
                     tabBarIcon: ({ color }) =>
-                        renderTabIcon({ color, name: "store" }),
+                        renderTabIcon({ color, name: "locations" }),
                 }}
             />
             <Tabs.Screen
-                name="users"
+                name="employees"
                 options={{
                     tabBarIcon: ({ color }) =>
-                        renderTabIcon({ color, name: "users" }),
+                        renderTabIcon({ color, name: "employees" }),
                 }}
             />
             <Tabs.Screen
-                name="settings"
+                name="account"
                 options={{
                     tabBarIcon: ({ color }) =>
-                        renderTabIcon({ color, name: "settings" }),
+                        renderTabIcon({ color, name: "account" }),
                 }}
             />
             <Tabs.Screen

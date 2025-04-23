@@ -7,9 +7,10 @@ import { PublicUserProfile } from "@/types";
 
 interface ProfileHeaderProps {
   user: PublicUserProfile;
+  link: string;
 }
 
-const ProfileHeader = ({ user }: ProfileHeaderProps) => {
+const ProfileHeader = ({ user, link }: ProfileHeaderProps) => {
   const router = useRouter();
 
   return (
@@ -22,7 +23,7 @@ const ProfileHeader = ({ user }: ProfileHeaderProps) => {
           <Text style={styles.name}>{`${user.first_name} ${user.last_name}`}</Text>
         </View>
         <TouchableOpacity
-          onPress={() => router.push("/(public)/profile/settings")}
+          onPress={() => router.push(link as any)}
           style={styles.settingsContainer}
         >
           <Text style={styles.settingsText}>Settings</Text>

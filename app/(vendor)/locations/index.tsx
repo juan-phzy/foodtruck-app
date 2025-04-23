@@ -2,45 +2,47 @@ import theme from "@/assets/theme";
 import { View, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScaledSheet } from "react-native-size-matters";
-import IconButton from "@/components/buttons/IconButton";
-import { MANAGE_SCREEN_USERS } from "@/constants";
 import { ScrollView } from "react-native-gesture-handler";
+import { LOCATION_SCREEN_TRUCKS } from "@/constants";
+import IconButton from "@/components/buttons/IconButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useRouter } from "expo-router";
 
 // Sample Data
-const sampleUsers = MANAGE_SCREEN_USERS;
+const sampleLocationScreenTrucks = LOCATION_SCREEN_TRUCKS;
 
-export default function ManageUsersPage() {
+export default function LocationsIndex() {
     const insets = useSafeAreaInsets();
+    const router = useRouter();
 
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
             {/* Header */}
             <View style={styles.headerContainer}>
-                <Text style={styles.headerText}>Manage Users</Text>
+                <Text style={styles.headerText}>Manage Trucks</Text>
                 <MaterialCommunityIcons
                     name="plus"
                     size={45}
                     color={theme.colors.primary}
-                    onPress={() => console.log("Clicked Add User")}
+                    onPress={() => {console.log("Clicked Add Trucks")
+                        router.push('/locations/addTruckPage') // Navigate to add truck page
+                    }}
                 />
             </View>
-            {/* Manage User List */}
+            {/* Manage Truck List */}
             <ScrollView
                 contentContainerStyle={styles.scrollView}
                 showsVerticalScrollIndicator={false}
             >
-                {sampleUsers.map((user, index) => (
+                {sampleLocationScreenTrucks.map((truck, index) => (
                     <IconButton
-                        key={user.name + index}
-                        iconName={
-                            user.type == "User" ? "user-large" : "user-shield"
-                        }
-                        text={user.name}
+                        key={truck.name + index}
+                        iconName={truck.type == "Truck" ? "truck" : "store"}
+                        text={truck.name}
+                        status={truck.status}
                         showManage={true}
                         onPress={() => {
-                            router.push(`/users/${user.name}/manageUser`);
+                            router.push(`/locations/${truck.name}`);
                         }}
                     />
                 ))}
@@ -62,12 +64,13 @@ const styles = ScaledSheet.create({
         paddingVertical: theme.padding.lg,
     },
     headerText: {
-        fontSize: theme.fontSize.xl,
         fontWeight: "bold",
+        fontSize: theme.fontSize.xl,
         color: theme.colors.black,
     },
     scrollView: {
         gap: "10@ms",
         paddingBottom: theme.padding.md,
+        // Leave some space at the bottom of scroll views
     },
 });
