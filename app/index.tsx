@@ -8,8 +8,8 @@
 import { Redirect } from "expo-router";
 
 console.log("");
-console.log("___________________________________");
-console.log("index.tsx: Entered Root Index Route");
+console.log("___________________________");
+console.log("app/index.tsx: Entered File");
 
 export default function Index() {
     return <Redirect href="/(auth)/login" />;

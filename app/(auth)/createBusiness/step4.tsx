@@ -84,19 +84,19 @@ export default function CreateBusinessStep4() {
                 router.push("/createBusiness/step5");
                 return;
             }
-        } catch (err) {
+        } catch (err:any) {
             console.error("Sign-up error:", JSON.stringify(err, null, 2));
             Toast.show({
                 type: "error",
                 text1: "Sign-up Error",
-                text2: "Please try again or check your input.",
+                text2: err.errors[0].message,
                 text1Style: {
                     color: theme.colors.red,
                     fontSize: theme.fontSize.sm,
                 },
                 text2Style: {
                     color: theme.colors.black,
-                    fontSize: theme.fontSize.xs,
+                    fontSize: theme.fontSize.xxs,
                 },
             });
         } finally {

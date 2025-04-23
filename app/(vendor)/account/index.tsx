@@ -13,21 +13,21 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { PROFILE_SECTIONS } from "@/constants";
 import LargeIconButton from "@/components/buttons/LargeIconButton";
 import { router } from "expo-router";
-import { useUserStore } from "@/store/useUserStore";
 import { useClerk } from "@clerk/clerk-expo";
 import StandardButton from "@/components/buttons/StandardButton";
+import { useVendorStore } from "@/store/useVendorStore";
 
 export default function UserProfilePage() {
     const insets = useSafeAreaInsets();
 
     console.log(
-        "_____________________________________________________________"
+        "________________________________________"
     );
     console.log(
-        "(public)/profile/profilePage.tsx: Entered Public Profile Page"
+        "(vendor)/account/index.tsx: Entered File"
     );
 
-    const { currentUser, isLoading } = useUserStore();
+    const { currentVendor, isLoading } = useVendorStore();
 
     const { signOut } = useClerk();
     const handleSignOut = async () => {
@@ -53,7 +53,7 @@ export default function UserProfilePage() {
         );
     }
 
-    if (currentUser === null) {
+    if (currentVendor === null) {
         return (
             <View style={styles.loadingContainer}>
                 <Text style={{ fontWeight: "bold" }}>
@@ -75,7 +75,7 @@ export default function UserProfilePage() {
                 colors={["rgba(255, 132, 0, 1)", "rgba(255, 132, 0, 0)"]}
                 locations={[0.01, 0.09]}
             />
-            <ProfileHeader user={currentUser} link="/account/account-settings/" />
+            <ProfileHeader user={currentVendor} link="/account/account-settings/" />
             <View style={styles.sections}>
                 <FlatList
                     data={PROFILE_SECTIONS}

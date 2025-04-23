@@ -27,6 +27,7 @@ export const createVendor = mutation({
             email: args.email,
             dob: args.dob,
             clerkId: args.clerkId,
+            is_onboarded: false,
         });
     },
 });
@@ -56,7 +57,6 @@ export async function getAuthenticatedVendor(ctx: QueryCtx | MutationCtx) {
     return currentVendor;
 }
 
-
 export const updateClerkInfo = mutation({
     args: {
         clerkId: v.string(),
@@ -76,6 +76,19 @@ export const updateClerkInfo = mutation({
         await ctx.db.patch(vendor._id, {
             first_name: args.first_name,
             last_name: args.last_name,
+        });
+    },
+});
+
+export const updateOnboardingStatus = mutation({
+    args: {
+        isOnboarded: v.boolean(),
+    },
+    handler: async (ctx, args) => {
+        const user = await getAuthenticatedVendor(ctx);
+
+        await ctx.db.patch(user._id, {
+            is_onboarded: args.isOnboarded,
         });
     },
 });

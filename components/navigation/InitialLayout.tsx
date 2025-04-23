@@ -1,60 +1,57 @@
-/**
- * InitialLayout Component
- *
- * This layout is responsible for redirecting users based on their authentication status and role.
- *
- * Behavior:
- * - If not signed in and not on an auth screen → redirect to login
- * - If signed in and currently on an auth screen → redirect based on `publicMetadata.role`
- *   - "vendor" → /vendor layout
- *   - otherwise → /public layout
- *
- * Used as the entry point inside RootLayout.
- */
-
 import { useEffect } from "react";
-
-// Clerk Authentication
+import { useRouter, useSegments, Stack } from "expo-router";
 import { useAuth, useUser } from "@clerk/clerk-expo";
-
-// Navigation
-import { Stack, useRouter, useSegments } from "expo-router";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 export default function InitialLayout() {
     const { isLoaded, isSignedIn } = useAuth();
     const { user } = useUser();
-    const segments = useSegments();
     const router = useRouter();
+    const segments = useSegments();
 
-    console.log("");
-    console.log("______________________________________");
-    console.log("InitialLayout.tsx: Checking Auth Logic");
+    // Fetch vendor profile for onboarding status
+    const vendorProfile = useQuery(
+        api.vendors.getUserByClerkId,
+        user && user.unsafeMetadata?.role === "vendor"
+            ? { clerkId: user.id }
+            : "skip"
+    );
 
-    // useEffect(() => {
-    //     if (!isLoaded || !user) return;
+    useEffect(() => {
+        if (!isLoaded || !user) return;
 
-    //     const inAuthScreen = segments[0] === "(auth)";
+        const currentSegment = segments[0]; // e.g., "(auth)", "(public)", "(vendor)"
+        const role = user.unsafeMetadata?.role;
 
-    //     if (!isSignedIn && !inAuthScreen) {
-    //         console.log("_______________________________________________________")
-    //         console.log("InitialLayout.tsx: Not signed in, redirecting to login.");
-    //         // router.replace("/(auth)/login");
-    //     } else if (isSignedIn && inAuthScreen) {
-    //         const role = user.unsafeMetadata?.role;
-    //         console.log("_______________________________________________________")
-    //         console.log(`InitialLayout.tsx: Signed in as ${role}, redirecting...`);
+        // Case 1: Not signed in → redirect to login unless already on auth screen
+        if (!isSignedIn) {
+            if (currentSegment !== "(auth)") {
+                router.replace("/(auth)/login");
+            }
+            return;
+        }
 
-    //         if (role === "vendor") {
-    //             // router.replace("/(vendor)/locations/");
-    //         } else {
-    //             // router.replace("/(public)");
-    //         }
-    //     }
-    // }, [isLoaded, isSignedIn, segments, user]);
+        // Case 2: Vendor logic
+        if (role === "vendor") {
+            const isOnboarded = vendorProfile?.is_onboarded;
 
-    if (!isLoaded) {
-        return null; // You can replace this with a splash screen or loader
-    }
+            if (!isOnboarded) {
+                // Not onboarded → stay in auth routes only
+                if (currentSegment !== "(auth)") {
+                    router.replace("/(auth)/createBusiness/step1");
+                }
+            } else if (currentSegment === "(auth)") {
+                // Onboarded vendors → redirect to vendor app
+                router.replace("/(vendor)/locations/");
+            }
+        }
+
+        // Case 3: Public user logic
+        if (role === "public" && (currentSegment === "(auth)" || currentSegment === "(vendor)")) {
+            router.replace("/(public)");
+        }
+    }, [isLoaded, isSignedIn, user, vendorProfile, segments]);
 
     return <Stack screenOptions={{ headerShown: false }} />;
 }

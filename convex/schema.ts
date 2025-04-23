@@ -23,6 +23,7 @@ export default defineSchema({
         email: v.string(),
         dob: v.optional(v.string()),
         business_Id: v.optional(v.string()),
+        is_onboarded: v.boolean(),
     })
         .index("by_clerk_id", ["clerkId"])
         .index("by_email", ["email"])

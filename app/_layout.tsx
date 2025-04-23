@@ -29,8 +29,8 @@ import Toast from "react-native-toast-message";
 export default function RootLayout() {
     console.log("");
     console.log("_______________________________");
-    console.log("_layout.tsx: Entered RootLayout");
-    console.log("_layout.tsx: Rendering InitialLayout Nav Logic");
+    console.log("app/_layout.tsx: Entered RootLayout");
+    console.log("app/_layout.tsx: Rendering InitialLayout Nav Logic");
 
     const [fontsLoaded, setFontsLoaded] = useState(false);
 

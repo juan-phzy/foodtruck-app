@@ -208,9 +208,6 @@ export default function SignIn() {
                                 : "Switch to Vendor Login"}
                         </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=> router.push("/(auth)/createBusiness/step9")}>
-                        <Text style={{color:"white", fontSize:15}}>Temp Link</Text>
-                    </TouchableOpacity>
                 </BlurView>
             </ImageBackground>
         </View>

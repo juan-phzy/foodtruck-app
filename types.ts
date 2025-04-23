@@ -110,14 +110,16 @@ export type PublicUserProfile = {
 };
 
 export type VendorProfile = {
-    _id: string;
+    _id: Id<"vendors">;
     _creationTime: number;
+    dob?: string | undefined;
+    business_Id?: string | undefined;
     first_name: string;
     last_name: string;
     phone_number: string;
     email: string;
-    dob?: string;
     clerkId: string;
+    is_onboarded: boolean;
 };
 
 export type Business = {
@@ -137,7 +139,7 @@ export type Business = {
     twitter_link?: string | undefined;
     facebook_link?: string | undefined;
     email_link?: string | undefined;
-}
+};
 
 export type Trucks = {
     truck_name: string;

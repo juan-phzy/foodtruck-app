@@ -3,10 +3,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
 import { useRouter } from "expo-router";
-import { PublicUserProfile } from "@/types";
+import { PublicUserProfile, VendorProfile } from "@/types";
 
 interface ProfileHeaderProps {
-  user: PublicUserProfile;
+  user: PublicUserProfile | VendorProfile;
   link: string;
 }
 

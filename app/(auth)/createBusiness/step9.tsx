@@ -43,6 +43,7 @@ export default function Step9() {
     const router = useRouter();
 
     const updateSocials = useMutation(api.businesses.updateSocials);
+    const updateOnboarding = useMutation(api.vendors.updateOnboardingStatus);
 
     const handleGoBack = () => {
         console.log("Go Back Pressed");
@@ -61,13 +62,26 @@ export default function Step9() {
                 email_link: data.business_email,
             });
             console.log("Social Links Saved Successfully!");
-            router.replace("/(vendor)/locations/");
         } catch (error) {
             console.error("Error saving social links:", error);
             Toast.show({
                 type: "error",
                 text1: "Error",
                 text2: "Failed to save social links.",
+            });
+        }
+        try {
+            await updateOnboarding({
+                isOnboarded: true,
+            });
+            console.log("Onboarding Status Updated Successfully!");
+            router.replace("/(vendor)/locations/");
+        } catch (error) {
+            console.error("Error updating onboarding status", error);
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: "Error Completing Onboarding.",
             });
         }
     };
