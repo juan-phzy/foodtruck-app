@@ -1,26 +1,25 @@
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useClerk } from "@clerk/clerk-expo";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
-import { VENDOR_SETTINGS } from "@/constants";
+import { VENDOR_SETTINGS_CONFIG } from "@/constants";
 
 // Theme & Styling
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
 import IconButton from "@/components/buttons/IconButton";
-import { FontAwesome6 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useVendorStore } from "@/store/useVendorStore";
-import StandardButton from "@/components/buttons/StandardButton";
 
-// Sample Data
-const sampleSettings = VENDOR_SETTINGS;
-
-export default function AccountSettings() {
+export default function SettingsIndex() {
+    console.log("");
+    console.log("_____________________________________________________");
+    console.log("app/(vendor)/account/settings/index.tsx: Entered File");
+    const router = useRouter();
     const insets = useSafeAreaInsets();
-    const { currentVendor, isLoading } = useVendorStore();
-
     const { signOut } = useClerk();
+
     const handleSignOut = async () => {
         try {
             await signOut();
@@ -29,93 +28,98 @@ export default function AccountSettings() {
             console.error(JSON.stringify(err, null, 2));
         }
     };
+    const { currentVendor } = useVendorStore();
 
-    if (isLoading) {
-        return (
-            <View style={styles.loadingContainer}>
-                <Text>Loading profile</Text>
-                <ActivityIndicator size="large" color={theme.colors.primary} />
-                <StandardButton
-                    width="fit"
-                    onPress={handleSignOut}
-                    text="Sign Out"
-                />
-            </View>
-        );
-    }
-
-    if (currentVendor === null) {
-        return (
-            <View style={styles.loadingContainer}>
-                <Text style={{ fontWeight: "bold" }}>
-                    No User Found: Contact Support
-                </Text>
-                <StandardButton
-                    width="fit"
-                    onPress={handleSignOut}
-                    text="Sign Out"
-                />
-            </View>
-        );
-    }
+    const handleSettingPress = (link: string) => {
+        if (link in VENDOR_SETTINGS_CONFIG) {
+            // fix with correct types
+            router.push(`/account/settings/${link}` as any);
+        } else {
+            console.warn("Invalid settings link:", link);
+        }
+    };
 
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
+            <TouchableOpacity
+                style={styles.goBackContainer}
+                onPress={router.back}
+            >
+                <View style={styles.arrowButton}>
+                    <MaterialCommunityIcons
+                        name="arrow-left"
+                        style={styles.arrowIcon}
+                    />
+                </View>
+                <Text style={styles.goBackText}>Go Back</Text>
+            </TouchableOpacity>
             {/* Profile Header */}
             <View style={styles.headerContainer}>
-                <FontAwesome6
-                    name="user-circle"
+                <MaterialCommunityIcons
+                    name="account-circle"
                     size={70}
                     color={theme.colors.primary}
-                    onPress={() => console.log("Clicked Settings")}
                 />
-                <Text style={styles.headerNameText}>
-                    {`${currentVendor.first_name} ${currentVendor.last_name}`}
-                </Text>
-                <Text style={styles.headerEmailText}>
-                    {currentVendor.email}
-                </Text>
+                <Text
+                    style={styles.headerNameText}
+                >{`${currentVendor!.first_name} ${currentVendor!.last_name}`}</Text>
+                <Text style={styles.headerEmailText}>{currentVendor!.email}</Text>
             </View>
             {/* Profile Options */}
             <ScrollView
                 contentContainerStyle={styles.scrollView}
                 showsVerticalScrollIndicator={false}
             >
-                {sampleSettings.map((setting, index) => (
+                {Object.entries(VENDOR_SETTINGS_CONFIG).map(([key, config]) => (
                     <IconButton
-                        key={setting.setting + index}
-                        iconName={setting.iconName}
-                        text={setting.setting}
+                        key={config.link}
+                        iconName={config.iconName}
+                        text={config.setting}
                         showManage={false}
-                        onPress={
-                            setting.setting === "Log Out"
-                                ? handleSignOut
-                                : () =>
-                                      console.log(
-                                          `Clicked on ${setting.setting}`
-                                      )
-                        }
+                        onPress={() => handleSettingPress(config.link)}
                     />
                 ))}
+
+                <IconButton
+                    iconName="arrow-right-from-bracket"
+                    text="Log Out"
+                    showManage={false}
+                    onPress={handleSignOut}
+                />
             </ScrollView>
         </View>
     );
 }
 
 const styles = ScaledSheet.create({
-    loadingContainer: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        gap: "15@ms",
-    },
     rootContainer: {
         flex: 1,
         backgroundColor: theme.colors.primaryLight,
         paddingHorizontal: theme.padding.xl,
     },
+    goBackContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: theme.padding.md,
+        gap: "5@ms",
+    },
+    arrowButton: {
+        borderRadius: "20@ms",
+        width: "30@ms",
+        height: "30@ms",
+        backgroundColor: theme.colors.primary,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    arrowIcon: {
+        fontSize: theme.fontSize.xl,
+        color: theme.colors.white,
+    },
+    goBackText: {
+        fontSize: theme.fontSize.md,
+    },
     headerContainer: {
-        padding: theme.padding.lg,
+        paddingBottom: theme.padding.lg,
         alignItems: "center",
         gap: "5@ms",
     },
@@ -129,6 +133,7 @@ const styles = ScaledSheet.create({
         color: theme.colors.black,
     },
     scrollView: {
+        paddingVertical: theme.padding.sm,
         gap: "10@ms",
     },
 });

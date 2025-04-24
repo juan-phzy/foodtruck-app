@@ -62,6 +62,8 @@ export const updateClerkInfo = mutation({
         clerkId: v.string(),
         first_name: v.string(),
         last_name: v.string(),
+        phone_number: v.string(), 
+        email: v.string(),
     },
     handler: async (ctx, args) => {
         const vendor = await ctx.db
@@ -76,6 +78,8 @@ export const updateClerkInfo = mutation({
         await ctx.db.patch(vendor._id, {
             first_name: args.first_name,
             last_name: args.last_name,
+            phone_number: args.phone_number,
+            email: args.email,
         });
     },
 });
@@ -89,6 +93,27 @@ export const updateOnboardingStatus = mutation({
 
         await ctx.db.patch(user._id, {
             is_onboarded: args.isOnboarded,
+        });
+    },
+});
+
+export const updateDOB = mutation({
+    args: {
+        clerkId: v.string(),
+        dob: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const vendor = await ctx.db
+            .query("vendors")
+            .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.clerkId))
+            .unique();
+
+        if (!vendor) {
+            throw new Error("Vendor not found");
+        }
+
+        await ctx.db.patch(vendor._id, {
+            dob: args.dob,
         });
     },
 });

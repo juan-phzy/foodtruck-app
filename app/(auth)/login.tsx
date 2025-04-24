@@ -1,5 +1,5 @@
 // React & Hooks
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // React Native Components
 import {

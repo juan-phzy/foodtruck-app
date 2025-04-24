@@ -123,8 +123,8 @@ export type VendorProfile = {
 };
 
 export type Business = {
-    _id: Id<"businesses">;
     _creationTime: number;
+    _id: Id<"businesses">;
     business_name: string;
     vendor_clerk_id: string;
     clerkId: string;

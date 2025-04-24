@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { useClerk } from "@clerk/clerk-expo";
 import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
-import { MERGED_SETTINGS_CONFIG } from "@/constants";
+import { USER_SETTINGS_CONFIG } from "@/constants";
 
 // Theme & Styling
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -31,7 +31,7 @@ export default function SettingsIndex() {
     const { currentUser } = useUserStore();
 
     const handleSettingPress = (link: string) => {
-        if (link in MERGED_SETTINGS_CONFIG) {
+        if (link in USER_SETTINGS_CONFIG) {
             router.push(`/profile/settings/${link}`);
         } else {
             console.warn("Invalid settings link:", link);
@@ -69,7 +69,7 @@ export default function SettingsIndex() {
                 contentContainerStyle={styles.scrollView}
                 showsVerticalScrollIndicator={false}
             >
-                {Object.entries(MERGED_SETTINGS_CONFIG).map(([key, config]) => (
+                {Object.entries(USER_SETTINGS_CONFIG).map(([key, config]) => (
                     <IconButton
                         key={config.link}
                         iconName={config.iconName}

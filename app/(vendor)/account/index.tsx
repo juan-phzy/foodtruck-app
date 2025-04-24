@@ -1,33 +1,23 @@
-import {
-    View,
-    StyleSheet,
-    FlatList,
-    Text,
-    ActivityIndicator,
-} from "react-native";
+import { View, StyleSheet, Text, ActivityIndicator } from "react-native";
 import ProfileHeader from "@/components/profilePage/ProfileHeader";
 import { LinearGradient } from "expo-linear-gradient";
 import theme from "@/assets/theme";
 import { ScaledSheet } from "react-native-size-matters";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { PROFILE_SECTIONS } from "@/constants";
-import LargeIconButton from "@/components/buttons/LargeIconButton";
 import { router } from "expo-router";
 import { useClerk } from "@clerk/clerk-expo";
 import StandardButton from "@/components/buttons/StandardButton";
 import { useVendorStore } from "@/store/useVendorStore";
+import { useBusinessStore } from "@/store/useBusinessStore";
 
 export default function UserProfilePage() {
     const insets = useSafeAreaInsets();
 
-    console.log(
-        "________________________________________"
-    );
-    console.log(
-        "(vendor)/account/index.tsx: Entered File"
-    );
+    console.log("________________________________________");
+    console.log("(vendor)/account/index.tsx: Entered File");
 
-    const { currentVendor, isLoading } = useVendorStore();
+    const { currentVendor, isLoading: isVendorLoading } = useVendorStore();
+    const { business, isLoading: isBusinessLoading } = useBusinessStore();
 
     const { signOut } = useClerk();
     const handleSignOut = async () => {
@@ -39,7 +29,7 @@ export default function UserProfilePage() {
         }
     };
 
-    if (isLoading) {
+    if (isBusinessLoading || isVendorLoading) {
         return (
             <View style={styles.loadingContainer}>
                 <Text>Loading profile</Text>
@@ -68,6 +58,21 @@ export default function UserProfilePage() {
         );
     }
 
+    if (business === null) {
+        return (
+            <View style={styles.loadingContainer}>
+                <Text style={{ fontWeight: "bold" }}>
+                    No Business Found: Contact Support
+                </Text>
+                <StandardButton
+                    width="fit"
+                    onPress={handleSignOut}
+                    text="Sign Out"
+                />
+            </View>
+        );
+    }
+
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
             <LinearGradient
@@ -75,25 +80,19 @@ export default function UserProfilePage() {
                 colors={["rgba(255, 132, 0, 1)", "rgba(255, 132, 0, 0)"]}
                 locations={[0.01, 0.09]}
             />
-            <ProfileHeader user={currentVendor} link="/account/account-settings/" />
+            <ProfileHeader user={currentVendor} link="/account/settings/" />
             <View style={styles.sections}>
-                <FlatList
-                    data={PROFILE_SECTIONS}
-                    contentContainerStyle={styles.gap}
-                    columnWrapperStyle={styles.gap}
-                    keyExtractor={(item) => item.name}
-                    renderItem={({ item }) => (
-                        <LargeIconButton
-                            text={item.name}
-                            icon={item.icon}
-                            onPress={() => {
-                                console.log(
-                                    `Clicked ${item.name} button`)
-                            }}
-                        />
-                    )}
-                    numColumns={2}
-                />
+                <Text>Your Business</Text>
+                <Text>{business.business_name}</Text>
+                <Text>{business.primary_city}</Text>
+                <Text>{business.phone_number}</Text>
+                <Text>{business.email_link}</Text>
+                <Text>{business.instagram_link}</Text>
+                <Text>{business.twitter_link}</Text>
+                <Text>{business.facebook_link}</Text>
+                <Text>{business.website}</Text>
+                <Text>{business.description}</Text>
+                <Text>{business.categories}</Text>
             </View>
         </View>
     );
@@ -117,8 +116,5 @@ const styles = ScaledSheet.create({
         padding: theme.padding.sm,
         borderBottomColor: theme.colors.grayLight,
         borderBottomWidth: 1,
-    },
-    gap: {
-        gap: theme.padding.xs,
     },
 });

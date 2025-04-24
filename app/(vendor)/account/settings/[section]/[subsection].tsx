@@ -25,13 +25,13 @@ import EditInfoInput from "@/components/inputs/EditInfoInput";
 import StandardButton from "@/components/buttons/StandardButton";
 
 // Convex, Clerk, and Function Imports
-import { useUserStore } from "@/store/useUserStore";
 import { useUser } from "@clerk/clerk-expo";
 import { formatDobInput } from "@/utils/helperFunctions";
 
 // Config
-import { USER_SETTINGS_CONFIG } from "@/constants";
-import { useSettingsHandlers } from "@/lib/userSettings/handlers";
+import { VENDOR_SETTINGS_CONFIG } from "@/constants";
+import { useSettingsHandlers } from "@/lib/vendorSettings/handlers";
+import { useVendorStore } from "@/store/useVendorStore";
 
 export default function EditProfileSubsection() {
     const { subsection, section } = useLocalSearchParams();
@@ -39,16 +39,16 @@ export default function EditProfileSubsection() {
     const subKey = Array.isArray(subsection) ? subsection[0] : subsection;
     const insets = useSafeAreaInsets();
 
-    const { currentUser } = useUserStore();
+    const { currentVendor } = useVendorStore();
     const { user } = useUser();
 
-    if (!sectionKey || !subKey || !(sectionKey in USER_SETTINGS_CONFIG)) {
+    if (!sectionKey || !subKey || !(sectionKey in VENDOR_SETTINGS_CONFIG)) {
         throw new Error("Invalid section or subsection");
     }
 
     const sectionConfig =
-        USER_SETTINGS_CONFIG[
-            sectionKey as keyof typeof USER_SETTINGS_CONFIG
+        VENDOR_SETTINGS_CONFIG[
+            sectionKey as keyof typeof VENDOR_SETTINGS_CONFIG
         ];
     const fieldConfig = sectionConfig.fields.find((f) => f.link === subKey);
     if (!fieldConfig) throw new Error("Invalid subsection field");
@@ -151,8 +151,8 @@ export default function EditProfileSubsection() {
                                     return "Enter Current Password";
                                 default:
                                     return (
-                                        currentUser![
-                                            input.key as keyof typeof currentUser
+                                        currentVendor![
+                                            input.key as keyof typeof currentVendor
                                         ] ?? ""
                                     );
                             }

@@ -1,7 +1,7 @@
 import theme from "@/assets/theme";
 import EditInfoCard from "@/components/cards/EditInfoCard";
-import { USER_SETTINGS_CONFIG } from "@/constants";
-import { useUserStore } from "@/store/useUserStore";
+import { VENDOR_SETTINGS_CONFIG } from "@/constants";
+import { useVendorStore } from "@/store/useVendorStore";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter, useLocalSearchParams } from "expo-router";
@@ -9,15 +9,15 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
-export default function SettingsSectionIndex() {
+export default function SectionIndex() {
     const insets = useSafeAreaInsets();
     const router = useRouter();
-    const { currentUser } = useUserStore();
+    const { currentVendor } = useVendorStore();
     const { section } = useLocalSearchParams();
     const key = Array.isArray(section) ? section[0] : section;
 
     const config =
-        USER_SETTINGS_CONFIG[key as keyof typeof USER_SETTINGS_CONFIG];
+        VENDOR_SETTINGS_CONFIG[key as keyof typeof VENDOR_SETTINGS_CONFIG];
     if (!config) throw new Error("Invalid settings section");
 
     return (
@@ -49,7 +49,7 @@ export default function SettingsSectionIndex() {
                     <View style={styles.editPhotoContainer}>
                         <View style={styles.photoContainer}>
                             <Text style={styles.photoLetter}>
-                                {currentUser?.first_name[0].toUpperCase()}
+                                {currentVendor?.first_name[0].toUpperCase()}
                             </Text>
                         </View>
                         <TouchableOpacity>
@@ -64,8 +64,8 @@ export default function SettingsSectionIndex() {
                     <EditInfoCard
                         key={field.link}
                         title={field.label}
-                        text={field.displayValue(currentUser!)}
-                        link={`/profile/settings/${key}/${field.link}`}
+                        text={field.displayValue(currentVendor!)}
+                        link={`/account/settings/${key}/${field.link}`}
                     />
                 ))}
             </View>

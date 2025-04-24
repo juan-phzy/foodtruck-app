@@ -8,7 +8,7 @@ import { useRouter } from "expo-router";
 interface EditInfoCardProps {
     readonly title: string;
     readonly text: string;
-    readonly link: string;
+    readonly link: any; // fix with correct types
 }
 
 export default function EditInfoCard({ title, text, link }: EditInfoCardProps) {
@@ -22,7 +22,7 @@ export default function EditInfoCard({ title, text, link }: EditInfoCardProps) {
             <MaterialCommunityIcons
                 style={styles.infoIcon}
                 name="chevron-right"
-                onPress={()=> router.push(`/profile/settings/${link}`)}
+                onPress={() => router.push(link)}
             />
         </View>
     );

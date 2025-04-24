@@ -1,6 +1,6 @@
 // lib/userSettings/handlers.ts
 import { UserResource } from "@clerk/types";
-import { useSettingsMutations } from "@/lib/userSettings/mutations";
+import { useSettingsMutations } from "@/lib/vendorSettings/mutations";
 
 export type SettingsForm = Record<string, string>;
 
@@ -57,12 +57,6 @@ export const useSettingsHandlers = ({
             },
             dob: async (user, form) => {
                 await mutations.updateDOB({ clerkId: user.id, dob: form.dob });
-            },
-            city: async (user, form) => {
-                await mutations.updatePrimaryCity({
-                    clerkId: user.id,
-                    primary_city: form.primary_city,
-                });
             },
         },
         security: {

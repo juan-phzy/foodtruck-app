@@ -176,6 +176,8 @@ async function handleUserUpdated(ctx: any, data: any) {
                 clerkId: id,
                 first_name: first_name ?? "",
                 last_name: last_name ?? "",
+                phone_number: phone_numbers?.[0]?.phone_number ?? "",
+                email: email_addresses?.[0]?.email_address ?? "",
             });
         } catch (err) {
             console.error("Error updating vendor in Convex:", err);

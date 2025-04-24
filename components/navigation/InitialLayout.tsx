@@ -36,12 +36,12 @@ export default function InitialLayout() {
         if (role === "vendor") {
             const isOnboarded = vendorProfile?.is_onboarded;
 
-            if (!isOnboarded) {
+            if (isOnboarded != undefined && !isOnboarded) {
                 // Not onboarded → stay in auth routes only
                 if (currentSegment !== "(auth)") {
                     router.replace("/(auth)/createBusiness/step1");
                 }
-            } else if (currentSegment === "(auth)") {
+            } else if (currentSegment === "(auth)" || currentSegment === "(public)") {
                 // Onboarded vendors → redirect to vendor app
                 router.replace("/(vendor)/locations/");
             }

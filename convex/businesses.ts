@@ -36,12 +36,12 @@ export const createBusiness = mutation({
 
 // Get a business by vendor ID
 export const getBusinessByVendor = query({
-    args: { vendor_id: v.string() },
+    args: { vendor_clerk_id: v.string() },
     handler: async (ctx, args) => {
         return await ctx.db
             .query("businesses")
             .withIndex("by_vendor", (q) =>
-                q.eq("vendor_clerk_id", args.vendor_id)
+                q.eq("vendor_clerk_id", args.vendor_clerk_id)
             )
             .first();
     },

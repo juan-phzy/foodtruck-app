@@ -1,11 +1,25 @@
 // constants.ts
-import { FoodTruck, PublicUserProfile } from "@/types";
+import { FoodTruck, PublicUserProfile, VendorProfile } from "@/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-// types.ts (optional separation)
-export type SettingsSection = "personal" | "security" | "notifications" | "contact";
 
-export type SettingsField = {
+export type VendorSettingsSection = "personal" | "security" | "notifications" | "contact";
+
+export type VendorSettingsField = {
+    label: string;
+    link: string;
+    displayValue: (user: any) => string;
+    inputs: {
+      title: string;
+      key: keyof VendorProfile | "password" | "current_password";
+      keyboardType: "default" | "numeric" | "email-address";
+    }[];
+  };
+
+// types.ts (optional separation)
+export type UserSettingsSection = "personal" | "security" | "notifications" | "contact";
+
+export type UserSettingsField = {
   label: string;
   link: string;
   displayValue: (user: any) => string;
@@ -16,19 +30,19 @@ export type SettingsField = {
   }[];
 };
 
-export type MergedSettingsConfigType = Record<
-  SettingsSection,
+export type UserSettingsConfigType = Record<
+  UserSettingsSection,
   {
     iconName: string;
     setting: string;
-    link: SettingsSection;
+    link: UserSettingsSection;
     title: string;
-    fields: SettingsField[];
+    fields: UserSettingsField[];
   }
 >;
 
 // mergedSettingsConfig.ts
-export const MERGED_SETTINGS_CONFIG: MergedSettingsConfigType = {
+export const USER_SETTINGS_CONFIG: UserSettingsConfigType = {
   personal: {
     iconName: "user-pen",
     setting: "Edit Profile",
@@ -47,7 +61,7 @@ export const MERGED_SETTINGS_CONFIG: MergedSettingsConfigType = {
       {
         label: "Date of Birth",
         link: "dob",
-        displayValue: (user) => user.dob ?? "Not Set",
+        displayValue: (user) => user.dob == "" ? "Not Set" : user.dob ?? "Not Set",
         inputs: [
           { title: "Date of Birth", key: "dob", keyboardType: "numeric" },
         ],
@@ -120,24 +134,100 @@ export const MERGED_SETTINGS_CONFIG: MergedSettingsConfigType = {
 };
 
 
-export const VENDOR_SETTINGS = [
-    {
-        iconName: "user-pen",
-        setting: "Edit Profile",
-    },
-    {
-        iconName: "lock",
-        setting: "Change Password",
-    },
-    {
-        iconName: "bell",
-        setting: "Notifications",
-    },
-    {
-        iconName: "arrow-right-from-bracket",
-        setting: "Log Out",
-    },
-];
+export type VendorSettingsConfigType = Record<
+  VendorSettingsSection,
+  {
+    iconName: string;
+    setting: string;
+    link: UserSettingsSection;
+    title: string;
+    fields: VendorSettingsField[];
+  }
+>;
+
+// mergedSettingsConfig.ts
+export const VENDOR_SETTINGS_CONFIG: VendorSettingsConfigType = {
+  personal: {
+    iconName: "user-pen",
+    setting: "Edit Profile",
+    link: "personal",
+    title: "Edit Profile",
+    fields: [
+      {
+        label: "Name",
+        link: "name",
+        displayValue: (user) => `${user.first_name} ${user.last_name}`,
+        inputs: [
+          { title: "First Name", key: "first_name", keyboardType: "default" },
+          { title: "Last Name", key: "last_name", keyboardType: "default" },
+        ],
+      },
+      {
+        label: "Date of Birth",
+        link: "dob",
+        displayValue: (user) => user.dob == "" ? "Not Set" : user.dob ?? "Not Set",
+        inputs: [
+          { title: "Date of Birth", key: "dob", keyboardType: "numeric" },
+        ],
+      },
+    ],
+  },
+  security: {
+    iconName: "lock",
+    setting: "Security",
+    link: "security",
+    title: "Security Settings",
+    fields: [
+      {
+        label: "Password",
+        link: "password",
+        displayValue: () => "********",
+        inputs: [
+          { title: "Current Password", key: "current_password", keyboardType: "default" },
+          { title: "New Password", key: "password", keyboardType: "default" },
+        ],
+      },
+    ],
+  },
+  notifications: {
+    iconName: "bell",
+    setting: "Notifications",
+    link: "notifications",
+    title: "Notifications",
+    fields: [
+      {
+        label: "Notification Preferences",
+        link: "preferences",
+        displayValue: () => "Manage",
+        inputs: [], // e.g. toggle switches could be handled differently
+      },
+    ],
+  },
+  contact: {
+    iconName: "phone",
+    setting: "Contact",
+    link: "contact",
+    title: "Contact Information",
+    fields: [
+      {
+        label: "Email",
+        link: "email",
+        displayValue: (user) => user.email,
+        inputs: [
+          { title: "Email", key: "email", keyboardType: "email-address" },
+        ],
+      },
+      {
+        label: "Phone Number",
+        link: "phone",
+        displayValue: (user) => user.phone_number ?? "Not Set",
+        inputs: [
+          { title: "Phone Number", key: "phone_number", keyboardType: "numeric" },
+        ],
+      },
+    ],
+  },
+};
 
 export const MANAGE_SCREEN_USERS = [
     {

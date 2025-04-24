@@ -124,36 +124,33 @@ export const updatePrimaryCity = mutation({
         await ctx.db.patch(user._id, {
             primary_city: args.primary_city,
         });
-    }
-})
+    },
+});
 
-// ✅ New Mutation
 export const toggleCategory = mutation({
     args: {
-      category: v.string(),
+        category: v.string(),
     },
     handler: async (ctx, args) => {
-      const user = await getAuthenticatedUser(ctx);
-  
-      const selected = user.selectedCategories || [];
-  
-      const updated = selected.includes(args.category)
-        ? selected.filter((c) => c !== args.category)
-        : [...selected, args.category];
-  
-      await ctx.db.patch(user._id, {
-        selectedCategories: updated,
-      });
-  
-      return updated;
+        const user = await getAuthenticatedUser(ctx);
+
+        const selected = user.selectedCategories || [];
+
+        const updated = selected.includes(args.category)
+            ? selected.filter((c) => c !== args.category)
+            : [...selected, args.category];
+
+        await ctx.db.patch(user._id, {
+            selectedCategories: updated,
+        });
+
+        return updated;
     },
-  });
-  
-  // ✅ New Query
-  export const getUserCategories = query({
+});
+
+export const getUserCategories = query({
     handler: async (ctx) => {
-      const user = await getAuthenticatedUser(ctx);
-      return user.selectedCategories ?? [];
+        const user = await getAuthenticatedUser(ctx);
+        return user.selectedCategories ?? [];
     },
-  });
-  
+});
