@@ -1,5 +1,5 @@
 // React & Hooks
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // React Native Components
 import {
@@ -41,8 +41,20 @@ export default function SignIn() {
     const router = useRouter(); // Router for navigation between screens
 
     // Temporary variables for email and password inputs, default values based on user type (Vendor/Public)
-    const [emailAddress, setEmailAddress] = useState("");
-    const [password, setPassword] = useState("");
+    const [emailAddress, setEmailAddress] = useState(
+        "public-user+clerk_test@example.com"
+    );
+    const [password, setPassword] = useState("public12345");
+
+    useEffect(() => {
+        if (isVendor) {
+            setEmailAddress("vendor+clerk_test@example.com");
+            setPassword("vendor123");
+        } else {
+            setEmailAddress("public-user+clerk_test@example.com");
+            setPassword("public12345");
+        }
+    }, [isVendor]);
 
     // Function to handle sign-in process
     const onSignInPress = async () => {

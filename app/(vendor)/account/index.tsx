@@ -9,6 +9,7 @@ import { useClerk } from "@clerk/clerk-expo";
 import StandardButton from "@/components/buttons/StandardButton";
 import { useVendorStore } from "@/store/useVendorStore";
 import { useBusinessStore } from "@/store/useBusinessStore";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function UserProfilePage() {
     const insets = useSafeAreaInsets();
@@ -82,17 +83,41 @@ export default function UserProfilePage() {
             />
             <ProfileHeader user={currentVendor} link="/account/settings/" />
             <View style={styles.sections}>
-                <Text>Your Business</Text>
-                <Text>{business.business_name}</Text>
-                <Text>{business.primary_city}</Text>
-                <Text>{business.phone_number}</Text>
-                <Text>{business.email_link}</Text>
-                <Text>{business.instagram_link}</Text>
-                <Text>{business.twitter_link}</Text>
-                <Text>{business.facebook_link}</Text>
-                <Text>{business.website}</Text>
-                <Text>{business.description}</Text>
-                <Text>{business.categories}</Text>
+                <Text style={styles.title}>Your Business Public Profile</Text>
+                <Text style={styles.subtitle}>{business.business_name}</Text>
+                <Text style={styles.text}>{business.description}</Text>
+                <Text style={styles.subtitle}>Business Categories</Text>
+                <Text style={styles.text}>{business.categories}</Text>
+                <Text style={styles.subtitle}>Contact:</Text>
+                <Text style={styles.text}>{business.email_link}</Text>
+                <Text style={styles.text}>{business.phone_number}</Text>
+                <Text style={styles.subtitle}>Socials</Text>
+                <Text style={styles.text}>
+                    <MaterialCommunityIcons
+                        name="instagram"
+                        size={20}
+                        color={theme.colors.primary}
+                    />{" "}
+                    {business.instagram_link}
+                </Text>
+                <Text style={styles.text}>
+                    <MaterialCommunityIcons
+                        name="twitter"
+                        size={20}
+                        color={theme.colors.primary}
+                    />{" "}
+                    {business.twitter_link}
+                </Text>
+                <Text style={styles.text}>
+                    <MaterialCommunityIcons
+                        name="facebook"
+                        size={20}
+                        color={theme.colors.primary}
+                    />{" "}
+                    {business.facebook_link}
+                </Text>
+                <Text style={styles.subtitle}>Website</Text>
+                <Text style={styles.text}>{business.website}</Text>
             </View>
         </View>
     );
@@ -116,5 +141,21 @@ const styles = ScaledSheet.create({
         padding: theme.padding.sm,
         borderBottomColor: theme.colors.grayLight,
         borderBottomWidth: 1,
+    },
+    title: {
+        fontSize: theme.fontSize.lg,
+        fontWeight: "bold",
+        borderBottomColor: theme.colors.primary,
+        borderBottomWidth: 1,
+    },
+    subtitle: {
+        paddingTop: theme.padding.sm,
+        fontSize: theme.fontSize.sm,
+        fontWeight: "bold",
+    },
+    text: {
+        alignContent: "center",
+        fontSize: theme.fontSize.sm,
+        color: theme.colors.grayDark,
     },
 });
