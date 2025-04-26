@@ -8,10 +8,16 @@ import { useRouter } from "expo-router";
 interface EditInfoCardProps {
     readonly title: string;
     readonly text: string;
-    readonly link: any; // fix with correct types
+    readonly link?: any; // fix with correct types
+    readonly onPress?: () => void;
 }
 
-export default function EditInfoCard({ title, text, link }: EditInfoCardProps) {
+export default function EditInfoCard({
+    title,
+    text,
+    link,
+    onPress,
+}: EditInfoCardProps) {
     const router = useRouter();
     return (
         <View style={styles.infoContainer}>
@@ -22,7 +28,13 @@ export default function EditInfoCard({ title, text, link }: EditInfoCardProps) {
             <MaterialCommunityIcons
                 style={styles.infoIcon}
                 name="chevron-right"
-                onPress={() => router.push(link)}
+                onPress={() => {
+                    if (link) {
+                        router.push(link);
+                    } else if (onPress) {
+                        onPress();
+                    }
+                }}
             />
         </View>
     );
@@ -39,7 +51,7 @@ const styles = ScaledSheet.create({
         borderRadius: theme.radius.sm,
         borderColor: theme.colors.gray,
         borderWidth: 0.5,
-        boxShadow: "0 0px 10px rgba(0, 0, 0, 0.1)",
+        boxShadow: "0 0px 5px rgba(0, 0, 0, 0.08)",
     },
     infoTextContainer: {
         gap: "1@ms",

@@ -1,70 +1,84 @@
-import { mutation, MutationCtx, query, QueryCtx } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-// Create Truck
-export const createTruck = mutation({
-    args: {
-        truck_name: v.string(),
-        vendor_id: v.string(),
-        latitude: v.number(),
-        longitude: v.number(),
-        open_status: v.boolean(),
-        schedule: v.object({
-            days: v.array(v.string()),
-            times: v.array(v.string()),
-        }),
-        truck_type: v.string(), // Stationary or Mobile
-    },
+export const getTrucksByBusinessId = query({
+  args: {
+    business_clerk_id: v.optional(v.string()),
+    business_convex_id: v.optional(v.id("businesses")),
+  },
+  handler: async (ctx, args) => {
+    if (!args.business_clerk_id && !args.business_convex_id) {
+      throw new Error("Must provide either business_clerk_id or business_convex_id.");
+    }
 
-    handler: async (ctx, args) => {
-        const existingTruck = await ctx.db
-            .query("trucks")
-            .withIndex("by_vendor", (q) => q.eq("vendor_id", args.vendor_id))
-            .first();
-        if (existingTruck) return;
-
-        await ctx.db.insert("trucks", {
-            truck_name: args.truck_name,
-            vendor_id: args.vendor_id,
-            latitude: args.latitude,
-            longitude: args.longitude,
-            open_status: args.open_status,
-            schedule: args.schedule,
-            truck_type: args.truck_type,
-        });
-    },
-});
-
-// Get All Trucks for a Vendor
-export const getTrucksByVendorId = query({
-    args: { vendor_id: v.string() },
-    handler: async (ctx, args) => {
-        const trucks = await ctx.db
-            .query("trucks")
-            .withIndex("by_vendor", (q) => q.eq("vendor_id", args.vendor_id))
-            .collect();
-        return trucks;
-    },
-});
-
-// Get Authenticated Vendor’s Trucks (if you're using auth)
-export async function getAuthenticatedVendorTrucks(
-    ctx: QueryCtx | MutationCtx
-) {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Unauthorized");
-
-    const vendor = await ctx.db
-        .query("vendors")
-        .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-        .first();
-
-    if (!vendor) throw new Error("Vendor not found");
-
-    const trucks = await ctx.db
+    if (args.business_convex_id) {
+      // Search by business_convex_id
+      return await ctx.db
         .query("trucks")
-        .withIndex("by_vendor", (q) => q.eq("vendor_id", vendor._id))
+        .withIndex("by_business_convex_id", (q) =>
+          q.eq("business_convex_id", args.business_convex_id!)
+        )
         .collect();
+    } else if (args.business_clerk_id) {
+      // Search by business_clerk_id
+      return await ctx.db
+        .query("trucks")
+        .withIndex("by_business_clerk_id", (q) =>
+          q.eq("business_clerk_id", args.business_clerk_id!)
+        )
+        .collect();
+    }
 
-    return trucks;
-}
+    return [];
+  },
+});
+
+export const createTruck = mutation({
+  args: {
+    truck_name: v.string(),
+    truck_type: v.union(v.literal("Stationary"), v.literal("Mobile")),
+    location: v.string(),
+    business_clerk_id: v.string(),
+    business_convex_id: v.id("businesses"),
+    schedule: v.array(
+      v.object({
+        day: v.string(),
+        start_time: v.string(),
+        end_time: v.string(),
+        closed: v.boolean(),
+      })
+    ),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Unauthorized: User not signed in.");
+    }
+
+    // 1. Fetch the business
+    const business = await ctx.db
+      .query("businesses")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", args.business_clerk_id))
+      .unique();
+
+    if (!business) {
+      throw new Error("Business not found.");
+    }
+
+    // 2. Verify the requesting user is the vendor/admin of the business
+    if (business.vendor_clerk_id !== identity.subject) {
+      throw new Error("Unauthorized: Only the business admin can create a truck.");
+    }
+
+    // 3. Insert the new truck
+    await ctx.db.insert("trucks", {
+      truck_name: args.truck_name,
+      business_clerk_id: args.business_clerk_id,
+      business_convex_id: args.business_convex_id,
+      location: args.location,
+      open_status: false,   // default
+      truck_type: args.truck_type,
+      schedule: args.schedule,
+    });
+  },
+});

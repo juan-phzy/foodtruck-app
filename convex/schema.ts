@@ -30,12 +30,11 @@ export default defineSchema({
         .index("by_phone", ["phone_number"]),
 
     businesses: defineTable({
-        
         // Identifiers
         business_name: v.string(),
         clerkId: v.string(), // Clerk ID of the organization
         vendor_clerk_id: v.string(), // or v.id("vendors") if you want to enforce ref integrity
-        
+
         // About the business
         categories: v.optional(v.array(v.string())), // Categories of the business
         description: v.optional(v.string()),
@@ -43,35 +42,44 @@ export default defineSchema({
         logo_url: v.optional(v.string()), // could be used for branding
         cover_photo_url: v.optional(v.string()), // optional banner/hero image
         primary_city: v.optional(v.string()),
-        
+
         // Social media
         website: v.optional(v.string()),
         instagram_link: v.optional(v.string()),
         twitter_link: v.optional(v.string()),
         facebook_link: v.optional(v.string()),
         email_link: v.optional(v.string()),
-
     })
         .index("by_vendor", ["vendor_clerk_id"])
         .index("by_city", ["primary_city"])
         .index("by_business_name", ["business_name"])
         .index("by_clerk_id", ["clerkId"]),
 
-
     // Trucks Table
     trucks: defineTable({
         truck_name: v.string(),
-        vendor_id: v.string(),
-        latitude: v.number(),
-        longitude: v.number(),
+        business_clerk_id: v.string(),
+        business_convex_id: v.id("businesses"),
+        location: v.optional(v.string()),
+        latitude: v.optional(v.number()),
+        longitude: v.optional(v.number()),
         menu_id: v.optional(v.string()),
         open_status: v.boolean(),
-        schedule: v.object({
-            days: v.array(v.string()),
-            times: v.array(v.string()),
-        }), // Example: {days: ['Mon', 'Tue'], times: ['10AM-6PM']}
-        truck_type: v.string(), // Stationary or Mobile
-    }).index("by_vendor", ["vendor_id"]),
+
+        truck_type: v.union(v.literal("Stationary"), v.literal("Mobile")),
+
+        schedule:
+            v.array(
+                v.object({
+                    day: v.string(),
+                    start_time: v.string(),
+                    end_time: v.string(),
+                    closed: v.boolean(),
+                })
+            ),
+    })
+        .index("by_business_convex_id", ["business_convex_id"])
+        .index("by_business_clerk_id", ["business_clerk_id"]),
 
     // Stands Table
     stands: defineTable({

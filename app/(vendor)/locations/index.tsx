@@ -3,29 +3,37 @@ import { View, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScaledSheet } from "react-native-size-matters";
 import { ScrollView } from "react-native-gesture-handler";
-import { LOCATION_SCREEN_TRUCKS } from "@/constants";
 import IconButton from "@/components/buttons/IconButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { router, useRouter } from "expo-router";
-
-// Sample Data
-const sampleLocationScreenTrucks = LOCATION_SCREEN_TRUCKS;
+import { useRouter } from "expo-router";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useBusinessStore } from "@/store/useBusinessStore";
 
 export default function LocationsIndex() {
     const insets = useSafeAreaInsets();
     const router = useRouter();
 
+    const business = useBusinessStore();
+
+    const trucks = business.business?._id
+        ? useQuery(api.trucks.getTrucksByBusinessId, {
+              business_convex_id: business.business._id,
+          })
+        : null;
+
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
             {/* Header */}
             <View style={styles.headerContainer}>
-                <Text style={styles.headerText}>Manage Trucks</Text>
+                <Text style={styles.headerText}>Manage Locations</Text>
                 <MaterialCommunityIcons
                     name="plus"
                     size={45}
                     color={theme.colors.primary}
-                    onPress={() => {console.log("Clicked Add Trucks")
-                        router.push('/locations/addTruckPage') // Navigate to add truck page
+                    onPress={() => {
+                        console.log("Clicked Add Trucks");
+                        router.push("/locations/add-truck"); // Navigate to add truck page
                     }}
                 />
             </View>
@@ -34,18 +42,24 @@ export default function LocationsIndex() {
                 contentContainerStyle={styles.scrollView}
                 showsVerticalScrollIndicator={false}
             >
-                {sampleLocationScreenTrucks.map((truck, index) => (
-                    <IconButton
-                        key={truck.name + index}
-                        iconName={truck.type == "Truck" ? "truck" : "store"}
-                        text={truck.name}
-                        status={truck.status}
-                        showManage={true}
-                        onPress={() => {
-                            router.push(`/locations/${truck.name}`);
-                        }}
-                    />
-                ))}
+                {trucks ? (
+                    trucks.map((truck) => (
+                        <IconButton
+                            key={truck._id}
+                            iconName="truck"
+                            text={truck.truck_name}
+                            status={truck.open_status}
+                            showManage={true}
+                            onPress={() => {
+                                router.push(`/locations/${truck.truck_name}`);
+                            }}
+                        />
+                    ))
+                ) : (
+                    <Text style={{ fontSize: theme.fontSize.md, color: theme.colors.black }}>
+                        No trucks available.
+                    </Text>
+                )}
             </ScrollView>
         </View>
     );

@@ -154,3 +154,21 @@ export type Trucks = {
     };
     truck_type: string;
 };
+
+export type DayOfWeek =
+  | "Sunday"
+  | "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday";
+
+export type ScheduleType = Record<
+  DayOfWeek,
+  {
+    start: string;
+    end: string;
+    closed: boolean;
+  }
+>;
