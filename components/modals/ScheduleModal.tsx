@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -11,6 +11,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 interface ScheduleModalProps {
     readonly closeModal: () => void;
     readonly onSave: (schedule: ScheduleType) => void;
+    readonly initialSchedule?: ScheduleType;
 }
 
 const DAYS_OF_WEEK: (keyof ScheduleType)[] = [
@@ -26,6 +27,7 @@ const DAYS_OF_WEEK: (keyof ScheduleType)[] = [
 export default function ScheduleModal({
     closeModal,
     onSave,
+    initialSchedule,
 }: ScheduleModalProps) {
     const insets = useSafeAreaInsets();
 
@@ -36,13 +38,13 @@ export default function ScheduleModal({
     );
 
     const [schedule, setSchedule] = useState<ScheduleType>(
-        () =>
-            Object.fromEntries(
+        initialSchedule ||
+            (Object.fromEntries(
                 DAYS_OF_WEEK.map((day) => [
                     day,
                     { start: "09:00 AM", end: "05:00 PM", closed: true },
                 ])
-            ) as ScheduleType
+            ) as ScheduleType)
     );
 
     const toggleClosed = (day: keyof ScheduleType) => {
@@ -54,6 +56,10 @@ export default function ScheduleModal({
             },
         }));
     };
+
+    useEffect(() => {
+        initialSchedule && setSchedule(initialSchedule);
+    }, [initialSchedule]);
 
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>

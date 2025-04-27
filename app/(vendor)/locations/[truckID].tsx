@@ -1,13 +1,19 @@
 import theme from "@/assets/theme";
 import icon from "@/assets/images/icon.png";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image, Switch } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import SmallIconButton from "@/components/buttons/SmallIconButton";
 import SideBySideRow from "@/components/rows/SideBySideRow";
 import { router, useLocalSearchParams } from "expo-router";
+import { api } from "@/convex/_generated/api";
+import { useMutation, useQuery } from "convex/react";
+import { Id } from "@/convex/_generated/dataModel";
+import ScheduleModal from "@/components/modals/ScheduleModal";
+import { ScheduleType } from "@/types";
+import { convertScheduleArrayToRecord } from "@/utils/converScheduleArrayToRecord";
 
 /* 
     For future implementation to pass in picture and name of food truck.
@@ -18,20 +24,98 @@ interface ManageTruckProps {
     image: string;
 }
 
-export default function ManageTruckScreen() {
+export default function ManageLocation() {
     const { truckID } = useLocalSearchParams();
     const insets = useSafeAreaInsets();
 
-    const [isOpen, setIsOpen] = useState(false);
     const [useLiveLocation, setUseLiveLocation] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+
+    const deleteTruck = useMutation(api.trucks.deleteTruck);
+    const updateScheduleMutation = useMutation(api.trucks.updateTruckSchedule);
+    const updateConvexOpenStatus = useMutation(api.trucks.updateOpenStatus);
+    const truck = useQuery(api.trucks.getTruckById, {
+        truckId: truckID as Id<"trucks">,
+    });
+
+    const changeOpenStatus = async () => {
+        try {
+            await updateConvexOpenStatus({
+                truckId: truckID as Id<"trucks">,
+                open_status: !truck?.open_status,
+            });
+            console.log("Truck open status updated successfully!");
+        } catch (error) {
+            console.error("Error updating truck open status:", error);
+        }
+    };
+
+    const [form, setForm] = useState<{
+        schedule: ScheduleType;
+    }>({
+        schedule: {
+            Sunday: { start: "09:00 AM", end: "05:00 PM", closed: true },
+            Monday: { start: "09:00 AM", end: "05:00 PM", closed: true },
+            Tuesday: { start: "09:00 AM", end: "05:00 PM", closed: true },
+            Wednesday: { start: "09:00 AM", end: "05:00 PM", closed: true },
+            Thursday: { start: "09:00 AM", end: "05:00 PM", closed: true },
+            Friday: { start: "09:00 AM", end: "05:00 PM", closed: true },
+            Saturday: { start: "09:00 AM", end: "05:00 PM", closed: true },
+        },
+    });
+
+    useEffect(() => {
+        if (truck) {
+            setForm({
+                schedule: convertScheduleArrayToRecord(truck.schedule),
+            });
+        }
+    }, [truck]);
+
+    const handleChange = (key: keyof typeof form, value: ScheduleType) => {
+        setForm((prev) => ({ ...prev, [key]: value }));
+    };
+
+    const handleSaveSchedule = async (newSchedule: ScheduleType) => {
+        try {
+            await updateScheduleMutation({
+                truckId: truckID as Id<"trucks">,
+                schedule: Object.entries(newSchedule).map(([day, times]) => ({
+                    day,
+                    start_time: times.start,
+                    end_time: times.end,
+                    closed: times.closed,
+                })),
+            });
+            handleChange("schedule", newSchedule); // Update local form (optional if needed)
+            console.log("Schedule updated successfully!");
+        } catch (error) {
+            console.error("Error updating schedule:", error);
+        }
+    };
+
+    const handleDeleteTruck = async () => {
+        try {
+            await deleteTruck({ truckId: truckID as Id<"trucks"> });
+            console.log("Truck deleted successfully!");
+            router.back(); // Navigate back after deletion
+        } catch (error) {
+            console.error("Error deleting truck:", error);
+        }
+    };
+
+    if (!truck) {
+        return (
+            <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
+                <Text>Loading...</Text>
+            </View>
+        );
+    }
 
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
             <View style={styles.header}>
-                <TouchableOpacity
-                    style={styles.goBack}
-                    onPress={router.back}
-                >
+                <TouchableOpacity style={styles.goBack} onPress={router.back}>
                     <View style={styles.arrowButton}>
                         <MaterialCommunityIcons
                             name="arrow-left"
@@ -42,7 +126,7 @@ export default function ManageTruckScreen() {
                 </TouchableOpacity>
                 <View style={styles.truckImageAndText}>
                     <Image source={icon} style={styles.truckLogo} />
-                    <Text style={styles.truckTitle}>{truckID}</Text>
+                    <Text style={styles.truckTitle}>{truck.truck_name}</Text>
                 </View>
             </View>
             {/* 
@@ -81,11 +165,11 @@ export default function ManageTruckScreen() {
                             }}
                         >
                             <Text style={styles.settingValue}>
-                                {isOpen ? "Open" : "Closed"}
+                                {truck.open_status ? "Open" : "Closed"}
                             </Text>
                             <Switch
-                                value={isOpen}
-                                onValueChange={setIsOpen}
+                                value={truck.open_status}
+                                onValueChange={changeOpenStatus}
                                 trackColor={{
                                     false: theme.colors.gray,
                                     true: theme.colors.primary,
@@ -184,7 +268,10 @@ export default function ManageTruckScreen() {
                     }
                     rightComponent={
                         <TouchableOpacity
-                            onPress={() => console.log("Set Schedule Pressed")}
+                            onPress={() => {
+                                console.log("Set Schedule Pressed");
+                                setShowModal(true);
+                            }}
                         >
                             <MaterialCommunityIcons
                                 name="menu-right"
@@ -197,24 +284,42 @@ export default function ManageTruckScreen() {
             <View>
                 <SideBySideRow
                     leftComponent={
-                        <Text style={styles.settingText}>
-                            Set Unique Images
+                        <Text style={[styles.settingText, { color: "red" }]}>
+                            DANGER
                         </Text>
                     }
                     rightComponent={
                         <TouchableOpacity
-                            onPress={() =>
-                                console.log("Set Unique Images Pressed")
-                            }
+                            onPress={handleDeleteTruck}
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                            }}
                         >
                             <MaterialCommunityIcons
-                                name="menu-right"
-                                style={styles.iconFontSize}
+                                name="trash-can-outline"
+                                style={[styles.iconFontSize, { color: "red" }]}
                             />
+                            <Text
+                                style={{
+                                    fontSize: theme.fontSize.md,
+                                    color: "red",
+                                }}
+                            >
+                                Delete Truck
+                            </Text>
                         </TouchableOpacity>
                     }
                 />
             </View>
+
+            {showModal && (
+                <ScheduleModal
+                    closeModal={() => setShowModal(false)}
+                    onSave={handleSaveSchedule}
+                    initialSchedule={form.schedule}
+                />
+            )}
         </View>
     );
 }
@@ -254,11 +359,11 @@ const styles = ScaledSheet.create({
         marginBottom: "10@ms",
     },
     truckLogo: {
-        width: "125@ms",
-        height: "125@ms",
+        width: "80@ms",
+        height: "80@ms",
     },
     truckTitle: {
-        fontSize: theme.fontSize.xxl,
+        fontSize: theme.fontSize.xl,
         fontWeight: "bold",
     },
     settingText: {

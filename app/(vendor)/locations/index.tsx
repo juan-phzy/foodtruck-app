@@ -14,13 +14,11 @@ export default function LocationsIndex() {
     const insets = useSafeAreaInsets();
     const router = useRouter();
 
-    const business = useBusinessStore();
+    const businessConvexID = useBusinessStore().business?._id;
 
-    const trucks = business.business?._id
-        ? useQuery(api.trucks.getTrucksByBusinessId, {
-              business_convex_id: business.business._id,
-          })
-        : null;
+    const trucks = useQuery(api.trucks.getTrucksByBusinessId, {
+        business_convex_id: businessConvexID,
+    });
 
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
@@ -51,12 +49,17 @@ export default function LocationsIndex() {
                             status={truck.open_status}
                             showManage={true}
                             onPress={() => {
-                                router.push(`/locations/${truck.truck_name}`);
+                                router.push(`/locations/${truck._id}`);
                             }}
                         />
                     ))
                 ) : (
-                    <Text style={{ fontSize: theme.fontSize.md, color: theme.colors.black }}>
+                    <Text
+                        style={{
+                            fontSize: theme.fontSize.md,
+                            color: theme.colors.black,
+                        }}
+                    >
                         No trucks available.
                     </Text>
                 )}

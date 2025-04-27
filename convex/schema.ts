@@ -80,7 +80,7 @@ export default defineSchema({
     })
         .index("by_business_convex_id", ["business_convex_id"])
         .index("by_business_clerk_id", ["business_clerk_id"]),
-
+        
     // Stands Table
     stands: defineTable({
         stand_id: v.string(),
