@@ -95,12 +95,12 @@ const styles = ScaledSheet.create({
     rootContainer: {
         flex: 1,
         backgroundColor: theme.colors.primaryLight,
-        paddingHorizontal: theme.padding.xl,
     },
     goBackContainer: {
         flexDirection: "row",
         alignItems: "center",
         paddingVertical: theme.padding.md,
+        paddingHorizontal: theme.padding.lg,
         gap: "5@ms",
     },
     arrowButton: {
@@ -120,6 +120,7 @@ const styles = ScaledSheet.create({
     },
     headerContainer: {
         paddingBottom: theme.padding.lg,
+        paddingHorizontal: theme.padding.lg,
         alignItems: "center",
         gap: "5@ms",
     },
@@ -134,6 +135,7 @@ const styles = ScaledSheet.create({
     },
     scrollView: {
         paddingVertical: theme.padding.sm,
+        paddingHorizontal: theme.padding.lg,
         gap: "10@ms",
     },
 });

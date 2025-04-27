@@ -132,7 +132,7 @@ const styles = ScaledSheet.create({
     },
     rootContainer: {
         flex: 1,
-        backgroundColor: theme.colors.white,
+        backgroundColor: theme.colors.primaryExtraLight,
     },
     gradient: {
         ...StyleSheet.absoluteFillObject,

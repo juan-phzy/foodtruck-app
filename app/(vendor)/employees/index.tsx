@@ -52,14 +52,14 @@ export default function EmployeesIndex() {
 const styles = ScaledSheet.create({
     rootContainer: {
         flex: 1,
-        backgroundColor: theme.colors.primaryLight,
-        paddingHorizontal: theme.padding.xl,
+        backgroundColor: theme.colors.primaryExtraLight,
     },
     headerContainer: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingVertical: theme.padding.lg,
+        paddingVertical: theme.padding.md,
+        paddingHorizontal: theme.padding.sm,
     },
     headerText: {
         fontSize: theme.fontSize.xl,
@@ -68,6 +68,7 @@ const styles = ScaledSheet.create({
     },
     scrollView: {
         gap: "10@ms",
-        paddingBottom: theme.padding.md,
+        paddingVertical: theme.padding.md,
+        paddingHorizontal: theme.padding.sm,
     },
 });
