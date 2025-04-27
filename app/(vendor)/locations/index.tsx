@@ -71,14 +71,14 @@ export default function LocationsIndex() {
 const styles = ScaledSheet.create({
     rootContainer: {
         flex: 1,
-        backgroundColor: theme.colors.primaryLight,
-        paddingHorizontal: theme.padding.xl,
+        backgroundColor: theme.colors.primaryExtraLight,
     },
     headerContainer: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingVertical: theme.padding.lg,
+        paddingVertical: theme.padding.md,
+        paddingHorizontal: theme.padding.sm,
     },
     headerText: {
         fontWeight: "bold",
@@ -87,7 +87,8 @@ const styles = ScaledSheet.create({
     },
     scrollView: {
         gap: "10@ms",
-        paddingBottom: theme.padding.md,
+        paddingVertical: theme.padding.md,
+        paddingHorizontal: theme.padding.sm,
         // Leave some space at the bottom of scroll views
     },
 });

@@ -6,6 +6,7 @@ const theme = {
         primary: "rgba(255, 132, 0, 1)",
         primaryInactive: "rgba(255, 132, 0, 0.5)",
         primaryLight: "rgba(255, 243, 230, 1)",
+        primaryExtraLight: "rgb(255, 251, 246)",
         black: "rgba(0, 0, 0, 1)",
         blackInactive: "rgba(0, 0, 0, 0.5)",
         grayDark: "rgba(120, 120, 120, 1)",

@@ -65,7 +65,7 @@ export default defineSchema({
         longitude: v.optional(v.number()),
         menu_id: v.optional(v.string()),
         open_status: v.boolean(),
-
+        
         truck_type: v.union(v.literal("Stationary"), v.literal("Mobile")),
 
         schedule:
@@ -83,18 +83,29 @@ export default defineSchema({
         
     // Stands Table
     stands: defineTable({
-        stand_id: v.string(),
         stand_name: v.string(),
-        vendor_id: v.string(),
-        latitude: v.number(),
-        longitude: v.number(),
-        menu_id: v.string(),
+        business_clerk_id: v.string(),
+        business_convex_id: v.id("businesses"),
+        location: v.optional(v.string()),
+        latitude: v.optional(v.number()),
+        longitude: v.optional(v.number()),
+        menu_id: v.optional(v.string()),
         open_status: v.boolean(),
-        schedule: v.object({
-            days: v.array(v.string()),
-            times: v.array(v.string()),
-        }),
-    }).index("by_vendor", ["vendor_id"]),
+        
+        stand_type: v.union(v.literal("Stationary"), v.literal("Mobile")),
+
+        schedule:
+            v.array(
+                v.object({
+                    day: v.string(),
+                    start_time: v.string(),
+                    end_time: v.string(),
+                    closed: v.boolean(),
+                })
+            ),
+    })
+        .index("by_business_convex_id", ["business_convex_id"])
+        .index("by_business_clerk_id", ["business_clerk_id"]),
 
     // Ratings Table
     ratings: defineTable({

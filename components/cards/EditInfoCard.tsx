@@ -48,13 +48,13 @@ const styles = ScaledSheet.create({
         backgroundColor: theme.colors.white,
         paddingHorizontal: theme.padding.sm,
         paddingVertical: theme.padding.xs,
-        borderRadius: theme.radius.sm,
+        borderRadius: theme.radius.md,
         borderColor: theme.colors.gray,
         borderWidth: 0.5,
-        boxShadow: "0 0px 5px rgba(0, 0, 0, 0.08)",
+        boxShadow: "0 0px 10px 0px rgba(0, 0, 0, 0.1)",
     },
     infoTextContainer: {
-        gap: "1@ms",
+        gap: theme.padding.xxs,
     },
     infoTitle: {
         fontSize: theme.fontSize.sm,
@@ -62,8 +62,8 @@ const styles = ScaledSheet.create({
         fontWeight: "bold",
     },
     infoText: {
-        fontSize: theme.fontSize.xs,
-        color: theme.colors.black,
+        fontSize: theme.fontSize.sm,
+        color: theme.colors.grayDark,
     },
     infoIcon: {
         fontSize: theme.fontSize.xl,

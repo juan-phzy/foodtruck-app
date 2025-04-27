@@ -246,7 +246,7 @@ export default function ManageLocation() {
                                     },
                                 ]}
                             >
-                                123 Main Street
+                                {truck.location?.split(",")[0]}
                             </Text>
                             <MaterialCommunityIcons
                                 name="pencil"
@@ -367,18 +367,17 @@ const styles = ScaledSheet.create({
         fontWeight: "bold",
     },
     settingText: {
-        fontSize: "15@ms",
+        fontSize: theme.fontSize.sm,
         fontWeight: "bold",
     },
     settingValue: {
-        fontSize: "15@ms",
-        fontWeight: "bold",
-        marginRight: "10@ms",
+        fontSize: theme.fontSize.xs,
+        marginRight: "5@ms",
     },
     switchStyle: {
-        transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+        transform: [{ scaleX: ms(1.2) }, { scaleY: ms(1.2) }],
     },
     iconFontSize: {
-        fontSize: ms(theme.fontSize.xxl),
+        fontSize: theme.fontSize.xl,
     },
 });
