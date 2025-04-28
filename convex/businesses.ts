@@ -34,6 +34,21 @@ export const createBusiness = mutation({
     },
 });
 
+export const getBusinessById = query({
+    args: {
+        businessId: v.id("businesses"),
+    },
+    handler: async (ctx, args) => {
+        const business = await ctx.db.get(args.businessId);
+
+        if (!business) {
+            throw new Error("Business not found.");
+        }
+
+        return business;
+    },
+});
+
 // Get a business by vendor ID
 export const getBusinessByVendor = query({
     args: { vendor_clerk_id: v.string() },

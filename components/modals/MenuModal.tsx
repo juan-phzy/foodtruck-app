@@ -41,7 +41,7 @@ import theme from "@/assets/theme";
 import useMenuModalStore from "@/store/useMenuModalStore";
 
 // Types
-import { FoodTruck } from "@/types";
+import { Trucks } from "@/types";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import FlatListCard from "@/components/cards/FlatListCard";
@@ -49,7 +49,7 @@ import ItemCard from "@/components/cards/ItemCard";
 
 // Props Interface
 interface MenuModalProps {
-    truck: FoodTruck;
+    truck: Trucks;
 }
 
 const MenuModal: React.FC<MenuModalProps> = ({ truck }) => {

@@ -1,19 +1,12 @@
-/**
- * @file TruckModal.tsx
- * @description Displays detailed information about a selected food truck.
- * 
- * Features:
- * - Shows truck name, location, category, type, and operational hours.
- * - Allows toggling of business hours and bookmarking as a favorite.
- * - Displays existing user ratings and allows rating submissions.
- * - Implements memoization to optimize rendering performance.
- */
-
 // React & Hooks
 import { useState, useMemo, useCallback } from "react";
 
 // State Management (Zustand)
 import useTruckStore from "@/store/useTruckStore";
+
+// Convex & Queries
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 // Expo Libraries
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -27,65 +20,54 @@ import {
     StyleSheet,
     Text,
     View,
+    Dimensions,
 } from "react-native";
 
 // Constants & Theme
-import theme from '@/assets/theme';
+import theme from "@/assets/theme";
+import { ms, ScaledSheet } from "react-native-size-matters";
 
 // Types
-import { FoodTruck, Hours } from "@/types";
+import { Trucks } from "@/types";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// Component Props
+const { height } = Dimensions.get("window");
+
 interface TruckModalProps {
-    truck: FoodTruck;
+    truck: Trucks;
 }
 
 const TruckModal: React.FC<TruckModalProps> = ({ truck }) => {
     const { toggleTruckModal } = useTruckStore();
+    const insets = useSafeAreaInsets();
 
-    // State Hooks
     const [isFavorite, setIsFavorite] = useState(false);
     const [showHours, setShowHours] = useState(false);
     const [userRating, setUserRating] = useState(0);
 
-    // Helper Functions
-    const toggleFavorite = useCallback(() => setIsFavorite((prev) => !prev), []);
-    const toggleShowHours = useCallback(() => setShowHours((prev) => !prev), []);
-
-    // Compute Current Day's Hours using Memoization
-    const weekdays: (keyof Hours)[] = [
-        "sunday",
-        "monday",
-        "tuesday",
-        "wednesday",
-        "thursday",
-        "friday",
-        "saturday",
-    ];
-    const weekday: keyof Hours = useMemo(() => weekdays[new Date().getDay()], []);
-
-    // Memoized Social Media Links
-    const socialLinks = useMemo(
-        () =>
-            Object.entries(truck.contact.social).map(([platform, handle]) => (
-                <Text key={platform}>
-                    {platform.charAt(0).toUpperCase() + platform.slice(1)}: {handle}
-                </Text>
-            )),
-        [truck.contact.social]
+    const toggleFavorite = useCallback(
+        () => setIsFavorite((prev) => !prev),
+        []
     );
-
-    // Handle Rating Submission
+    const toggleShowHours = useCallback(
+        () => setShowHours((prev) => !prev),
+        []
+    );
     const handleRatingSubmit = useCallback(() => {
         alert(`You rated ${userRating} stars!`);
     }, [userRating]);
+
+    // Fetch the related business
+    const business = useQuery(api.businesses.getBusinessById, {
+        businessId: truck.business_convex_id,
+    });
 
     return (
         <View style={styles.truckPageContainer}>
             {/* Truck Header */}
             <View style={styles.truckPageHeader}>
                 <ImageBackground
-                    source={{ uri: truck.imageUrl }}
+                    source={require("@/assets/images/placeholder.jpg")}
                     style={{
                         flex: 1,
                         justifyContent: "center",
@@ -93,27 +75,63 @@ const TruckModal: React.FC<TruckModalProps> = ({ truck }) => {
                     }}
                     imageStyle={{ resizeMode: "cover" }}
                 >
-                    <LinearGradient colors={["rgba(255, 132, 0, .2)", theme.colors.primary]} style={styles.gradient} />
-                    
-                    {/* Header Content */}
-                    <View style={styles.headerContent}>
+                    <LinearGradient
+                        colors={["rgba(255, 132, 0, .2)", theme.colors.primary]}
+                        style={styles.gradient}
+                    />
+
+                    <View
+                        style={[
+                            styles.headerContent,
+                            { paddingTop: insets.top + ms(16) },
+                        ]}
+                    >
                         <View style={styles.headerRow}>
                             {/* Back Button */}
-                            <Pressable style={styles.backBtnContainer} onPress={toggleTruckModal}>
-                                <MaterialCommunityIcons name="arrow-left" size={30} color={theme.colors.white} />
+                            <Pressable
+                                style={styles.backBtnContainer}
+                                onPress={toggleTruckModal}
+                            >
+                                <MaterialCommunityIcons
+                                    name="arrow-left"
+                                    size={30}
+                                    color={theme.colors.white}
+                                />
                             </Pressable>
 
                             {/* Favorite Button */}
-                            <Pressable style={styles.bookmarkIcon} onPress={toggleFavorite}>
-                                <MaterialCommunityIcons name={isFavorite ? "bookmark" : "bookmark-outline"} size={30} color={theme.colors.primary} />
+                            <Pressable
+                                style={styles.bookmarkIcon}
+                                onPress={toggleFavorite}
+                            >
+                                <MaterialCommunityIcons
+                                    name={
+                                        isFavorite
+                                            ? "bookmark"
+                                            : "bookmark-outline"
+                                    }
+                                    size={30}
+                                    color={theme.colors.primary}
+                                />
                             </Pressable>
                         </View>
 
                         {/* Truck Name & Open Status */}
                         <View style={styles.headerRow}>
-                            <Text style={styles.headerTitle}>{truck.name}</Text>
-                            <View style={[styles.openCloseContainer, truck.isOpen ? styles.open : styles.closed]}>
-                                <Text style={styles.openCloseText}>{truck.isOpen ? "Open" : "Closed"}</Text>
+                            <Text style={styles.headerTitle}>
+                                {truck.truck_name}
+                            </Text>
+                            <View
+                                style={[
+                                    styles.openCloseContainer,
+                                    truck.open_status
+                                        ? styles.open
+                                        : styles.closed,
+                                ]}
+                            >
+                                <Text style={styles.openCloseText}>
+                                    {truck.open_status ? "Open" : "Closed"}
+                                </Text>
                             </View>
                         </View>
                     </View>
@@ -125,36 +143,76 @@ const TruckModal: React.FC<TruckModalProps> = ({ truck }) => {
                 {/* Location */}
                 <View style={styles.contentRow}>
                     <Text style={styles.contentRowTitle}>Location</Text>
-                    <Text style={styles.contentRowBody}>{truck.location}</Text>
+                    <Text style={styles.contentRowBody}>
+                        {truck.location || "Location not available"}
+                    </Text>
                 </View>
 
                 {/* Categories */}
-                <View style={styles.contentRow}>
-                    <Text style={styles.contentRowTitle}>Categories</Text>
-                    <Text style={styles.contentRowBody}>{truck.categories.join(", ")}</Text>
-                </View>
+                {truck.categories && (
+                    <View style={styles.contentRow}>
+                        <Text style={styles.contentRowTitle}>Categories</Text>
+                        <Text style={styles.contentRowBody}>
+                            {truck.categories.join(", ")}
+                        </Text>
+                    </View>
+                )}
 
                 {/* Type */}
                 <View style={styles.contentRow}>
                     <Text style={styles.contentRowTitle}>Type</Text>
-                    <Text style={styles.contentRowBody}>{truck.type}</Text>
+                    <Text style={styles.contentRowBody}>
+                        {truck.truck_type}
+                    </Text>
                 </View>
 
                 {/* Business Hours */}
                 <View style={styles.contentRow}>
                     <View style={styles.hoursTitleRow}>
                         <Text style={styles.hoursTitleText}>Hours</Text>
-                        <Pressable onPress={toggleShowHours} style={styles.dropdownButton}>
-                            <MaterialCommunityIcons name={showHours ? "chevron-down" : "chevron-up"} size={30} color={theme.colors.primary} />
+                        <Pressable
+                            onPress={toggleShowHours}
+                            style={styles.dropdownButton}
+                        >
+                            <MaterialCommunityIcons
+                                name={showHours ? "chevron-down" : "chevron-up"}
+                                size={30}
+                                color={theme.colors.primary}
+                            />
                         </Pressable>
                     </View>
-                    <Text style={styles.contentRowBody}>{`Today: ${truck.hours[weekday]}`}</Text>
+
+                    {/* Today's hours */}
+                    <Text style={styles.contentRowBody}>
+                        {/* Find today's hours */}
+                        {truck.schedule.find(
+                            (d) =>
+                                d.day ===
+                                new Date().toLocaleString("en-US", {
+                                    weekday: "long",
+                                })
+                        )?.closed
+                            ? "Closed today"
+                            : `${truck.schedule.find((d) => d.day === new Date().toLocaleString("en-US", { weekday: "long" }))?.start_time} - ${truck.schedule.find((d) => d.day === new Date().toLocaleString("en-US", { weekday: "long" }))?.end_time}`}
+                    </Text>
+
+                    {/* Expand full weekly schedule */}
                     {showHours && (
                         <View style={styles.scheduleContainer}>
-                            {weekdays.map((day) => (
-                                <View style={styles.scheduleRow} key={day}>
-                                    <Text>{day.charAt(0).toUpperCase() + day.slice(1)}:</Text>
-                                    <Text>{truck.hours[day]}</Text>
+                            {truck.schedule.map((entry) => (
+                                <View
+                                    style={styles.scheduleRow}
+                                    key={entry.day}
+                                >
+                                    <Text>{entry.day}:</Text>
+                                    {entry.closed ? (
+                                        <Text>Closed</Text>
+                                    ) : (
+                                        <Text>
+                                            {entry.start_time} -{" "}
+                                            {entry.end_time}
+                                        </Text>
+                                    )}
                                 </View>
                             ))}
                         </View>
@@ -165,54 +223,102 @@ const TruckModal: React.FC<TruckModalProps> = ({ truck }) => {
                 <View style={styles.contentRow}>
                     <Text style={styles.contentRowTitle}>Ratings</Text>
                     <View style={styles.contentRowBody}>
-                        {/* Display existing ratings */}
+                        {/* Existing Rating */}
                         <View style={styles.ratingContainer}>
-                            <Text style={{ marginLeft: 5, fontSize: 14, color: theme.colors.primary }}>
-                                {truck.rating}
+                            <Text
+                                style={{
+                                    marginLeft: 5,
+                                    fontSize: 14,
+                                    color: theme.colors.primary,
+                                }}
+                            >
+                                {truck.rating ?? "0"}
                             </Text>
                             {Array.from({ length: 5 }, (_, index) => (
                                 <MaterialCommunityIcons
                                     key={index}
-                                    name={index < Math.floor(truck.rating) ? "star" : "star-outline"}
+                                    name={
+                                        index < Math.floor(truck.rating ?? 0)
+                                            ? "star"
+                                            : "star-outline"
+                                    }
                                     size={16}
                                     color={theme.colors.primary}
                                 />
                             ))}
-                            <Text style={{ fontSize: 12 }}>({truck.reviewCount})</Text>
+                            <Text style={{ fontSize: 12 }}>
+                                0 {/* Placeholder for reviews */}
+                            </Text>
                         </View>
 
-                        {/* Interactive Rating Submission */}
+                        {/* Submit New Rating */}
                         <View style={styles.starContainer}>
                             {[1, 2, 3, 4, 5].map((star) => (
-                                <Pressable key={star} onPress={() => setUserRating(star)}>
+                                <Pressable
+                                    key={star}
+                                    onPress={() => setUserRating(star)}
+                                >
                                     <MaterialCommunityIcons
-                                        name={star <= userRating ? "star" : "star-outline"}
+                                        name={
+                                            star <= userRating
+                                                ? "star"
+                                                : "star-outline"
+                                        }
                                         size={30}
                                         color={theme.colors.primary}
                                     />
                                 </Pressable>
                             ))}
                         </View>
-                        <Pressable style={styles.submitButton} onPress={handleRatingSubmit}>
+                        <Pressable
+                            style={styles.submitButton}
+                            onPress={handleRatingSubmit}
+                        >
                             <Text style={styles.submitText}>Submit</Text>
                         </Pressable>
                     </View>
                 </View>
 
-                {/* Contact */}
-                <View style={styles.contentRow}>
-                    <Text style={styles.contentRowTitle}>Contact</Text>
-                    <View style={styles.contentRowBody}>
-                        <Text>Email: {truck.contact.email}</Text>
-                        {socialLinks}
+                {/* Contact Info */}
+                {business && (
+                    <View style={styles.contentRow}>
+                        <Text style={styles.contentRowTitle}>Contact</Text>
+                        <View style={styles.contentRowBody}>
+                            {business.email_link && (
+                                <Text>Email: {business.email_link}</Text>
+                            )}
+                            {business.phone_number && (
+                                <Text>Phone: {business.phone_number}</Text>
+                            )}
+                            {business.website && (
+                                <Text>Website: {business.website}</Text>
+                            )}
+                        </View>
+                        <Text style={styles.contentRowTitle}>Socials</Text>
+                        <View style={styles.contentRowBody}>
+                            {business.instagram_link && (
+                                <Text>
+                                    Instagram: {business.instagram_link}
+                                </Text>
+                            )}
+                            {business.twitter_link && (
+                                <Text>Twitter: {business.twitter_link}</Text>
+                            )}
+                            {business.facebook_link && (
+                                <Text>
+                                    Facebook: {business.facebook_link}
+                                </Text>
+                            )}
+                        </View>
                     </View>
-                </View>
+                    
+                )}
             </ScrollView>
         </View>
     );
 };
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
     truckPageContainer: {
         flex: 1,
         justifyContent: "flex-start",
@@ -226,7 +332,7 @@ const styles = StyleSheet.create({
         overflowY: "scroll",
     },
     truckPageHeader: {
-        height: 250,
+        height: height * 0.3,
     },
     gradient: {
         ...StyleSheet.absoluteFillObject,
@@ -236,9 +342,8 @@ const styles = StyleSheet.create({
         width: "100%",
         flexDirection: "column",
         justifyContent: "space-between",
-        paddingTop: 60,
-        paddingHorizontal: 10,
-        paddingBottom: 20,
+        paddingHorizontal: theme.padding.sm,
+        paddingBottom: theme.padding.md,
     },
     headerRow: {
         flexDirection: "row",
@@ -260,20 +365,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     headerTitle: {
-        fontSize: 32,
+        fontSize: theme.fontSize.lg,
         fontWeight: "bold",
         color: theme.colors.white,
     },
     openCloseContainer: {
         justifyContent: "center",
         alignItems: "center",
-        height: 30,
+        height: 25,
         borderRadius: 20,
     },
     openCloseText: {
         borderRadius: 15,
-        paddingHorizontal: 15,
-        fontSize: 16,
+        paddingHorizontal: theme.padding.xs,
+        fontSize: theme.fontSize.sm,
         fontWeight: "bold",
         color: theme.colors.white,
     },
