@@ -65,9 +65,9 @@ export default defineSchema({
         longitude: v.optional(v.number()),
         menu_id: v.optional(v.string()),
         open_status: v.boolean(),
-        
+        rating: v.optional(v.number()),
+        categories: v.optional(v.array(v.string())),
         truck_type: v.union(v.literal("Stationary"), v.literal("Mobile")),
-
         schedule:
             v.array(
                 v.object({

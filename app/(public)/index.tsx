@@ -10,20 +10,6 @@ import React, {
 // React Native Components
 import { ActivityIndicator, View } from "react-native";
 
-// Custom Components
-import NearbyTrucks from "@/components/indexPage/NearbyTrucks";
-import SelectedTruck from "@/components/indexPage/SelectedTruck";
-import CategoryModal from "@/components/modals/CategoryModal";
-import MenuModal from "@/components/modals/MenuModal";
-import TruckModal from "@/components/modals/TruckModal";
-import MapHeader from "@/components/indexPage/MapHeader";
-
-// Constants & Types & Themes
-import { ms, ScaledSheet } from "react-native-size-matters";
-import { Coordinates } from "@/types";
-import { FOOD_TRUCKS } from "@/constants";
-import theme from "@/assets/theme";
-
 // Mapbox Imports
 import Mapbox, {
     Camera,
@@ -35,12 +21,6 @@ import Mapbox, {
     CircleLayer,
 } from "@rnmapbox/maps";
 
-// Geospatial Utilities
-import { featureCollection, point } from "@turf/helpers";
-
-// Assets
-import icon from "@/assets/images/icon.png";
-
 // Zustand State Management
 import useTruckStore from "@/store/useTruckStore";
 import useFilterStore from "@/store/useFilterStore";
@@ -48,44 +28,73 @@ import useMenuModalStore from "@/store/useMenuModalStore";
 import useMapLayerStore from "@/store/useMapLayerStore";
 import useUserLocationStore from "@/store/useUserLocationStore";
 
+// Custom Components
+import MapHeader from "@/components/indexPage/MapHeader";
+import NearbyTrucks from "@/components/indexPage/NearbyTrucks";
+import SelectedTruck from "@/components/indexPage/SelectedTruck";
+import CategoryModal from "@/components/modals/CategoryModal";
+import MenuModal from "@/components/modals/MenuModal";
+import TruckModal from "@/components/modals/TruckModal";
+
+// Constants, Utilities, Assets
+import { ms, ScaledSheet } from "react-native-size-matters";
+import { Coordinates, Trucks } from "@/types";
+import { featureCollection, point } from "@turf/helpers";
+import icon from "@/assets/images/icon.png";
+import theme from "@/assets/theme";
+
+// Convex & Custom Hooks
+import { useTrucksInViewport } from "@/hooks/useTrucksInViewport";
+import { Id } from "@/convex/_generated/dataModel";
+import calculateDistance from "@/utils/calculateDistance";
+
 // Mapbox Access Token
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_KEY ?? "");
 
 export default function Index() {
-    console.log("");
-    console.log("____________________________________________");
-    console.log("app/(public)/index.tsx: Entered Public Home Page");
+    console.log("\n\napp/(public)/index.tsx: Entered Page");
 
-    // Zustand store for managing selected truck
+    /** -------------------------- Local State -------------------------- */
+
+    const [mapLoaded, setMapLoaded] = useState<boolean>(false);
+    const [showMap, setShowMap] = useState<boolean>(false);
+    const [viewportBounds, setViewportBounds] = useState<{
+        topLat: number;
+        bottomLat: number;
+        leftLng: number;
+        rightLng: number;
+    } | null>(null);
+
+    /** ------------------------ Zustand Stores ------------------------- */
+
+    const { userLocation, fetchUserLocation } = useUserLocationStore();
     const {
         selectedTruck,
         showTruckModal,
+        persistedTrucks,
+        setPersistedTrucks,
         setSelectedTruckId,
         clearSelectedTruck,
     } = useTruckStore();
-
-    // Zustand store for managing category filters and modals
     const { categoryFilters, showCategoryModal } = useFilterStore();
-
-    // Zustand store for managing menu modal visibility
     const { showMenuModal } = useMenuModalStore();
-
-    // Zustand store for managing map layer style
     const { mapStyle } = useMapLayerStore();
 
-    // State for user location
-    const { userLocation, fetchUserLocation } = useUserLocationStore();
+    /** ---------------------- Refs & Debouncing ------------------------ */
 
-    // State for map load status and component mount status
-    const [mapLoaded, setMapLoaded] = useState(false);
-    const [showMap, setShowMap] = useState(false);
-
-    // Map Camera Reference
     const cameraRef = useRef<Camera>(null);
+    const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-    // Moves the Mapbox camera to a specific location.
+    /** ---------------------- Trucks in Viewport ------------------------ */
+
+    const trucksInView: Trucks[] | undefined =
+        useTrucksInViewport(viewportBounds);
+
+    /** -------------------------- Callbacks ---------------------------- */
+
     const moveCamera = useCallback(
         (longitude: number, latitude: number, zoomLevel: number = 14) => {
+            console.log("app/(public)/index.tsx: FUNCTION moveCamera CALLED");
             cameraRef.current?.setCamera({
                 centerCoordinate: [longitude, latitude],
                 zoomLevel,
@@ -95,30 +104,68 @@ export default function Index() {
         []
     );
 
-    // Fetches the user's location and sets it in the Zustand store.
+    const handleSearch = useCallback(
+        ({ latitude, longitude }: Coordinates) => {
+            console.log("app/(public)/index.tsx: FUNCTION handleSearch CALLED");
+            moveCamera(longitude, latitude);
+            clearSelectedTruck();
+        },
+        [moveCamera, clearSelectedTruck]
+    );
+
+    const handleMapRegionChange = useCallback((data: any) => {
+        if (debounceTimeout.current) {
+            clearTimeout(debounceTimeout.current);
+        }
+
+        debounceTimeout.current = setTimeout(() => {
+            console.log(
+                "app/(public)/index.tsx: FUNCTION handleMapRegionChange CALLED"
+            );
+            const visibleBounds = data?.properties?.bounds;
+            if (visibleBounds) {
+                const topRight = visibleBounds.ne;
+                const bottomLeft = visibleBounds.sw;
+                const [rightLng, topLat] = topRight;
+                const [leftLng, bottomLat] = bottomLeft;
+
+                console.log("Updating bounds:", {
+                    topLat,
+                    bottomLat,
+                    leftLng,
+                    rightLng,
+                });
+                setViewportBounds({ topLat, bottomLat, leftLng, rightLng });
+            }
+        }, 1000);
+    }, []);
+
+    /** -------------------------- Effects ------------------------------- */
+
     useEffect(() => {
         if (mapLoaded) {
-            console.log("app/(public)/index.tsx: MAP LOADED, FETCHING USER LOCATION");
+            console.log(
+                "app/(public)/index.tsx: MAP LOADED, FETCHING USER LOCATION"
+            );
             fetchUserLocation();
         }
     }, [mapLoaded]);
 
-    // Activates the map once a user location is found.
     useEffect(() => {
-        console.log("app/(public)/index.tsx: USER LOCATION: ", userLocation);
         if (userLocation) {
-            console.log("app/(public)/index.tsx: USEER LOCATION FOUND, MOVING CAMERA");
+            console.log(
+                "app/(public)/index.tsx: USER LOCATION FOUND, MOVING CAMERA"
+            );
             moveCamera(userLocation.longitude, userLocation.latitude);
             setTimeout(() => setShowMap(true), 300);
         }
     }, [userLocation]);
 
-    // Moves the camera when a truck is selected.
     useEffect(() => {
-        if (selectedTruck && mapLoaded) {
+        if (selectedTruck?.longitude && selectedTruck.latitude && mapLoaded) {
             moveCamera(
-                selectedTruck.coordinates.longitude,
-                selectedTruck.coordinates.latitude - ms(0.0007),
+                selectedTruck.longitude,
+                selectedTruck.latitude - ms(0.0007),
                 16
             );
         } else {
@@ -126,66 +173,59 @@ export default function Index() {
         }
     }, [selectedTruck, moveCamera, mapLoaded]);
 
-    // Handles Map Search and moves the camera to searched location.
-    const handleSearch = useCallback(
-        ({ latitude, longitude }: Coordinates) => {
-            console.log("app/(public)/index.tsx: FUNCTION handleSearch CALLED");
-            moveCamera(longitude, latitude);
-            clearSelectedTruck();
-        },
-        [moveCamera, setSelectedTruckId]
-    );
+    useEffect(() => {
+        if (trucksInView && userLocation) {
+            const trucksWithDistance = trucksInView.map((truck) => ({
+                ...truck,
+                distance: calculateDistance(
+                    userLocation.latitude,
+                    userLocation.longitude,
+                    truck.latitude!,
+                    truck.longitude!
+                ),
+            }));
 
-    // Filters and computes food truck features only when dependencies change.
+            setPersistedTrucks(trucksWithDistance);
+        }
+    }, [trucksInView, userLocation]);
+
+    /** -------------------------- Computed ----------------------------- */
+
     const truckFeatures = useMemo(() => {
-        // Then filter trucks based on category filters
-        const filteredTrucks =
-            categoryFilters.length === 0
-                ? FOOD_TRUCKS
-                : FOOD_TRUCKS.filter((truck) =>
-                      truck.categories.some((c) => categoryFilters.includes(c))
-                  );
+        const filteredTrucks = categoryFilters.length
+            ? persistedTrucks.filter((truck) =>
+                  truck.categories?.some((c: string) =>
+                      categoryFilters.includes(c)
+                  )
+              )
+            : persistedTrucks;
 
         return {
             filteredTrucks,
             featureCollection: featureCollection(
                 filteredTrucks.map((truck) =>
-                    point(
-                        [
-                            truck.coordinates.longitude,
-                            truck.coordinates.latitude,
-                        ],
-                        {
-                            id: truck.id,
-                        }
-                    )
+                    point([truck.longitude!, truck.latitude!], {
+                        id: truck._id,
+                    })
                 )
             ),
         };
-    }, [categoryFilters]);
+    }, [persistedTrucks, categoryFilters]);
+
+    /** -------------------------- Return ------------------------------- */
 
     return (
         <View style={styles.rootContainer}>
-            {/* Search Bar */}
-            <MapHeader
-                handleSearch={handleSearch}
-                moveCamera={moveCamera}
-            />
+            <MapHeader handleSearch={handleSearch} moveCamera={moveCamera} />
 
-            {/* Map */}
             <MapView
                 style={styles.map}
                 styleURL={mapStyle}
                 onPress={clearSelectedTruck}
                 scaleBarEnabled={false}
                 logoEnabled={false}
-                onDidFinishLoadingMap={() => {
-                    console.log("app/(public)/index.tsx: MAP LOADED");
-                    setMapLoaded(true);
-                }}
-                onDidFinishLoadingStyle={() => {
-                    console.log("app/(public)/index.tsx: MAP STYLE LOADED");
-                }}
+                onCameraChanged={handleMapRegionChange}
+                onDidFinishLoadingMap={() => setMapLoaded(true)}
             >
                 <Camera ref={cameraRef} />
                 <LocationPuck pulsing={locationPuckStyle.pulsing} />
@@ -195,8 +235,10 @@ export default function Index() {
                     cluster
                     shape={truckFeatures.featureCollection}
                     onPress={(e) => {
-                        const truckId = e.features?.[0]?.properties?.id;
+                        const truckId = e.features?.[0]?.properties
+                            ?.id as Id<"trucks">;
                         if (truckId) {
+                            console.log("Truck Selected:", truckId); // Optional Debug
                             setSelectedTruckId(truckId);
                         }
                     }}
@@ -216,7 +258,6 @@ export default function Index() {
                 </ShapeSource>
             </MapView>
 
-            {/* Loading Indicator */}
             {!showMap && (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator
@@ -226,25 +267,17 @@ export default function Index() {
                 </View>
             )}
 
-            {/* Conditional Card Rendering */}
-            {selectedTruck ? (
-                <SelectedTruck truck={selectedTruck} />
-            ) : (
+            {selectedTruck ? null : ( // <SelectedTruck truck={selectedTruck} />
                 <NearbyTrucks trucks={truckFeatures.filteredTrucks} />
             )}
 
-            {/* Category Modal */}
             {showCategoryModal && <CategoryModal />}
-
-            {/* Menu Modal */}
-            {showMenuModal && selectedTruck && (
+            {/* {showMenuModal && selectedTruck && (
                 <MenuModal truck={selectedTruck} />
             )}
-
-            {/* Truck Page */}
             {showTruckModal && selectedTruck && (
                 <TruckModal truck={selectedTruck} />
-            )}
+            )} */}
         </View>
     );
 }

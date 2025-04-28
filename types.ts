@@ -142,17 +142,26 @@ export type Business = {
 };
 
 export type Trucks = {
+    _creationTime: number;
+    _id: Id<"trucks">;
     truck_name: string;
-    vendor_id: string;
-    latitude: number;
-    longitude: number;
+    business_clerk_id: string;
+    business_convex_id: Id<"businesses">;
+    location?: string | undefined;
+    latitude?: number | undefined;
+    longitude?: number | undefined;
     menu_id?: string | undefined;
     open_status: boolean;
+    rating?: number | undefined;
+    truck_type: "Stationary" | "Mobile";
+    categories?: string[] | undefined;
+    distance?: number | undefined;
     schedule: {
-        days: string[];
-        times: string[];
-    };
-    truck_type: string;
+        day: string;
+        start_time: string;
+        end_time: string;
+        closed: boolean;
+    }[];
 };
 
 export type DayOfWeek =

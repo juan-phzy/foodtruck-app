@@ -17,14 +17,14 @@ import React, { useState, useCallback, useMemo } from "react";
 import { View, Text, Image, Pressable, Dimensions } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import theme from "@/assets/theme";
-import { FoodTruck } from "@/types";
+import { Trucks } from "@/types";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import useTruckStore from "@/store/useTruckStore";
 
 const { width } = Dimensions.get("window");
 
 interface TruckCardSmallProps {
-    truck: FoodTruck; // Data object containing truck information
+    truck: Trucks; // Data object containing truck information
     pressable: boolean; // Determines if the card is pressable
 }
 
@@ -32,7 +32,10 @@ interface TruckCardSmallProps {
  * @component TruckCardSmall
  * @description A single compact food truck card optimized for performance in large lists.
  */
-const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck, pressable }) => {
+const TruckCardSmall: React.FC<TruckCardSmallProps> = ({
+    truck,
+    pressable,
+}) => {
     const [isFavorite, setIsFavorite] = useState(false);
 
     const { setSelectedTruckId } = useTruckStore();
@@ -55,7 +58,7 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck, pressable }) => 
                 <MaterialCommunityIcons
                     key={index}
                     name={
-                        index < Math.floor(truck.rating)
+                        index < Math.floor(truck.rating!)
                             ? "star"
                             : "star-outline"
                     }
@@ -68,9 +71,9 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck, pressable }) => 
 
     const handlePress = () => {
         if (pressable) {
-            setSelectedTruckId(truck.id);
+            setSelectedTruckId(truck._id);
         }
-    }
+    };
 
     return (
         /*
@@ -83,30 +86,33 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck, pressable }) => 
         <Pressable onPress={handlePress} style={styles.rootContainer}>
             <View style={styles.bodyContainer}>
                 {/* Truck Image */}
-                <Image source={{ uri: truck.imageUrl }} style={styles.image} />
+                <Image
+                    source={require("@/assets/images/placeholder.jpg")}
+                    style={styles.image}
+                />
 
                 {/* Truck Info */}
                 <View style={styles.infoContainer}>
                     {/* Name and Open/Closed Status */}
                     <Text style={styles.name}>
-                        {truck.name} ⦁{" "}
+                        {truck.truck_name} ⦁{" "}
                         <Text
-                            style={truck.isOpen ? styles.open : styles.closed}
+                            style={truck.open_status ? styles.open : styles.closed}
                         >
-                            {truck.isOpen ? "OPEN" : "CLOSED"}
+                            {truck.open_status ? "OPEN" : "CLOSED"}
                         </Text>
                     </Text>
 
                     {/* Distance and Estimated Travel Time */}
                     <Text style={styles.details}>
-                        {`${truck.distance.toFixed(2)} mi ⦁ `}
-                        {`${Math.round(truck.distance * 3)} min drive ⦁ `}
-                        {`${Math.round(truck.distance * 20)} min walk`}
+                        {`${truck.distance!.toFixed(2)} mi ⦁ `}
+                        {`${Math.round(truck.distance! * 3)} min drive ⦁ `}
+                        {`${Math.round(truck.distance! * 20)} min walk`}
                     </Text>
 
                     {/* Categories */}
                     <Text style={styles.details}>
-                        {truck.categories.join(", ")}
+                        {truck.categories!.join(", ")}
                     </Text>
 
                     {/* Star Ratings */}
@@ -114,7 +120,7 @@ const TruckCardSmall: React.FC<TruckCardSmallProps> = ({ truck, pressable }) => 
                         {starIcons}
                         <Text style={styles.ratingText}>{truck.rating}</Text>
                         <Text style={styles.ratingText}>
-                            ({truck.reviewCount})
+                          {`(0)`} {/* FIX Put Review Count In Later */}
                         </Text>
                     </View>
                 </View>
@@ -148,8 +154,8 @@ const styles = ScaledSheet.create({
         gap: "5@ms",
     },
     image: {
-        width: width * .18,
-        height: width * .18,
+        width: width * 0.18,
+        height: width * 0.18,
         borderRadius: "8@ms",
         resizeMode: "cover",
     },

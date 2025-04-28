@@ -47,13 +47,10 @@ export default function EditProfileSubsection() {
     }
 
     const sectionConfig =
-        USER_SETTINGS_CONFIG[
-            sectionKey as keyof typeof USER_SETTINGS_CONFIG
-        ];
+        USER_SETTINGS_CONFIG[sectionKey as keyof typeof USER_SETTINGS_CONFIG];
     const fieldConfig = sectionConfig.fields.find((f) => f.link === subKey);
     if (!fieldConfig) throw new Error("Invalid subsection field");
 
-    // Dynamically generate input state
     const [form, setForm] = useState(
         fieldConfig.inputs.reduce(
             (acc, input) => {
@@ -157,9 +154,7 @@ export default function EditProfileSubsection() {
                                     );
                             }
                         })()}
-                        onChangeText={(text) =>
-                            handleInputChange(input.key, text)
-                        }
+                        onChange={(text) => handleInputChange(input.key, text)}
                     />
                 ))}
 
@@ -169,7 +164,7 @@ export default function EditProfileSubsection() {
                         value={verificationCode}
                         keyboardType="numeric"
                         placeholder="Enter verification code"
-                        onChangeText={setVerificationCode}
+                        onChange={setVerificationCode}
                     />
                 )}
                 {verifyingEmail && (
@@ -178,7 +173,7 @@ export default function EditProfileSubsection() {
                         value={emailVerificationCode}
                         keyboardType="numeric"
                         placeholder="Enter verification code"
-                        onChangeText={setEmailVerificationCode}
+                        onChange={setEmailVerificationCode}
                     />
                 )}
 

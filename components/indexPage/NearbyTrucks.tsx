@@ -24,7 +24,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Theme & Types
 import theme from "@/assets/theme";
-import { FoodTruck } from "@/types";
+import { Trucks } from "@/types";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
 // State Management (Zustand)
@@ -35,7 +35,7 @@ import StandardButton from "@/components/buttons/StandardButton";
 import TruckCardList from "@/components/lists/TruckCardList"
 
 interface NearbyTrucksProps {
-    trucks: FoodTruck[];
+    trucks: Trucks[];
 }
 
 const NearbyTrucks: React.FC<NearbyTrucksProps> = ({ trucks }) => {
@@ -49,9 +49,9 @@ const NearbyTrucks: React.FC<NearbyTrucksProps> = ({ trucks }) => {
      */
     const sortedTrucks = useMemo(() => {
         if (sortBy === "rating")
-            return [...trucks].sort((a, b) => b.rating - a.rating);
+            return [...trucks].sort((a, b) => b.rating! - a.rating!);
         if (sortBy === "distance")
-            return [...trucks].sort((a, b) => a.distance - b.distance);
+            return [...trucks].sort((a, b) => a.distance! - b.distance!);
         return trucks;
     }, [trucks, sortBy]);
 

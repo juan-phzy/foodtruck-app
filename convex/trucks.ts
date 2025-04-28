@@ -86,6 +86,8 @@ export const createTruck = mutation({
             longitude: args.longitude,
             open_status: false, // default
             truck_type: args.truck_type,
+            categories: business.categories || [],
+            rating: 0, // default
             schedule: args.schedule,
         });
     },
@@ -160,39 +162,71 @@ export const updateTruckSchedule = mutation({
 });
 
 export const deleteTruck = mutation({
-	args: {
-	  truckId: v.id("trucks"),
-	},
-	handler: async (ctx, args) => {
-	  const identity = await ctx.auth.getUserIdentity();
-	  if (!identity) {
-		throw new Error("Unauthorized: User not signed in.");
-	  }
-  
-	  // 1. Fetch the truck
-	  const truck = await ctx.db.get(args.truckId);
-	  if (!truck) {
-		throw new Error("Truck not found.");
-	  }
-  
-	  // 2. Fetch the associated business
-	  const business = await ctx.db
-		.query("businesses")
-		.withIndex("by_clerk_id", (q) =>
-		  q.eq("clerkId", truck.business_clerk_id)
-		)
-		.unique();
-  
-	  if (!business) {
-		throw new Error("Associated business not found.");
-	  }
-  
-	  // 3. Verify the requesting user is the vendor/admin
-	  if (business.vendor_clerk_id !== identity.subject) {
-		throw new Error("Unauthorized: Only the business admin can delete a truck.");
-	  }
-  
-	  // 4. Delete the truck
-	  await ctx.db.delete(args.truckId);
-	},
-  });
+    args: {
+        truckId: v.id("trucks"),
+    },
+    handler: async (ctx, args) => {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new Error("Unauthorized: User not signed in.");
+        }
+
+        // 1. Fetch the truck
+        const truck = await ctx.db.get(args.truckId);
+        if (!truck) {
+            throw new Error("Truck not found.");
+        }
+
+        // 2. Fetch the associated business
+        const business = await ctx.db
+            .query("businesses")
+            .withIndex("by_clerk_id", (q) =>
+                q.eq("clerkId", truck.business_clerk_id)
+            )
+            .unique();
+
+        if (!business) {
+            throw new Error("Associated business not found.");
+        }
+
+        // 3. Verify the requesting user is the vendor/admin
+        if (business.vendor_clerk_id !== identity.subject) {
+            throw new Error(
+                "Unauthorized: Only the business admin can delete a truck."
+            );
+        }
+
+        // 4. Delete the truck
+        await ctx.db.delete(args.truckId);
+    },
+});
+
+export const getTrucksInViewport = query({
+    args: {
+        topLat: v.number(),
+        bottomLat: v.number(),
+        leftLng: v.number(),
+        rightLng: v.number(),
+    },
+    handler: async (ctx, args) => {
+        const { topLat, bottomLat, leftLng, rightLng } = args;
+
+        const trucks = await ctx.db.query("trucks").collect();
+
+        // Only return trucks whose lat/lng is inside the viewport
+        const filteredTrucks = trucks.filter((truck) => {
+            if (truck.latitude === undefined || truck.longitude === undefined) {
+                return false; // skip if missing lat/lng
+            }
+
+            return (
+                truck.latitude <= topLat &&
+                truck.latitude >= bottomLat &&
+                truck.longitude >= leftLng &&
+                truck.longitude <= rightLng
+            );
+        });
+
+        return filteredTrucks;
+    },
+});

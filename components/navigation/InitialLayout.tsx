@@ -39,7 +39,7 @@ export default function InitialLayout() {
             if (isOnboarded != undefined && !isOnboarded) {
                 // Not onboarded → stay in auth routes only
                 if (currentSegment !== "(auth)") {
-                    router.replace("/(auth)/createBusiness/step1");
+                    router.replace("/(auth)/createBusiness/step6");
                 }
             } else if (currentSegment === "(auth)" || currentSegment === "(public)") {
                 // Onboarded vendors → redirect to vendor app
