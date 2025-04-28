@@ -40,7 +40,12 @@ const useTruckStore = create<TruckStore>((set, get) => ({
             return;
         }
 
-        const { persistedTrucks } = get();
+        const { persistedTrucks, selectedTruckId } = get();
+
+        if (id === selectedTruckId) {
+            set({ selectedTruckId: null, selectedTruck: null });
+            return;
+        }
         const truck = persistedTrucks.find((t) => t._id === id) || null;
 
         set({ selectedTruckId: id, selectedTruck: truck });

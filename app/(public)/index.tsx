@@ -267,7 +267,9 @@ export default function Index() {
                 </View>
             )}
 
-            {selectedTruck ? null : ( // <SelectedTruck truck={selectedTruck} />
+            {selectedTruck ? (
+                <SelectedTruck truck={selectedTruck} />
+            ) : (
                 <NearbyTrucks trucks={truckFeatures.filteredTrucks} />
             )}
 

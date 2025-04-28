@@ -13,14 +13,14 @@ import {
     MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import theme from "@/assets/theme";
-import { FoodTruck } from "@/types";
+import { Trucks } from "@/types";
 
 import useTruckStore from "@/store/useTruckStore";
 import useMenuModalStore from "@/store/useMenuModalStore";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
 interface SelectedTruckProps {
-    truck: FoodTruck;
+    truck: Trucks;
 }
 
 const {width} = Dimensions.get("window");
@@ -42,15 +42,15 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
     );
 
     // Calculate estimated driving & walking time once
-    const estimatedDriveTime = Math.round(truck.distance * 2);
-    const estimatedBikeTime = Math.round(truck.distance * 6);
-    const estimatedWalkTime = Math.round(truck.distance * 10);
+    const estimatedDriveTime = Math.round(truck.distance! * 2);
+    const estimatedBikeTime = Math.round(truck.distance! * 6);
+    const estimatedWalkTime = Math.round(truck.distance! * 10);
 
     return (
         <BlurView intensity={10} style={styles.rootContainer}>
             {/* Title Bar */}
             <View style={styles.titleBar}>
-                <Text style={styles.title}>{truck.name}</Text>
+                <Text style={styles.title}>{truck.truck_name}</Text>
 
                 <TouchableOpacity
                     style={styles.backButtonContainer}
@@ -105,7 +105,7 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                                 <MaterialCommunityIcons
                                     key={index}
                                     name={
-                                        index < Math.floor(truck.rating)
+                                        index < Math.floor(truck.rating!)
                                             ? "star"
                                             : "star-outline"
                                     }
@@ -117,17 +117,17 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
                         <Text
                             style={[
                                 styles.openStatus,
-                                truck.isOpen ? styles.open : styles.closed,
+                                truck.open_status ? styles.open : styles.closed,
                             ]}
                         >
-                            {truck.isOpen ? "Open" : "Closed"}
+                            {truck.open_status ? "Open" : "Closed"}
                         </Text>
                     </View>
                 </View>
                 <View style={styles.spaceBetweenRow}>
                     <Text style={styles.detailText}>Categories:</Text>
                     <Text style={styles.detailText}>
-                        {truck.categories.join(", ")}
+                        {truck.categories!.join(", ")}
                     </Text>
                 </View>
             </View>
@@ -183,11 +183,11 @@ const SelectedTruck: React.FC<SelectedTruckProps> = ({ truck }) => {
             </View>
             {/* Image Gallery */}
             <FlatList
-                data={truck.images}
+                data={[0,1,2,3]}
                 horizontal
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item }) => (
-                    <Image source={{ uri: item }} style={styles.image} />
+                    <Image source={require("@/assets/images/placeholder.jpg")} style={styles.image} />
                 )}
                 showsHorizontalScrollIndicator={false}
                 ItemSeparatorComponent={renderSeparator}
