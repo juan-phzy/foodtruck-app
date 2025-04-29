@@ -1,6 +1,6 @@
-// app/(public)/profile/_layout.tsx
+// app/(vendor)/account/_layout.tsx
 import { Stack } from "expo-router";
 
-export default function VendorSettingScreenLayout() {
+export default function VendorAccountLayout() {
     return <Stack screenOptions={{ headerShown: false }} />;
 }

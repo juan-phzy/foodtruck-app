@@ -2,11 +2,11 @@ import { Pressable, View, Text } from "react-native";
 import React from "react";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
-import { FontAwesome6 } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 type IconButtonProps = Readonly<{
     status?: boolean;
-    iconName: keyof typeof FontAwesome6.glyphMap;
+    iconName: keyof typeof MaterialCommunityIcons.glyphMap;
     showManage: boolean;
     text: string;
     onPress: () => void;
@@ -23,13 +23,11 @@ export default function IconButton({
             style={styles.rootContainer}
             onPress={!showManage ? onPress : undefined}
         >
-            <View style={styles.iconWrapper}>
-                <FontAwesome6
+                <MaterialCommunityIcons
                     name={iconName}
-                    size={ms(35)}
+                    size={ms(45)}
                     color={theme.colors.primary}
                 />
-            </View>
             <View style={styles.textView}>
                 <Text style={styles.textTitle}>{text}</Text>
                 {status == null ? null : (
@@ -58,10 +56,10 @@ const styles = ScaledSheet.create({
         borderRadius: "15@ms",
         backgroundColor: theme.colors.white,
         paddingHorizontal: theme.padding.md,
-        paddingVertical: theme.padding.xl,
+        paddingVertical: theme.padding.lg,
         boxShadow: "0px 0px 8px 0px rgba(0, 0, 0, 0.2)",
         alignItems: "center",
-        gap: "5@ms",
+        gap: "10@ms",
     },
     iconWrapper: {
         flexDirection: "row",

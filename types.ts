@@ -150,7 +150,7 @@ export type Trucks = {
     location?: string | undefined;
     latitude?: number | undefined;
     longitude?: number | undefined;
-    menu_id?: string | undefined;
+    menu_id?: Id<"menus"> | undefined;
     open_status: boolean;
     rating?: number | undefined;
     truck_type: "Stationary" | "Mobile";
@@ -163,6 +163,23 @@ export type Trucks = {
         closed: boolean;
     }[];
 };
+
+export type Menu = {
+    _id: Id<"menus">;
+    _creationTime: number;
+    name: string;
+    business_convex_id: Id<"businesses">;
+    menu: {
+      category: string;
+      items: {
+        name: string;
+        description: string;
+        price: number;
+        imageUrl: string;
+      }[];
+    }[];
+  };
+
 
 export type DayOfWeek =
   | "Sunday"

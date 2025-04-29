@@ -23,7 +23,7 @@ import { useInitVendorBusiness } from "@/store/useBusinessStore";
 // Types
 type TabIconProps = {
     color: string;
-    name: "locations" | "employees" | "account" | "test";
+    name: "locations" | "employees" | "account" | "test" | "menu";
 };
 
 // Render tab icons by name
@@ -63,13 +63,21 @@ const renderTabIcon = ({ color, name }: TabIconProps) => {
                     color={color}
                 />
             );
+        case "menu":
+            return (
+                <MaterialCommunityIcons
+                    name="silverware-fork-knife"
+                    size={size}
+                    color={color}
+                />
+            );
+
         default:
             return null;
     }
 };
 
 export default function VendorLayout() {
-    
     useInitVendorProfile();
     useInitVendorBusiness();
 
@@ -98,6 +106,15 @@ export default function VendorLayout() {
                         renderTabIcon({ color, name: "locations" }),
                 }}
             />
+             <Tabs.Screen
+                name="menu"
+                options={{
+                    tabBarIcon: ({ color }) =>
+                        renderTabIcon({ color, name: "menu" }),
+                    // href: null,
+                    // USE THIS LATER TO HIDE TAB FROM UNAUTHORIZED USERS
+                }}
+            />
             <Tabs.Screen
                 name="employees"
                 options={{
@@ -119,6 +136,7 @@ export default function VendorLayout() {
                         renderTabIcon({ color, name: "test" }),
                 }}
             />
+        
         </Tabs>
     );
 }

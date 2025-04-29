@@ -63,24 +63,23 @@ export default defineSchema({
         location: v.optional(v.string()),
         latitude: v.optional(v.number()),
         longitude: v.optional(v.number()),
-        menu_id: v.optional(v.string()),
+        menu_id: v.optional(v.id("menus")),
         open_status: v.boolean(),
         rating: v.optional(v.number()),
         categories: v.optional(v.array(v.string())),
         truck_type: v.union(v.literal("Stationary"), v.literal("Mobile")),
-        schedule:
-            v.array(
-                v.object({
-                    day: v.string(),
-                    start_time: v.string(),
-                    end_time: v.string(),
-                    closed: v.boolean(),
-                })
-            ),
+        schedule: v.array(
+            v.object({
+                day: v.string(),
+                start_time: v.string(),
+                end_time: v.string(),
+                closed: v.boolean(),
+            })
+        ),
     })
         .index("by_business_convex_id", ["business_convex_id"])
         .index("by_business_clerk_id", ["business_clerk_id"]),
-        
+
     // Stands Table
     stands: defineTable({
         stand_name: v.string(),
@@ -91,75 +90,36 @@ export default defineSchema({
         longitude: v.optional(v.number()),
         menu_id: v.optional(v.string()),
         open_status: v.boolean(),
-        
+
         stand_type: v.union(v.literal("Stationary"), v.literal("Mobile")),
 
-        schedule:
-            v.array(
-                v.object({
-                    day: v.string(),
-                    start_time: v.string(),
-                    end_time: v.string(),
-                    closed: v.boolean(),
-                })
-            ),
+        schedule: v.array(
+            v.object({
+                day: v.string(),
+                start_time: v.string(),
+                end_time: v.string(),
+                closed: v.boolean(),
+            })
+        ),
     })
         .index("by_business_convex_id", ["business_convex_id"])
         .index("by_business_clerk_id", ["business_clerk_id"]),
 
-    // Ratings Table
-    ratings: defineTable({
-        rating_id: v.string(),
-        user_id: v.string(),
-        entity_id: v.string(),
-        rated_entity: v.union(v.literal("truck"), v.literal("stand")), // ENUM-like structure
-        rating: v.float64(), // Decimal rating (1.0 - 5.0)
-        created_at: v.number(),
-    })
-        .index("by_user", ["user_id"])
-        .index("by_entity", ["entity_id"]),
-
-    // User Favorite Trucks
-    user_favorite_trucks: defineTable({
-        user_id: v.string(),
-        truck_id: v.string(),
-        created_at: v.number(),
-    })
-        .index("by_user", ["user_id"])
-        .index("by_truck", ["truck_id"]),
-
-    // Vendor Trucks
-    vendor_trucks: defineTable({
-        vendor_id: v.string(),
-        truck_id: v.string(),
-    })
-        .index("by_vendor", ["vendor_id"])
-        .index("by_truck", ["truck_id"]),
-
-    // Truck Categories
-    truck_categories: defineTable({
-        truck_id: v.string(),
-        category_name: v.string(),
-    }).index("by_truck", ["truck_id"]),
-
-    // Stand Categories
-    stand_categories: defineTable({
-        stand_id: v.string(),
-        category_name: v.string(),
-    }).index("by_stand", ["stand_id"]),
-
-    // Stand Ratings
-    stand_ratings: defineTable({
-        user_id: v.string(),
-        stand_id: v.string(),
-        rating: v.float64(),
-        review: v.string(),
-        created_at: v.number(),
-    })
-        .index("by_stand", ["stand_id"])
-        .index("by_user", ["user_id"]),
+    menus: defineTable({
+        business_id: v.id("businesses"),
+        name: v.string(),
+        menu: v.array(
+            v.object({
+                category: v.string(),
+                items: v.array(
+                    v.object({
+                        name: v.string(),
+                        description: v.optional(v.string()),
+                        price: v.number(),
+                        imageUrl: v.optional(v.string()),
+                    })
+                ),
+            })
+        ),
+    }).index("by_business_id", ["business_id"]),
 });
-
-// webhooks - automated message that are sent when something happens.
-// user.created - event in clerk
-// we listen to the event once
