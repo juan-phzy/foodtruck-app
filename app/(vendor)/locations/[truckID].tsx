@@ -15,15 +15,6 @@ import ScheduleModal from "@/components/modals/ScheduleModal";
 import { ScheduleType } from "@/types";
 import { convertScheduleArrayToRecord } from "@/utils/converScheduleArrayToRecord";
 
-/* 
-    For future implementation to pass in picture and name of food truck.
-    For now, generic truck icon and name is shown
-*/
-interface ManageTruckProps {
-    truckName: string;
-    image: string;
-}
-
 export default function ManageLocation() {
     const { truckID } = useLocalSearchParams();
     const insets = useSafeAreaInsets();

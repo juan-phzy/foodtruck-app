@@ -25,20 +25,20 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
 // Vendor Store
-import { useVendorOnboardingStore } from "@/store/useVendorOnboardingStore";
+import { useUserOnboardingStore } from "@/store/useUserOnboardingStore";
 import Toast from "react-native-toast-message";
 
 const { height } = Dimensions.get("window");
 
-export default function CreateBusinessStep2() {
+export default function CreateUserStep1() {
     console.log("");
-    console.log("_________________________________________________");
-    console.log("app/(auth)/createBusiness/step2.tsx: Entered Page");
+    console.log("_____________________________________________");
+    console.log("app/(auth)/createUser/step1.tsx: Entered Page");
 
     const insets = useSafeAreaInsets();
     const router = useRouter();
 
-    const { data, updateField } = useVendorOnboardingStore();
+    const { data, updateField } = useUserOnboardingStore();
 
     const handleGoBack = () => {
         console.log("Go Back Pressed");
@@ -46,12 +46,12 @@ export default function CreateBusinessStep2() {
     };
 
     const handleNextStep = () => {
-        if (!data.email) {
+        if (!data.first_name || !data.last_name) {
             Toast.show({
                 visibilityTime: 10000,
                 type: "error",
                 text1: "Missing Information",
-                text2: "Please enter a valid email address",
+                text2: "Please enter both first and last name",
                 text1Style: {
                     color: theme.colors.red,
                     fontSize: theme.fontSize.sm,
@@ -64,7 +64,7 @@ export default function CreateBusinessStep2() {
             return;
         }
 
-        router.push("/(auth)/createBusiness/step3");
+        router.push("/(auth)/createUser/step2");
     };
 
     return (
@@ -88,7 +88,9 @@ export default function CreateBusinessStep2() {
                     style={[styles.logoContainer, { paddingTop: insets.top }]}
                 >
                     <Text style={styles.title}>MunchMap</Text>
-                    <Text style={styles.subtitle}>Create Account</Text>
+                    <Text style={styles.subtitle}>
+                        Create Account
+                    </Text>
                 </View>
 
                 <BlurView
@@ -110,7 +112,7 @@ export default function CreateBusinessStep2() {
                         <Text style={styles.goBackText}>Go Back</Text>
                     </Pressable>
 
-                    <Text style={styles.formHeader}>Contact Information</Text>
+                    <Text style={styles.formHeader}>Personal Information</Text>
 
                     <ScrollView
                         showsVerticalScrollIndicator={false}
@@ -118,21 +120,21 @@ export default function CreateBusinessStep2() {
                         keyboardShouldPersistTaps="handled"
                     >
                         <TextInputFancy
-                            label="Email"
+                            label="First Name"
                             required={true}
-                            placeholder="vendor@email.com"
-                            value={data.email}
+                            placeholder="Enter your first name"
+                            value={data.first_name}
                             onChangeText={(value) =>
-                                updateField("email", value)
+                                updateField("first_name", value)
                             }
                         />
                         <TextInputFancy
-                            label="Phone Number"
-                            required={false}
-                            placeholder="(123)-456-7890"
-                            value={data.phone_number}
+                            label="Last Name"
+                            required={true}
+                            placeholder="Enter your last name"
+                            value={data.last_name}
                             onChangeText={(value) =>
-                                updateField("phone_number", value)
+                                updateField("last_name", value)
                             }
                         />
                     </ScrollView>

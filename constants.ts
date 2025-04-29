@@ -33,7 +33,7 @@ export type UserSettingsField = {
 export type UserSettingsConfigType = Record<
   UserSettingsSection,
   {
-    iconName: string;
+    iconName: keyof typeof MaterialCommunityIcons.glyphMap;
     setting: string;
     link: UserSettingsSection;
     title: string;
@@ -44,7 +44,7 @@ export type UserSettingsConfigType = Record<
 // mergedSettingsConfig.ts
 export const USER_SETTINGS_CONFIG: UserSettingsConfigType = {
   personal: {
-    iconName: "user-pen",
+    iconName: "account-edit",
     setting: "Edit Profile",
     link: "personal",
     title: "Edit Profile",
@@ -137,7 +137,7 @@ export const USER_SETTINGS_CONFIG: UserSettingsConfigType = {
 export type VendorSettingsConfigType = Record<
   VendorSettingsSection,
   {
-    iconName: string;
+    iconName:  keyof typeof MaterialCommunityIcons.glyphMap;
     setting: string;
     link: UserSettingsSection;
     title: string;
@@ -148,7 +148,7 @@ export type VendorSettingsConfigType = Record<
 // mergedSettingsConfig.ts
 export const VENDOR_SETTINGS_CONFIG: VendorSettingsConfigType = {
   personal: {
-    iconName: "user-pen",
+    iconName: "account-edit",
     setting: "Edit Profile",
     link: "personal",
     title: "Edit Profile",

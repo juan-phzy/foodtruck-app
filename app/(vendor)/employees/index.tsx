@@ -35,7 +35,7 @@ export default function EmployeesIndex() {
                     <IconButton
                         key={user.name + index}
                         iconName={
-                            user.type == "User" ? "user-large" : "user-shield"
+                            user.type == "User" ? "badge-account-horizontal" : "shield-account"
                         }
                         text={user.name}
                         showManage={true}

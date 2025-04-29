@@ -6,7 +6,6 @@ import {
     ImageBackground,
     Pressable,
     Dimensions,
-    ScrollView,
 } from "react-native";
 
 // Expo Libraries
@@ -16,42 +15,112 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 
 // Custom Components
-import TextInputFancy from "@/components/inputs/TextInputFancy";
 import StandardButton from "@/components/buttons/StandardButton";
+import TextInputFancy from "@/components/inputs/TextInputFancy";
 
 // Theme & Constants
 import theme from "@/assets/theme";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
-// Vendor Store
-import { useVendorOnboardingStore } from "@/store/useVendorOnboardingStore";
+// State Management
 import Toast from "react-native-toast-message";
+import { useSignUp } from "@clerk/clerk-expo";
+import { useState } from "react";
+import { useVendorOnboardingStore } from "@/store/useVendorOnboardingStore";
+import { useUserOnboardingStore } from "@/store/useUserOnboardingStore";
 
 const { height } = Dimensions.get("window");
 
-export default function CreateBusinessStep2() {
+export default function CreateUserStep5() {
     console.log("");
-    console.log("_________________________________________________");
-    console.log("app/(auth)/createBusiness/step2.tsx: Entered Page");
+    console.log("_____________________________________________");
+    console.log("app/(auth)/createUser/step5.tsx: Entered Page");
+
+    const { isLoaded, signUp, setActive } = useSignUp(); // Clerk sign-up hook for user authentication
+    const [isLoading, setIsLoading] = useState(false); // Loading state for the sign-up process
+    const [resendDisabled, setResendDisabled] = useState(false); // Loading state for the verification process
+    const [verificationCode, setVerificationCode] = useState("");
+
+    const {reset:resetVendorForm} = useVendorOnboardingStore(); // Reset the vendor onboarding store to clear any previous data
+    const { reset: resetUserForm } = useUserOnboardingStore(); // Reset the user onboarding store to clear any previous data
 
     const insets = useSafeAreaInsets();
     const router = useRouter();
-
-    const { data, updateField } = useVendorOnboardingStore();
 
     const handleGoBack = () => {
         console.log("Go Back Pressed");
         router.back();
     };
 
-    const handleNextStep = () => {
-        if (!data.email) {
+    const handleVerification = async () => {
+        if (!isLoaded || !signUp) return;
+
+        // If we're verifying...
+        setIsLoading(true);
+        try {
+            const verified = await signUp.attemptEmailAddressVerification({
+                code: verificationCode,
+            });
+
+            if (verified.status === "complete") {
+                await setActive({ session: verified.createdSessionId });
+                resetUserForm();
+                resetVendorForm();
+                router.replace("/(public)");
+            } else {
+                Toast.show({
+                    type: "error",
+                    text1: "Verification Failed",
+                    text2: "Check the code and try again.",
+                });
+            }
+        } catch (err) {
+            console.error("Verification error:", err);
             Toast.show({
-                visibilityTime: 10000,
                 type: "error",
-                text1: "Missing Information",
-                text2: "Please enter a valid email address",
+                text1: "Verification Error",
+                text2: "Unable to complete verification.",
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const startResendTimer = () => {
+        setResendDisabled(true);
+        setTimeout(() => {
+            setResendDisabled(false);
+        }, 30000); // 30 seconds
+    };
+
+    const resendCode = async () => {
+        if (!isLoaded || !signUp) return;
+
+        try {
+            await signUp.prepareEmailAddressVerification({
+                strategy: "email_code",
+            });
+            Toast.show({
+                type: "success",
+                text1: "Code Resent",
+                text2: "Check your email for the new code.",
+                text1Style: {
+                    color: theme.colors.green,
+                    fontSize: theme.fontSize.sm,
+                },
+                text2Style: {
+                    color: theme.colors.black,
+                    fontSize: theme.fontSize.xs,
+                },
+            });
+            startResendTimer();
+        } catch (err) {
+            console.error("Resend code error:", err);
+            Toast.show({
+                type: "error",
+                text1: "Resend Error",
+                text2: "Unable to resend code.",
                 text1Style: {
                     color: theme.colors.red,
                     fontSize: theme.fontSize.sm,
@@ -61,10 +130,9 @@ export default function CreateBusinessStep2() {
                     fontSize: theme.fontSize.xs,
                 },
             });
-            return;
+        } finally {
+            setIsLoading(false);
         }
-
-        router.push("/(auth)/createBusiness/step3");
     };
 
     return (
@@ -110,39 +178,37 @@ export default function CreateBusinessStep2() {
                         <Text style={styles.goBackText}>Go Back</Text>
                     </Pressable>
 
-                    <Text style={styles.formHeader}>Contact Information</Text>
+                    <Text style={styles.formHeader}>Verify Email</Text>
 
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={styles.formContainer}
-                        keyboardShouldPersistTaps="handled"
-                    >
-                        <TextInputFancy
-                            label="Email"
-                            required={true}
-                            placeholder="vendor@email.com"
-                            value={data.email}
-                            onChangeText={(value) =>
-                                updateField("email", value)
-                            }
-                        />
-                        <TextInputFancy
-                            label="Phone Number"
-                            required={false}
-                            placeholder="(123)-456-7890"
-                            value={data.phone_number}
-                            onChangeText={(value) =>
-                                updateField("phone_number", value)
-                            }
-                        />
-                    </ScrollView>
+                    <TextInputFancy
+                        label="Verification Code"
+                        placeholder="Enter code from email"
+                        value={verificationCode}
+                        onChangeText={setVerificationCode}
+                        keyboardType="numeric"
+                        maxLength={6}
+                    />
+
+                    <StandardButton
+                        style="outlineLight"
+                        verticalPadding={theme.padding.sm}
+                        fontSize={theme.fontSize.md}
+                        text={
+                            resendDisabled
+                                ? "Wait Before Requesting Another Code"
+                                : "Resend Code"
+                        }
+                        onPress={resendCode}
+                        disabled={resendDisabled}
+                    />
 
                     <StandardButton
                         style="light"
                         verticalPadding={theme.padding.sm}
                         fontSize={theme.fontSize.md}
-                        text={"Next Step"}
-                        onPress={handleNextStep}
+                        text={"Verify Code"}
+                        onPress={handleVerification}
+                        disabled={isLoading}
                     />
                 </BlurView>
             </ImageBackground>

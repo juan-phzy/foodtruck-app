@@ -13,6 +13,7 @@ interface TruckStore {
     previousTruck: () => void;
     setPersistedTrucks: (newTrucks: Trucks[]) => void;
     toggleTruckModal: () => void;
+    reset: () => void;
 }
 
 const useTruckStore = create<TruckStore>((set, get) => ({
@@ -85,6 +86,15 @@ const useTruckStore = create<TruckStore>((set, get) => ({
 
         set({ selectedTruckId: prevTruck._id, selectedTruck: prevTruck });
     },
+
+    reset: () => {
+        set({
+            selectedTruckId: null,
+            selectedTruck: null,
+            persistedTrucks: [],
+            showTruckModal: false,
+        });
+    }
 }));
 
 export default useTruckStore;

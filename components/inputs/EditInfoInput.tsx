@@ -166,7 +166,7 @@ const styles = ScaledSheet.create({
     },
     input: {
         backgroundColor: theme.colors.white,
-        fontSize: theme.fontSize.md,
+        fontSize: theme.fontSize.sm,
         color: theme.colors.black,
     },
     dropdown: {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, ScrollView, View } from "react-native";
+import { Text, ScrollView, View, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import theme from "@/assets/theme";
@@ -11,10 +11,11 @@ import ScheduleModal from "@/components/modals/ScheduleModal";
 import { ScheduleType } from "@/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useBusinessStore } from "@/store/useBusinessStore";
 import { showToast } from "@/utils/showToast";
+import { Id } from "@/convex/_generated/dataModel";
 
 export default function AddTruckPage() {
     const insets = useSafeAreaInsets();
@@ -27,12 +28,25 @@ export default function AddTruckPage() {
 
     const createTruck = useMutation(api.trucks.createTruck);
 
+    const [selectedMenu, setSelectedMenu] = useState<string>("No Menu Selected");
+    const [showMenuOptions, setShowMenuOptions] = useState(false);
+
+    const menus = useQuery(
+        api.menus.getMenusByBusiness,
+        business
+            ? {
+                  business_id: business?._id,
+              }
+            : "skip"
+    );
+
     const [form, setForm] = useState<{
         truck_name: string;
         truck_type: string;
         location: string;
         latitude: number | undefined;
         longitude: number | undefined;
+        menu_id: Id<"menus">;
         show_business_name: boolean;
         schedule: ScheduleType;
     }>({
@@ -41,6 +55,7 @@ export default function AddTruckPage() {
         location: "",
         latitude: undefined,
         longitude: undefined,
+        menu_id: "" as Id<"menus">,
         show_business_name: true,
         schedule: {
             Sunday: { start: "09:00 AM", end: "05:00 PM", closed: true },
@@ -95,6 +110,7 @@ export default function AddTruckPage() {
                 location: form.location,
                 latitude: form.latitude,
                 longitude: form.longitude,
+                menu_id: form.menu_id,
                 business_clerk_id: business!.clerkId,
                 business_convex_id: business!._id,
                 schedule: Object.entries(form.schedule).map(
@@ -181,6 +197,38 @@ export default function AddTruckPage() {
                     onPress={() => setShowModal(true)}
                 />
 
+                <View style={styles.inputRootContainer}>
+                    <View style={styles.inputSection1}>
+                        <View style={styles.inputTextContainer}>
+                            <Text
+                                style={styles.inputTitle}
+                            >{`Select a Menu`}</Text>
+                            <Text style={styles.inputText}>{selectedMenu}</Text>
+                        </View>
+                        <MaterialCommunityIcons
+                            style={styles.inputIcon}
+                            name="chevron-down"
+                            onPress={() => {
+                                setShowMenuOptions((prev) => !prev);
+                            }}
+                        />
+                    </View>
+                    {showMenuOptions && (
+                        <View style={styles.inputSection2}>
+                            {menus?.map((menu) => (
+                                <TouchableOpacity key={menu._id} onPress={() => {
+                                    setSelectedMenu(menu.name);
+                                    handleChange("menu_id", menu._id);
+                                    setShowMenuOptions(false);
+                                    console.log(JSON.stringify(form, null, 2));
+                                }}>
+                                    <Text>{menu?.name}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    )}
+                </View>
+
                 <StandardButton
                     text="Create Truck"
                     onPress={handleSubmit}
@@ -221,5 +269,42 @@ const styles = ScaledSheet.create({
         paddingVertical: theme.padding.md,
         paddingHorizontal: theme.padding.sm,
         gap: theme.padding.sm,
+    },
+    // -----------------
+    inputRootContainer: {
+        backgroundColor: theme.colors.white,
+        paddingHorizontal: theme.padding.sm,
+        paddingVertical: theme.padding.xs,
+        borderRadius: theme.radius.md,
+        borderColor: theme.colors.gray,
+        borderWidth: 0.5,
+        boxShadow: "0 0px 10px 0px rgba(0, 0, 0, 0.1)",
+        gap: "10@ms"
+    },
+    inputSection1: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    inputTextContainer: {
+        gap: theme.padding.xxs,
+    },
+    inputTitle: {
+        fontSize: theme.fontSize.sm,
+        color: theme.colors.black,
+        fontWeight: "bold",
+    },
+    inputText: {
+        fontSize: theme.fontSize.sm,
+        color: theme.colors.grayDark,
+    },
+    inputIcon: {
+        fontSize: theme.fontSize.xl,
+        color: theme.colors.black,
+    },
+    inputSection2: {
+        backgroundColor: theme.colors.grayLight,
+        paddingHorizontal: theme.padding.sm,
+        paddingVertical: theme.padding.xs,
     },
 });

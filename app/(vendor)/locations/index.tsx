@@ -9,6 +9,7 @@ import { useRouter } from "expo-router";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useBusinessStore } from "@/store/useBusinessStore";
+import { showToast } from "@/utils/showToast";
 
 export default function LocationsIndex() {
     const insets = useSafeAreaInsets();
@@ -20,6 +21,28 @@ export default function LocationsIndex() {
         business_convex_id: businessConvexID,
     });
 
+    const menuCount = useQuery(
+        api.menus.getMenusByBusiness,
+        businessConvexID
+            ? {
+                  business_id: businessConvexID,
+              }
+            : "skip"
+    )?.length;
+
+    const handleAddTruck = () => {
+        console.log("Clicked Add Trucks");
+        if (menuCount === 0 || menuCount === undefined) {
+            showToast({
+                type: "error",
+                title: "No Business Menus",
+                message: "Please create a menu before adding a truck.",
+            });
+            return;
+        }
+        router.push("/locations/add-truck");
+    };
+
     return (
         <View style={[styles.rootContainer, { paddingTop: insets.top }]}>
             {/* Header */}
@@ -29,10 +52,7 @@ export default function LocationsIndex() {
                     name="plus"
                     size={45}
                     color={theme.colors.primary}
-                    onPress={() => {
-                        console.log("Clicked Add Trucks");
-                        router.push("/locations/add-truck"); // Navigate to add truck page
-                    }}
+                    onPress={handleAddTruck}
                 />
             </View>
             {/* Manage Truck List */}

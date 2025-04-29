@@ -89,7 +89,7 @@ export default function SignIn() {
         if (isVendor) {
             router.push("/(auth)/createBusiness/step1");
         } else {
-            router.push("/(auth)/create");
+            router.push("/(auth)/createUser/step1");
         }
     };
 

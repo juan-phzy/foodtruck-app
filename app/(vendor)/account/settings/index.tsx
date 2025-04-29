@@ -81,7 +81,7 @@ export default function SettingsIndex() {
                 ))}
 
                 <IconButton
-                    iconName="arrow-right-from-bracket"
+                    iconName="logout-variant"
                     text="Log Out"
                     showManage={false}
                     onPress={handleSignOut}

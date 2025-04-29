@@ -30,10 +30,10 @@ import { useState } from "react";
 
 const { height } = Dimensions.get("window");
 
-export default function CreateBusinessStep4() {
+export default function CreateBusinessStep5() {
     console.log("");
     console.log("_________________________________________________");
-    console.log("app/(auth)/createBusiness/step4.tsx: Entered Page");
+    console.log("app/(auth)/createBusiness/step5.tsx: Entered Page");
 
     const { isLoaded, signUp, setActive } = useSignUp(); // Clerk sign-up hook for user authentication
     const [isLoading, setIsLoading] = useState(false); // Loading state for the sign-up process

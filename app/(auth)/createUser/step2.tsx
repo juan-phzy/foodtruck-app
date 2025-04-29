@@ -25,20 +25,20 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 
 // Vendor Store
-import { useVendorOnboardingStore } from "@/store/useVendorOnboardingStore";
+import { useUserOnboardingStore } from "@/store/useUserOnboardingStore";
 import Toast from "react-native-toast-message";
 
 const { height } = Dimensions.get("window");
 
-export default function CreateBusinessStep2() {
+export default function CreateUserStep2() {
     console.log("");
-    console.log("_________________________________________________");
-    console.log("app/(auth)/createBusiness/step2.tsx: Entered Page");
+    console.log("_____________________________________________");
+    console.log("app/(auth)/createUser/step2.tsx: Entered Page");
 
     const insets = useSafeAreaInsets();
     const router = useRouter();
 
-    const { data, updateField } = useVendorOnboardingStore();
+    const { data, updateField } = useUserOnboardingStore();
 
     const handleGoBack = () => {
         console.log("Go Back Pressed");
@@ -64,7 +64,7 @@ export default function CreateBusinessStep2() {
             return;
         }
 
-        router.push("/(auth)/createBusiness/step3");
+        router.push("/(auth)/createUser/step3");
     };
 
     return (

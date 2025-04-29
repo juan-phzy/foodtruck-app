@@ -40,6 +40,7 @@ export const createTruck = mutation({
         location: v.optional(v.string()),
         latitude: v.optional(v.number()),
         longitude: v.optional(v.number()),
+        menu_id: v.id("menus"),
         business_clerk_id: v.string(),
         business_convex_id: v.id("businesses"),
         schedule: v.array(
@@ -84,6 +85,7 @@ export const createTruck = mutation({
             location: args.location,
             latitude: args.latitude,
             longitude: args.longitude,
+            menu_id: args.menu_id,
             open_status: false, // default
             truck_type: args.truck_type,
             categories: business.categories || [],

@@ -11,6 +11,8 @@ import theme from "@/assets/theme";
 import IconButton from "@/components/buttons/IconButton";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useUserStore } from "@/store/useUserStore";
+import useTruckStore from "@/store/useTruckStore";
+import useFilterStore from "@/store/useFilterStore";
 
 export default function SettingsIndex() {
     console.log("");
@@ -18,11 +20,15 @@ export default function SettingsIndex() {
     console.log("app/(public)/profile/settings/index.tsx: Entered File");
     const router = useRouter();
     const insets = useSafeAreaInsets();
+    const { reset:resetTruckStore } = useTruckStore();
+    const { clearCategoryFilters } = useFilterStore();
     const { signOut } = useClerk();
 
     const handleSignOut = async () => {
         try {
             await signOut();
+            resetTruckStore(); // Reset the truck store to clear any previous data
+            clearCategoryFilters(); // Clear any category filters in the filter store
             router.replace("/(auth)/login");
         } catch (err) {
             console.error(JSON.stringify(err, null, 2));
@@ -80,7 +86,7 @@ export default function SettingsIndex() {
                 ))}
 
                 <IconButton
-                    iconName="arrow-right-from-bracket"
+                    iconName="logout-variant"
                     text="Log Out"
                     showManage={false}
                     onPress={handleSignOut}
