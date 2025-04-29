@@ -48,11 +48,11 @@ export default function SignIn() {
 
     useEffect(() => {
         if (isVendor) {
-            setEmailAddress("vendor+clerk_test@example.com");
+            setEmailAddress("+clerk_test@example.com");
             setPassword("vendor123");
         } else {
-            setEmailAddress("public-user+clerk_test@example.com");
-            setPassword("public12345");
+            setEmailAddress("+clerk_test@example.com");
+            setPassword("public123");
         }
     }, [isVendor]);
 

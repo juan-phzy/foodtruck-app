@@ -1,6 +1,8 @@
 // types.ts
 
 import { Id } from "./convex/_generated/dataModel";
+// IMPORTS ABOVE DONT TOUCH
+//------------------------------
 
 export interface Hours {
     monday: string;
