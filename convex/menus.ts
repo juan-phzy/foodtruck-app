@@ -1,7 +1,12 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
-// CREATE a menu
+export const generateUploadUrl = mutation({
+    handler: async (ctx) => {
+      return await ctx.storage.generateUploadUrl();
+    },
+  });
+
 export const createMenu = mutation({
     args: {
         business_id: v.id("businesses"),

@@ -5,7 +5,6 @@ import {
     View,
     TouchableOpacity,
     TextInput,
-    Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
