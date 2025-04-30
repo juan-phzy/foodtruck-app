@@ -274,9 +274,9 @@ export default function Index() {
             )}
 
             {showCategoryModal && <CategoryModal />}
-            {/* {showMenuModal && selectedTruck && (
+            {showMenuModal && selectedTruck && (
                 <MenuModal truck={selectedTruck} />
-            )} */}
+            )}
             {showTruckModal && selectedTruck && (
                 <TruckModal truck={selectedTruck} />
             )}

@@ -9,8 +9,8 @@ interface ItemCardProps {
     readonly item: {
         name: string;
         price: number;
-        description: string;
-        imageUrl: string;
+        description?: string | undefined;
+        imageUrl?: string | undefined;
     };
 }
 

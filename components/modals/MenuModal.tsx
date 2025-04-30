@@ -18,8 +18,6 @@
  *
  */
 
-// React & Hooks
-import React, { useMemo } from "react";
 
 // React Native Components
 import {
@@ -46,6 +44,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ms, ScaledSheet } from "react-native-size-matters";
 import FlatListCard from "@/components/cards/FlatListCard";
 import ItemCard from "@/components/cards/ItemCard";
+import { api } from "@/convex/_generated/api";
+import { useQuery } from "convex/react";
 
 // Props Interface
 interface MenuModalProps {
@@ -56,7 +56,16 @@ const MenuModal: React.FC<MenuModalProps> = ({ truck }) => {
     /**
      * Memoized menu categories to prevent unnecessary recalculations.
      */
-    const menuCategories = useMemo(() => truck.menu, [truck.menu]);
+
+    const menu = useQuery(
+        api.menus.getSingleMenu,
+        truck.menu_id
+            ? {
+                  menuId: truck.menu_id,
+              }
+            : "skip"
+    )?.menu;
+
     const { toggleMenuModal } = useMenuModalStore();
 
     const renderSeparator = () => {
@@ -89,7 +98,7 @@ const MenuModal: React.FC<MenuModalProps> = ({ truck }) => {
 
                 <FlatList
                     // style={{flex:1, borderColor:"red", borderWidth:5}}
-                    data={menuCategories}
+                    data={menu}
                     keyExtractor={(menu, index) => menu.category + index}
                     renderItem={({ item: menu }) => (
                         <View style={styles.cardContainer}>
