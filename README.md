@@ -52,8 +52,14 @@ FOODTRUCK-APP
 │   |   │   ├── step7.tsx               # Step 7: Set Public Business Info
 │   |   │   ├── step8.tsx               # Step 8: Set Business Categories
 │   |   │   └── step9.tsx               # Step 9: Set Business Socials
+│   │   ├── createUser.tsx          # User Account Creation
+│   |   │   ├── _layout.tsx             # Create Business Stack Layout
+│   |   │   ├── step1.tsx               # Step 1: User Name
+│   |   │   ├── step2.tsx               # Step 2: User Contact Info
+│   |   │   ├── step3.tsx               # Step 3: User Password
+│   |   │   ├── step4.tsx               # Step 4: Review & Create User Account
+│   |   │   └── step5.tsx               # Step 5: Verify Account Email With Code
 │   │   ├── _layout.tsx             # Auth layout file
-│   │   ├── create.tsx              # Create Account screen
 |   |	└── login.tsx               # Login Screen
 |   |
 |   ├── (public)                # Public Tabs Route
@@ -78,6 +84,10 @@ FOODTRUCK-APP
 │   ├── (vendor)                # Vendor Tabs Route
 │   │   ├── account                 # Account Tab
 │   |   │   ├── settings.tsx            # Account Settings Route
+|   │   |   │   ├── [section].tsx           # Settings Section (profile, security, notifs...)
+|   |   │   |   │   ├── _layout.tsx             # Settings Section Layout
+|   |   │   |   │   ├── [subsection].tsx        # Edit Settings Input Page
+|   |   │   |   │   └── index.tsx               # Edit Section Settings
 |   │   |   │   ├── _layout.tsx             # Account Settings Stack Layout
 |   │   |   │   └── index.tsx               # Account Settings Index
 │   |   │   ├── _layout.tsx             # Account Stack Layout
@@ -94,8 +104,14 @@ FOODTRUCK-APP
 │   │   ├── locations               # Vendor Home Tab - Manage Locations (Trucks & Stands)
 │   |   │   ├── _layout.tsx             # Locations Tab Inner Stack Layout
 │   |   │   ├── [truckID].tsx           # Manage Truck/Stand Page
-│   |   │   ├── addTruckPage.tsx        # Add Truck Page
+│   |   │   ├── add-truck.tsx           # Add Truck Page
 │   |   │   └── index.tsx               # Locations Tab Main Index Page
+|   |   |
+│   │   ├── menu                    #  Menu Tab - Manage Menus
+│   |   │   ├── _layout.tsx             # Menu Tab Inner Stack Layout
+│   |   │   ├── [menuID].tsx            # Manage Truck/Stand Page
+│   |   │   ├── add-menu.tsx            # Add Menu Page
+│   |   │   └── index.tsx               # Menu Tab Main Index Page
 |   |   |
 │   │   ├── _layout.tsx_        # Vendor Side Root Layout - Defines Tabs
 │   │   └── test.tsx_           # Vendor Test Page
@@ -145,9 +161,6 @@ FOODTRUCK-APP
 │   └── search
 │       └── MapSearchBar.tsx            # Renders the autocomplete map searchbar
 |
-├── constants                       # Constants Folder
-│   └── settingsConfig.ts               # Used for rendering public user profile settings
-|
 ├── convex                          # Convex Backend Folder
 │   ├── _generated                      # Automatically Generated Server Files
 │   ├── auth.config.ts                  # Auth configuration for convex
@@ -164,10 +177,16 @@ FOODTRUCK-APP
 │   ├── gitWorkflow.md                  # Guide for GitHub Branch/Feature Workflow
 |   └── styling.md                      # Guide for styling
 |
+├── hooks                           # Hooks
+|   └── useTrucksInViewport.ts          # Fetches trucks within map boundary
+|
 ├── lib                             # Logic Handling
-│   └── userSettings                    # User Profile Settings Handling
+│   ├── userSettings                    # User Profile Settings Handling
+|   |   ├── handlers.ts                     
+|   |   └── mutations.ts     
+│   └── vendorSettings                  # Vendor Profile Settings Handling
 |       ├── handlers.ts                     
-|       └── mutations.ts                   
+|       └── mutations.ts           
 │
 ├── node_modules                    # Automatically appears when npm and expo is initialized
 |
@@ -175,17 +194,22 @@ FOODTRUCK-APP
 |   └── ClerkAndConvexProvider.tsx
 │
 ├── store                           # Contains Zustand custom hooks
+│   ├── useBusinessStore.ts             # State management for signed in business
 │   ├── useFilterStore.ts               # State management for selected category filters
 │   ├── useMapLayerStore.ts             # State management for selected map layer style
 │   ├── useMenuModalStore.ts            # State management for menu toggle
 │   ├── useTruckStore.ts                # State management for selected truck on map
 │   ├── useUserLocationStore.ts         # State management for user device location
+│   ├── useUserOnboardingStore.ts     # State management for vendor creation & onboarding
 │   ├── useUserStore.ts                 # State management for convex user
 │   ├── useVendorOnboardingStore.ts     # State management for vendor creation & onboarding
 │   └── useVendorStore.ts               # State management for vendor
 |
 ├── utils                           # Utility Folder
-│   ├── helperFunctions.ts              # Utility Functions
+│   ├── calculateDistance.ts 
+│   ├── convertScheduleArrayToRecord.ts            
+│   ├── helperFunctions.ts             
+│   ├── showToast.ts             
 │   └── loadFonts.ts                    # Preloads all MaterialCommunityIcons
 │
 ├── .env.local               # Local environment variables
