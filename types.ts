@@ -122,11 +122,11 @@ export type VendorProfile = {
     email: string;
     clerkId: string;
     is_onboarded: boolean;
-    stripeCustomerId: string;
-    stripeSubscriptionId: string;
-    subscriptionPlanId: string; // e.g. "starter", "growth", etc.
-    subscriptionStatus: string; // e.g. "active", "past_due", "canceled"
-    subscriptionCurrentPeriodEnd: string; // ISO date string
+    stripeCustomerId?: string | undefined;
+    stripeSubscriptionId?: string | undefined;
+    subscriptionPlanId?: string | undefined; // e.g. "starter", "growth", etc.
+    subscriptionStatus?: string | undefined; // e.g. "active", "past_due", "canceled"
+    subscriptionCurrentPeriodEnd?: string | undefined; // ISO date string
 };
 
 export type Business = {

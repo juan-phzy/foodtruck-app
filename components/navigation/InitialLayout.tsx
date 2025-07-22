@@ -12,7 +12,7 @@ export default function InitialLayout() {
 
     // Fetch vendor profile for onboarding status
     const vendorProfile = useQuery(
-        api.vendors.getUserByClerkId,
+        api.vendors.getVendorByClerkId,
         user && user.unsafeMetadata?.role === "vendor"
             ? { clerkId: user.id }
             : "skip"

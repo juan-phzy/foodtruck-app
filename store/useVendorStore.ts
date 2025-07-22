@@ -26,7 +26,7 @@ export const useInitVendorProfile = () => {
     const { setProfile, setLoading } = useVendorStore();
 
     const convexVendor = useQuery(
-        api.vendors.getUserByClerkId,
+        api.vendors.getVendorByClerkId,
         user ? { clerkId: user.id } : "skip"
     );
 
